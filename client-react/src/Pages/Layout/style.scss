@@ -1,0 +1,20 @@
+@import '../../SharedStyles/layoutVariables';
+
+#pageLayout {
+  display: flex;
+  flex-direction: row;
+
+  #sidebarGap {
+    flex-basis: $sidebar-width;
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  #mainContent {
+    display: block;
+    flex-basis: 100%;
+    flex-grow: 0;
+    flex-shrink: 1;
+  }
+}
