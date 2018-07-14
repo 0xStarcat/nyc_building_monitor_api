@@ -5,7 +5,7 @@ from helpers import api_helpers
 from seeds import violations_seeds
 
 table = violations_seeds.violations_table
-source = "hpd"
+source = "HPD"
 hpd_url = 'https://data.cityofnewyork.us/resource/b2iz-pps8.json?$where=inspectiondate between "'+ api_helpers.get_next_day_to_request(table, source) + '" and "' + api_helpers.get_today(table, source) + '"&'
 
 def make_request():

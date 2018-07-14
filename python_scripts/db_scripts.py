@@ -7,7 +7,7 @@ def test():
   seed_db.test()
 
 def prepare():
-  # deed_db.drop()
+  deed_db.drop()
   seed_db.seed()
 
 def update():

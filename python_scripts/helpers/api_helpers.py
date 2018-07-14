@@ -17,7 +17,7 @@ def get_next_day_to_request(table_name, source):
   c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn=table_name, cn1="source", source=source))
   entry = c.fetchone() 
   if entry:
-    if table_name == violations_seeds.violations_table and source != "hpd":
+    if table_name == violations_seeds.violations_table and source != "HPD":
       return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")
     else:
       return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
@@ -25,13 +25,13 @@ def get_next_day_to_request(table_name, source):
     return get_start_date(table_name, source)
 
 def get_today(table_name, source):
-  if table_name == violations_seeds.violations_table and source != "hpd":
+  if table_name == violations_seeds.violations_table and source != "HPD":
     return datetime.date.today().strftime("%Y%m%d")
   else:
     return datetime.date.today().strftime("%Y-%m-%d")
 
 def get_start_date(table_name, source):
-  if table_name == violations_seeds.violations_table and source != "hpd":
+  if table_name == violations_seeds.violations_table and source != "HPD":
     return "20100101"
   else:
     return "2010-01-01"
@@ -72,6 +72,9 @@ def request_from_api(url, source, seed_method):
     count += len(request_data)
     print("  * " + str(count) + " records seeded.")
     request_data = []
+
+  conn.commit()
+  conn.close()
 
   return count
 

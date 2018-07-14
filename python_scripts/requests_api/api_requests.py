@@ -9,7 +9,6 @@ from requests_api import violation_ecb_request
 from requests_api import violation_hpd_request
 from requests_api import service_calls_dob_request
 from requests_api import service_calls_hpd_request
-from requests_api import service_calls_dohmh_request
 from requests_api import permit_request
 
 from migrations import buildings_migration

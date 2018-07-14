@@ -1,0 +1,20 @@
+11:56PM on July 13, 2018
+11:58PM on July 13, 2018
+11:59PM on July 13, 2018
+ ++ dob service calls added: 0
+ ++ hpd service calls added: 0
+12:21AM on July 14, 2018
+ ++ dob service calls added: 0
+ ++ hpd service calls added: 0
+12:30AM on July 14, 2018
+ ++ dob service calls added: 0
+ ++ hpd service calls added: 0
+ ++ dob violations added: 9
+ ++ ecb violations added: 0
+12:31AM on July 14, 2018
+ ++ dob service calls added: 0
+ ++ hpd service calls added: 0
+ ++ dob violations added: 0
+ ++ ecb violations added: 0
+ ++ hpd violations added: 0
+ ++ permits added: None
