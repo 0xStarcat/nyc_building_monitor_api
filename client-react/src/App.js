@@ -17,7 +17,6 @@ class App extends Component {
   componentWillMount() {
     this.props.dispatch(readCensusTracts())
     this.props.dispatch(readNeighborhoods())
-    this.baseUrl = process.env.REACT_APP_PUBLIC_URL // will be /hypercomp
   }
 
   render() {
@@ -27,13 +26,9 @@ class App extends Component {
       <div className="App">
         <Router history={history}>
           <Switch>
-            <Route exact path={`${this.baseUrl}/`} render={routeProps => <MapPage store={this.props.store} />} />
-            <Route
-              exact
-              path={`${this.baseUrl}/charts`}
-              render={routeProps => <ChartPage store={this.props.store} />}
-            />
-            <Route exact path={`${this.baseUrl}/about`} render={routeProps => <AboutPage />} />
+            <Route exact path="/" render={routeProps => <MapPage store={this.props.store} />} />
+            <Route exact path="/charts" render={routeProps => <ChartPage store={this.props.store} />} />
+            <Route exact path="/about" render={routeProps => <AboutPage />} />
           </Switch>
         </Router>
       </div>
