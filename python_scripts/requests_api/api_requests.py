@@ -22,9 +22,9 @@ def update_data():
   c.execute('pragma foreign_keys=on;')
   
   boundary_table_migrations.update_all(c, conn)
-  log_helper.write_to_log(" ++ boundary counts updated")
+  log_helper.write_to_log(" ++ boundary counts updated" + "\n")
   buildings_migration.update_data(c)
-  log_helper.write_to_log(" ++ building counts updated")
+  log_helper.write_to_log(" ++ building counts updated" + "\n")
   conn.commit()
   conn.close()
 
