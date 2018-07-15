@@ -8,12 +8,10 @@ const constructCensusTractJson = data => {
         geometry: JSON.parse(row['geometry']),
         properties: {
           name: row['name'],
-          neighborhood: row.neighborhood.name,
+          parentBoundaryName: row.neighborhood.name,
           // churnPercent: parseFloat((row.total_sales / row.total_buildings) * 100),
-          incomeMedian2011: parseFloat((row.income || {}).median_income_2011),
           incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
           incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
-          rentMedian2011: parseFloat((row.rent || {}).median_rent_2011),
           rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
           rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
           racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
@@ -38,6 +36,7 @@ const constructCensusTractJson = data => {
           //   ((row.total_sales_prior_violations / row.total_sales) * 100).toFixed(2)
           // ),
           // violationsAverageBeforeSalePerBuilding: parseFloat(row.avg_violation_count_3years_before_sale),
+          violationsTotal: parseFloat(row.total_violations),
           violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2))
           // violationsNonCommunityPerBuilding: parseFloat(
           //   ((row.total_violations - row.total_service_calls_with_violation_result) / row.total_buildings).toFixed(2)
