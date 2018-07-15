@@ -69,52 +69,6 @@ def create_table(c):
   c.execute('CREATE INDEX idx_call_building_id ON {tn}({col1})'.format(tn=service_calls_table, col1=call_col1))
   c.execute('CREATE INDEX idx_call_source ON {tn}({col6})'.format(tn=service_calls_table, col6=call_col6))
 
-def seed_service_calls_from_csv(c, service_calls_csv):
-  print("Seeding calls...")
-
-  for index, call in enumerate(service_calls_csv):
-    print("call: " + str(index) + "/" + str(len(service_calls_csv)))
-    
-    date = datetime.datetime.strptime(call[1][:10], "%Y-%m-%d").strftime("%Y%m%d")
-
-    resolution_description = call[21]
-    if call_is_duplicate(resolution_description):
-      print("  * duplicate complaint found")
-      continue
-
-    resolution_violation = resulted_in_violation(call[21])
-    resolution_no_action = took_no_action(call[21])
-    unable_to_investigate = unable_to_investigate_call(call[21])
-
-    source = call[3]
-    status = call[19]
-    unique_key = call[0]
-    open_over_month = is_open_over_month(status, date)
-    description = call[6]
-    building_match = get_building_match(c, call[9])
-    if building_match:
-      pass
-    else: 
-      print("  * no building match found")
-      continue
-
-    building_id = building_match[0]
-    
-    # Create call
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=service_calls_table, col1=call_col1, col2=call_col2, col3=call_col3, col4=call_col4, col5=call_col5, col6=call_col6, col7=call_col7, col8=call_col8, col9=call_col9, col10=call_col10, col11=call_col11), (building_id, date, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, status, unique_key, open_over_month, source))
-
-    insertion_id = c.lastrowid
-
-    c.execute('SELECT * FROM {tn} WHERE {cn}={b_id}'\
-      .format(tn=buildings_seeds.buildings_table, cn='id', b_id=building_id))
-
-    building = c.fetchone()
-
-    # Create Building Event
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}) VALUES ({ct_id}, {n_id}, {building_id}, \'{eventable}\', \"{event_id}\", \"{event_date}\")'\
-      .format(tn=building_events_seeds.building_events_table, col1="census_tract_id", col2="neighborhood_id", col3="building_id", col4="eventable", col5="eventable_id", col6="event_date", event_date=date, ct_id=building[6], n_id=building[7], building_id=building_id, eventable='service_call', event_id=insertion_id))
-
 def seed_service_calls_from_json(c, service_calls_json):
   print("Seeding calls...")
 

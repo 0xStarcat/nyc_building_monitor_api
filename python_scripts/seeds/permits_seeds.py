@@ -32,38 +32,6 @@ def create_table(c):
 
   c.execute('CREATE INDEX idx_permit_building_id ON {tn}({col1})'.format(tn=permits_table, col1=permit_col1))
 
-def seed_permits_from_csv(c, permit_csv):
-  print("Seeding permits...")
-
-  for index, permit in enumerate(permit_csv):
-    print("permit: " + str(index) + "/" + str(len(permit_csv)))
-    
-    building_match = get_building_match(c, permit[3], permit[23])
-
-    if not building_match:
-      print("  - no building match found")
-
-
-    building_id = building_match[0] if building_match else None
-    date = convert_date_format(permit[18])
-    geometry = get_geometry(permit[14], permit[13])
-    
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}) VALUES (?, ?, ?)'\
-      .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3), (building_id, str(date), str(geometry)))
-
-
-    if building_id:
-      insertion_id = c.lastrowid
-      
-      c.execute('SELECT * FROM {tn} WHERE {cn}={b_id}'\
-        .format(tn=buildings_seeds.buildings_table, cn='id', b_id=building_id))
-
-      building = c.fetchone()
-
-      # Create Building Event
-      c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}) VALUES ({ct_id}, {n_id}, {building_id}, \'{eventable}\', \"{event_id}\", \"{event_date}\")'\
-        .format(tn=building_events_seeds.building_events_table, col1="census_tract_id", col2="neighborhood_id", col3="building_id", col4="eventable", col5="eventable_id", col6="event_date", ct_id=building[6], n_id=building[7], building_id=building_id, eventable='permit', event_id=insertion_id, event_date=date))
-
 
 def seed_permits_from_json(c, permit_json):
   print("Seeding permits...")
@@ -75,7 +43,6 @@ def seed_permits_from_json(c, permit_json):
 
     if not building_match:
       print("  - no building match found")
-
 
     building_id = building_match[0] if building_match else None
     date = convert_date_format(permit["issuance_date"])
