@@ -44,6 +44,7 @@ export default class LeafletMap extends Component {
         onLoad={this.onBaseLayerChange}
         onBaseLayerChange={this.onBaseLayerChange}
       >
+        {/*mapbox.streets-satellite*/}
         <TileLayer
           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           url="https://api.tiles.mapbox.com/v4/mapbox.wheatpaste/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"

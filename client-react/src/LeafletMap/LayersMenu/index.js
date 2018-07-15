@@ -196,6 +196,14 @@ export default class LayersMenu extends Component {
             />
           </Pane>
         </Overlay>
+        <Overlay checked name="Street and Landmark Labels">
+          <Pane style={{ zIndex: 400 }}>
+            <TileLayer
+              url="https://api.mapbox.com/styles/v1/starcat/cjjm8phy75h572smkkms9cem5/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"
+              attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+            />
+          </Pane>
+        </Overlay>
       </LayersControl>
     )
   }
