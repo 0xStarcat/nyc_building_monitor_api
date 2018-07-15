@@ -15,7 +15,8 @@ export default class NeighborhoodsBoundary extends Component {
               interactive={false}
               key={`ct-${index}`}
               data={feature['geometry']}
-              color="red"
+              color="hotpink"
+              opacity={1}
               weight={1}
               fillOpacity={0}
             />
