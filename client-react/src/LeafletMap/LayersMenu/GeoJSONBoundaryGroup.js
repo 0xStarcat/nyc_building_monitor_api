@@ -1,18 +1,45 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { GeoJSON, LayerGroup } from 'react-leaflet'
 import CensusTractPopup from '../Popups/CensusTractPopup'
+import { createSelector } from 'reselect'
+import { handleUpdateSelectedLayer } from '../../Store/AppState/actions'
 
-export default class GeoJSONBoundaryGroup extends Component {
+class GeoJSONBoundaryGroup extends Component {
   constructor(props) {
     super(props)
     this.state = {
       featuresLength: props.features.length
     }
     this.layerGroupRef = React.createRef()
+    this.onClick = this.onClick.bind(this)
+    this.onEachFeature = this.onEachFeature.bind(this)
+  }
+
+  onClick(event) {
+    console.log(event.target.feature.properties)
+    this.props.dispatch(handleUpdateSelectedLayer(event.target.feature.properties))
+  }
+
+  onEachFeature(feature, layer) {
+    layer.on({
+      click: this.onClick
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ featuresLength: nextProps.features.length })
+  }
+
+  shouldComponentUpdate() {
+    return this.props.allLayersLoaded
   }
 
   componentDidMount() {
-    if (this.layerGroupRef.current.leafletElement.getLayers().length === this.state.featuresLength) {
+    if (
+      this.layerGroupRef.current &&
+      this.layerGroupRef.current.leafletElement.getLayers().length === this.state.featuresLength
+    ) {
       this.props.onLoad()
     }
   }
@@ -23,12 +50,15 @@ export default class GeoJSONBoundaryGroup extends Component {
         {this.props.features.map((feature, index) => {
           return (
             <GeoJSON
+              onEachFeature={this.onEachFeature}
               interactive={this.props.interactive}
               key={`ct-${index}`}
-              data={feature['geometry']}
+              data={feature}
               {...this.props.style(feature)}
             >
-              {this.props.interactive && <CensusTractPopup feature={feature} />}
+              {/*
+                this.props.interactive && <CensusTractPopup feature={feature} />
+              */}
             </GeoJSON>
           )
         })}
@@ -36,3 +66,11 @@ export default class GeoJSONBoundaryGroup extends Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    allLayersLoaded: state.appState.allLayersLoaded
+  }
+}
+
+export default connect(mapStateToProps)(GeoJSONBoundaryGroup)

@@ -1,16 +1,22 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import SideBar from '../../SideBar'
 
 import './style.scss'
 
-const MapPage = props => {
+const Layout = props => {
   return (
     <div id="pageLayout">
-      <SideBar />
+      <SideBar selectedLayer={props.selectedLayer} />
       <div id="sidebarGap" />
       <div id="mainContent">{props.children}</div>
     </div>
   )
 }
 
-export default MapPage
+const mapStateToProps = state => {
+  return {
+    selectedLayer: state.appState.selectedLayer
+  }
+}
+export default connect(mapStateToProps)(Layout)

@@ -17,11 +17,6 @@ export default class LeafletMap extends Component {
     }
 
     this.mapRef = React.createRef()
-    this.onBaseLayerChange = this.onBaseLayerChange.bind(this)
-  }
-
-  onBaseLayerChange(event) {
-    console.log('map load')
   }
 
   render() {
@@ -29,13 +24,7 @@ export default class LeafletMap extends Component {
     const position = [this.state.lat, this.state.lng]
     return (
       <div>
-        <Map
-          center={position}
-          id="leaflet-map"
-          onLoad={this.onBaseLayerChange}
-          ref={this.mapRef}
-          zoom={this.state.zoom}
-        >
+        <Map center={position} id="leaflet-map" ref={this.mapRef} zoom={this.state.zoom}>
           {!(
             this.props.store.censusTracts.initialFetchCompleted &&
             this.props.store.neighborhoods.initialFetchCompleted &&
@@ -45,7 +34,8 @@ export default class LeafletMap extends Component {
             attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             url="https://api.mapbox.com/styles/v1/starcat/cjjmbqf4pg6vq2rlqun4aquq9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"
           />
-          <LayersMenu position="topright" />
+          {this.props.store.censusTracts.initialFetchCompleted &&
+            this.props.store.neighborhoods.initialFetchCompleted && <LayersMenu position="topright" />}
         </Map>
       </div>
     )

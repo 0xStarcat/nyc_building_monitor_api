@@ -64,13 +64,18 @@ class LayersMenu extends Component {
   checkLayerLoadStatus() {
     if (
       this.layerControlRef.current &&
-      this.layerControlRef.current.leafletElement._layers.length >= this.layersLoaded &&
+      this.layerControlRef.current.leafletElement._layers.length &&
+      this.layersLoaded >= this.layerControlRef.current.leafletElement._layers.length - 1 &&
       this.tileLayerLoaded
     ) {
       this.props.dispatch(allLayersLoaded())
       this.layersLoaded = 0
       this.tileLayerLoaded = false
     }
+  }
+
+  shouldComponentUpdate() {
+    return !this.props.store.appState.allLayersLoaded
   }
 
   render() {
@@ -130,14 +135,6 @@ class LayersMenu extends Component {
             style={racePercentWhite2010}
           />
         </BaseLayer>
-        <BaseLayer name="Violations per Building, 2011 - 2017">
-          <GeoJSONBoundaryGroup
-            onLoad={this.layerLoaded}
-            interactive={true}
-            features={this.props.store.censusTracts.features}
-            style={violationsPerBuildingLayerStyle}
-          />
-        </BaseLayer>
         <BaseLayer name="Percent Service Calls Open 1 Month">
           <GeoJSONBoundaryGroup
             onLoad={this.layerLoaded}
@@ -145,24 +142,6 @@ class LayersMenu extends Component {
             features={this.props.store.censusTracts.features}
             style={serviceCallsPercentOpenOneMonth}
           />
-        </BaseLayer>
-        <BaseLayer name="Total Sales, 2011 - 2017">
-          <GeoJSONBoundaryGroup
-            onLoad={this.layerLoaded}
-            interactive={true}
-            features={this.props.store.censusTracts.features}
-            style={salesTotalLayerStyle}
-          />
-        </BaseLayer>
-        <BaseLayer name="Total Permits, 2011 - 2017">
-          <LayerGroup>
-            <GeoJSONBoundaryGroup
-              onLoad={this.layerLoaded}
-              interactive={true}
-              features={this.props.store.censusTracts.features}
-              style={permitsTotalLayerStyle}
-            />
-          </LayerGroup>
         </BaseLayer>
       </LayersControl>
     )

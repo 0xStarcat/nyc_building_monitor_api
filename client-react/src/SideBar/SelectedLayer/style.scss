@@ -1,0 +1,11 @@
+@import '../../SharedStyles/index.scss';
+
+#selectedLayer {
+  .headerBar {
+    height: 100px;
+    background-color: $primaryBackground;
+    .headerTitle {
+      color: white;
+    }
+  }
+}
