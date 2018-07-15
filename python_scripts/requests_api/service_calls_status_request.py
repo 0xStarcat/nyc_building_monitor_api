@@ -8,7 +8,7 @@ from seeds import service_calls_seeds
 table = service_calls_seeds.service_calls_table
 
 
-def make_request():
+def make_request(url):
   api_helpers.request_from_api(dob_url, source, service_calls_seeds.seed_service_calls_from_json)
 
 conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)

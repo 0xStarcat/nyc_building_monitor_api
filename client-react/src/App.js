@@ -4,7 +4,7 @@ import SideBar from './SideBar'
 import MapPage from './Pages/MapPage'
 import ChartPage from './Pages/ChartPage'
 import AboutPage from './Pages/AboutPage'
-
+import Loading from './SharedComponents/Loading'
 import { readCensusTracts } from './Store/CensusTracts/actions'
 import { readNeighborhoods } from './Store/Neighborhoods/actions'
 
@@ -21,7 +21,7 @@ class App extends Component {
 
   render() {
     if (!(this.props.store.censusTracts.initialFetchCompleted || this.props.store.neighborhoods.initialFetchCompleted))
-      return <div>Loading</div>
+      return <Loading />
     return (
       <div className="App">
         <Router history={history}>

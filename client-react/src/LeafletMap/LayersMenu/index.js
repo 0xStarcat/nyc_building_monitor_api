@@ -26,7 +26,8 @@ import {
   violationsCountBeforeSaleLayerStyle,
   permitsTotalLayerStyle,
   racePercentWhite2010,
-  raceWhitePercentChange
+  raceWhitePercentChange,
+  serviceCallsPercentOpenOneMonth
 } from '../GeoJsonStyles'
 
 import NeighborhoodsBoundary from './NeighborhoodsBoundary'
@@ -52,24 +53,6 @@ export default class LayersMenu extends Component {
                   key={`ct-${index}`}
                   data={feature['geometry']}
                   {...incomeMedianLayerStyle(feature.properties.incomeMedian2017, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Income Change, 2011 - 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...incomeChangeLayerStyle(
-                    feature.properties.incomeChange20112017,
-                    feature.properties.buildingsTotal
-                  )}
                 >
                   <CensusTractPopup feature={feature} />
                 </GeoJSON>
@@ -140,15 +123,15 @@ export default class LayersMenu extends Component {
             })}
           </LayerGroup>
         </BaseLayer>
-        <BaseLayer name="Percent Service Calls with Violation">
+        <BaseLayer name="Percent Service Calls Open 1 Month">
           <LayerGroup>
             {this.props.store.censusTracts.features.map((feature, index) => {
               return (
                 <GeoJSON
                   key={`ct-${index}`}
                   data={feature['geometry']}
-                  {...serviceCallsPercentViolationLayerStyle(
-                    feature.properties.serviceCallsPercentWithViolation,
+                  {...serviceCallsPercentOpenOneMonth(
+                    feature.properties.serviceCallsPercentOpenOneMonth,
                     feature.properties.buildingsTotal
                   )}
                 >

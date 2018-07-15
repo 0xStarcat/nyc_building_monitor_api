@@ -2,7 +2,7 @@ const serviceCallsTotalLayerStyle = (value, thresholdValue) => {
   if (!value || thresholdValue < 55) {
     return {
       color: 'white',
-      fillColor: 'white',
+      fillColor: 'ffdba5',
       opacity: 1,
       fillOpacity: 0.8,
       weight: 1

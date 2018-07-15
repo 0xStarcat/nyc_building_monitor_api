@@ -16,12 +16,14 @@ const constructCensusTractJson = data => {
           rentMedian2011: parseFloat((row.rent || {}).median_rent_2011),
           rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
           rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
-          racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010
-          // buildingsTotal: parseFloat(row.total_buildings),
-          // violationsTotal: parseFloat(row.total_violations),
-          // salesTotal: parseFloat(row.total_sales),
-          // permitsTotal: parseFloat(row.total_permits),
-          // serviceCallsTotal: parseFloat(row.total_service_calls),
+          racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
+          buildingsTotal: parseFloat(row.total_buildings),
+          salesTotal: parseFloat(row.total_sales),
+          permitsTotal: parseFloat(row.total_permits),
+          serviceCallsTotal: parseFloat(row.total_service_calls),
+          serviceCallsPercentOpenOneMonth: parseFloat(
+            ((row.total_service_calls_open_over_month / row.total_service_calls) * 100).toFixed(2)
+          ),
           // serviceCallsPercentWithViolation: parseFloat(
           //   ((row.total_service_calls_with_violation_result / row.total_service_calls) * 100).toFixed(2)
           // ),
@@ -36,7 +38,7 @@ const constructCensusTractJson = data => {
           //   ((row.total_sales_prior_violations / row.total_sales) * 100).toFixed(2)
           // ),
           // violationsAverageBeforeSalePerBuilding: parseFloat(row.avg_violation_count_3years_before_sale),
-          // violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
+          violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2))
           // violationsNonCommunityPerBuilding: parseFloat(
           //   ((row.total_violations - row.total_service_calls_with_violation_result) / row.total_buildings).toFixed(2)
           // ),

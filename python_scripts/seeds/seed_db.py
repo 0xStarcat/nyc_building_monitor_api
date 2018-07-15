@@ -139,25 +139,25 @@ def test():
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM building_events')
+  c.execute('SELECT * FROM census_tracts WHERE total_service_calls_open_over_month > 0')
   all_rows = c.fetchall()
   print(len(all_rows))
 
-  c.execute('SELECT * FROM violations')
-  all_rows = c.fetchall()
-  print(len(all_rows))
+  # c.execute('SELECT * FROM violations')
+  # all_rows = c.fetchall()
+  # print(len(all_rows))
 
-  c.execute('SELECT * FROM permits')
-  all_rows = c.fetchall()
-  print(len(all_rows))
+  # c.execute('SELECT * FROM permits')
+  # all_rows = c.fetchall()
+  # print(len(all_rows))
 
-  c.execute('SELECT * FROM service_calls')
-  all_rows = c.fetchall()
-  print(len(all_rows))
+  # c.execute('SELECT * FROM service_calls')
+  # all_rows = c.fetchall()
+  # print(len(all_rows))
 
-  c.execute('SELECT * FROM sales')
-  all_rows = c.fetchall()
-  print(len(all_rows))
+  # c.execute('SELECT * FROM sales')
+  # all_rows = c.fetchall()
+  # print(len(all_rows))
   # print(all_rows[len(all_rows) - 1])
   # for row in all_rows:
     # print(row[1])

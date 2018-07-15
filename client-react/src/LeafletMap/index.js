@@ -15,6 +15,7 @@ export default class LeafletMap extends Component {
       zoom: props.zoom
     }
 
+    this.layersLoaded = 0
     this.mapRef = React.createRef()
     this.neighborhoodLayerGroupRef = React.createRef()
     this.neighborhoodOverlayRef = React.createRef()
@@ -31,7 +32,8 @@ export default class LeafletMap extends Component {
   }
 
   onLayerAdd(event) {
-    console.log(event)
+    this.layersLoaded++
+    // console.log(this.layersLoaded)
   }
 
   onBaseLayerChange(event) {
@@ -47,7 +49,7 @@ export default class LeafletMap extends Component {
         center={position}
         zoom={this.state.zoom}
         onLoad={this.onBaseLayerChange}
-        layeradd={this.onLayerAdd}
+        onlayeradd={this.onLayerAdd}
         onBaseLayerChange={this.onBaseLayerChange}
       >
         {/*mapbox.streets-satellite*/}

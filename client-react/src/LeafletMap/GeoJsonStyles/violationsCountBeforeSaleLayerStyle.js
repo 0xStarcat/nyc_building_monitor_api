@@ -4,7 +4,7 @@ const violationsCountBeforeSaleLayerStyle = (value, thresholdValue) => {
   if (!value || thresholdValue < 55) {
     return {
       color: 'white',
-      fillColor: 'white',
+      fillColor: 'ffdba5',
       opacity: 1,
       fillOpacity: 0.7,
       weight: 1

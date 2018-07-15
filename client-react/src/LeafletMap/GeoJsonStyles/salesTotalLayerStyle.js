@@ -2,7 +2,7 @@ const salesTotalLayerStyle = (value, thresholdValue) => {
   if (!value || thresholdValue < 55) {
     return {
       color: 'white',
-      fillColor: '#252525',
+      fillColor: '#ffdba5',
       opacity: 1,
       fillOpacity: 0.3,
       weight: 1
