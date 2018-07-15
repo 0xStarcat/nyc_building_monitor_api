@@ -19,6 +19,7 @@ export default class LeafletMap extends Component {
     this.neighborhoodLayerGroupRef = React.createRef()
     this.neighborhoodOverlayRef = React.createRef()
     this.bringNeighborhoodsToFront = this.bringNeighborhoodsToFront.bind(this)
+    this.onLayerAdd = this.onLayerAdd.bind(this)
     this.onBaseLayerChange = this.onBaseLayerChange.bind(this)
   }
 
@@ -27,6 +28,10 @@ export default class LeafletMap extends Component {
     this.neighborhoodLayerGroupRef.current.leafletElement.eachLayer(layer => {
       if (layer._map) layer.bringToFront()
     })
+  }
+
+  onLayerAdd(event) {
+    console.log(event)
   }
 
   onBaseLayerChange(event) {
@@ -42,13 +47,14 @@ export default class LeafletMap extends Component {
         center={position}
         zoom={this.state.zoom}
         onLoad={this.onBaseLayerChange}
+        layeradd={this.onLayerAdd}
         onBaseLayerChange={this.onBaseLayerChange}
       >
         {/*mapbox.streets-satellite*/}
         {/*https://api.tiles.mapbox.com/v4/mapbox.wheatpaste/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA*/}
         <TileLayer
           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="https://api.mapbox.com/styles/v1/starcat/cjjmb7549g61p2sn02pvb8pfn/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"
+          url="https://api.mapbox.com/styles/v1/starcat/cjjmbqf4pg6vq2rlqun4aquq9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"
         />
         <LayersMenu
           neighborhoodOverlayRef={this.neighborhoodOverlayRef}
