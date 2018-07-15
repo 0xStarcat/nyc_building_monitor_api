@@ -20,8 +20,6 @@ class App extends Component {
   }
 
   render() {
-    if (!(this.props.store.censusTracts.initialFetchCompleted || this.props.store.neighborhoods.initialFetchCompleted))
-      return <Loading />
     return (
       <div className="App">
         <Router history={history}>

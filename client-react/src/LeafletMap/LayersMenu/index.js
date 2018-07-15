@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Circle,
   FeatureGroup,
@@ -27,16 +28,49 @@ import {
   permitsTotalLayerStyle,
   racePercentWhite2010,
   raceWhitePercentChange,
-  serviceCallsPercentOpenOneMonth
+  serviceCallsPercentOpenOneMonth,
+  neighborhoodBoundaryStyle
 } from '../GeoJsonStyles'
 
-import NeighborhoodsBoundary from './NeighborhoodsBoundary'
+import GeoJSONBoundaryGroup from './GeoJSONBoundaryGroup'
 import CensusTractPopup from '../Popups/CensusTractPopup'
+import { allLayersLoaded } from '../../Store/AppState/actions'
+
 const { BaseLayer, Overlay } = LayersControl
 
-export default class LayersMenu extends Component {
+class LayersMenu extends Component {
   constructor(props) {
     super(props)
+
+    this.layerControlRef = React.createRef()
+    this.layerLoaded = this.layerLoaded.bind(this)
+    this.layersLoaded = 0
+
+    this.tileLayerLoaded = false
+    this.tileLayerLoadComplete = this.tileLayerLoadComplete.bind(this)
+    this.checkLayerLoadStatus = this.checkLayerLoadStatus.bind(this)
+  }
+
+  layerLoaded() {
+    this.layersLoaded++
+    this.checkLayerLoadStatus()
+  }
+
+  tileLayerLoadComplete() {
+    this.tileLayerLoaded = true
+    this.checkLayerLoadStatus()
+  }
+
+  checkLayerLoadStatus() {
+    if (
+      this.layerControlRef.current &&
+      this.layerControlRef.current.leafletElement._layers.length >= this.layersLoaded &&
+      this.tileLayerLoaded
+    ) {
+      this.props.dispatch(allLayersLoaded())
+      this.layersLoaded = 0
+      this.tileLayerLoaded = false
+    }
   }
 
   render() {
@@ -44,150 +78,101 @@ export default class LayersMenu extends Component {
     const rectangle = [[51.49, -0.08], [51.5, -0.06]]
 
     return (
-      <LayersControl collapsed={true} ref={this.props.layerControlRef} position={this.props.position}>
-        <BaseLayer checked name="Median Income, 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...incomeMedianLayerStyle(feature.properties.incomeMedian2017, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Median Rent, 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...rentMedianLayerStyle(feature.properties.rentMedian2017, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Rent Change, 2011 - 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...rentChangeLayerStyle(feature.properties.rentChange20112017, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="% White 2010">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...racePercentWhite2010(feature.properties.racePercentWhite2010, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Violations per Building, 2011 - 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...violationsPerBuildingLayerStyle(
-                    feature.properties.violationsPerBuilding,
-                    feature.properties.buildingsTotal
-                  )}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Percent Service Calls Open 1 Month">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...serviceCallsPercentOpenOneMonth(
-                    feature.properties.serviceCallsPercentOpenOneMonth,
-                    feature.properties.buildingsTotal
-                  )}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Total Sales, 2011 - 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...salesTotalLayerStyle(feature.properties.salesTotal, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
-        <BaseLayer name="Total Permits, 2011 - 2017">
-          <LayerGroup>
-            {this.props.store.censusTracts.features.map((feature, index) => {
-              return (
-                <GeoJSON
-                  key={`ct-${index}`}
-                  data={feature['geometry']}
-                  {...permitsTotalLayerStyle(feature.properties.permitsTotal, feature.properties.buildingsTotal)}
-                >
-                  <CensusTractPopup feature={feature} />
-                </GeoJSON>
-              )
-            })}
-          </LayerGroup>
-        </BaseLayer>
+      <LayersControl collapsed={true} ref={this.layerControlRef} position={this.props.position}>
         <Overlay ref={this.props.neighborhoodOverlayRef} checked name="Neighborhood Boundaries">
           <Pane style={{ zIndex: 400 }}>
-            <NeighborhoodsBoundary
-              neighborhoodLayerGroupRef={this.props.neighborhoodLayerGroupRef}
-              store={this.props.store}
+            <GeoJSONBoundaryGroup
+              onLoad={this.layerLoaded}
+              features={this.props.store.neighborhoods.features}
+              interactive={false}
+              style={neighborhoodBoundaryStyle}
             />
           </Pane>
         </Overlay>
         <Overlay checked name="Street and Landmark Labels">
           <Pane style={{ zIndex: 410 }}>
             <TileLayer
+              onLoad={this.tileLayerLoadComplete}
               url="https://api.mapbox.com/styles/v1/starcat/cjjm9p2z85m3j2rme8ectwukv/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RhcmNhdCIsImEiOiJjamlpYmlsc28wbjlmM3FwbXdwaXozcWEzIn0.kLmWiUbmdqNLA1atmnTXXA"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             />
           </Pane>
         </Overlay>
+        <BaseLayer checked name="Median Income, 2017">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={incomeMedianLayerStyle}
+          />
+        </BaseLayer>
+        <BaseLayer name="Median Rent, 2017">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={rentMedianLayerStyle}
+          />
+        </BaseLayer>
+        <BaseLayer name="Rent Change, 2011 - 2017">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={rentChangeLayerStyle}
+          />
+        </BaseLayer>
+        <BaseLayer name="% White 2010">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={racePercentWhite2010}
+          />
+        </BaseLayer>
+        <BaseLayer name="Violations per Building, 2011 - 2017">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={violationsPerBuildingLayerStyle}
+          />
+        </BaseLayer>
+        <BaseLayer name="Percent Service Calls Open 1 Month">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={serviceCallsPercentOpenOneMonth}
+          />
+        </BaseLayer>
+        <BaseLayer name="Total Sales, 2011 - 2017">
+          <GeoJSONBoundaryGroup
+            onLoad={this.layerLoaded}
+            interactive={true}
+            features={this.props.store.censusTracts.features}
+            style={salesTotalLayerStyle}
+          />
+        </BaseLayer>
+        <BaseLayer name="Total Permits, 2011 - 2017">
+          <LayerGroup>
+            <GeoJSONBoundaryGroup
+              onLoad={this.layerLoaded}
+              interactive={true}
+              features={this.props.store.censusTracts.features}
+              style={permitsTotalLayerStyle}
+            />
+          </LayerGroup>
+        </BaseLayer>
       </LayersControl>
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    store: state
+  }
+}
+
+export default connect(mapStateToProps)(LayersMenu)

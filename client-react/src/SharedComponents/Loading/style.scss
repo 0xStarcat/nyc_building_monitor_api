@@ -4,9 +4,14 @@
   width: 100vw;
   opacity: 0.3;
   display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 10000;
+
   .lds-ripple {
     display: inline-block;
     position: relative;
@@ -40,4 +45,3 @@
     }
   }
 }
-

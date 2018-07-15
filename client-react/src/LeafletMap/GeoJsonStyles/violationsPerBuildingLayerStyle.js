@@ -1,5 +1,5 @@
-const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
-  if (!value || thresholdValue < 55) {
+const violationsPerBuildingLayerStyle = feature => {
+  if (!feature.properties.violationsPerBuilding || feature.properties.totalBuildings < 55) {
     return {
       color: 'white',
       fillColor: 'ffdba5',
@@ -7,7 +7,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 6) {
+  } else if (feature.properties.violationsPerBuilding >= 6) {
     return {
       color: 'white',
       fillColor: '#005a32',
@@ -15,7 +15,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 5) {
+  } else if (feature.properties.violationsPerBuilding >= 5) {
     return {
       color: 'white',
       fillColor: '#238443',
@@ -23,7 +23,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 4) {
+  } else if (feature.properties.violationsPerBuilding >= 4) {
     return {
       color: 'white',
       fillColor: '#41ab5d',
@@ -31,7 +31,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 3) {
+  } else if (feature.properties.violationsPerBuilding >= 3) {
     return {
       color: 'white',
       fillColor: '#addd8e',
@@ -39,7 +39,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 2) {
+  } else if (feature.properties.violationsPerBuilding >= 2) {
     return {
       color: 'white',
       fillColor: '#d9f0a3',
@@ -47,7 +47,7 @@ const violationsPerBuildingLayerStyle = (value, thresholdValue) => {
       fillOpacity: 0.7,
       weight: 1
     }
-  } else if (value >= 1) {
+  } else if (feature.properties.violationsPerBuilding >= 1) {
     return {
       color: 'white',
       fillColor: '#ffffcc',
