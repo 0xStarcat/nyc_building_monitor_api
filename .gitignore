@@ -14,4 +14,5 @@ nyc_data_map.sqlite-journal
 cache.db.bak
 python_scripts/update.py
 
-build
+build/server/*
+build/static/*
