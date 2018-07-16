@@ -13,7 +13,7 @@ const SideBar = props => {
   }
 
   const getInactiveTransform = () => {
-    return props.appState.landscapeOrientation ? 'translateX(500px)' : 'translateY(calc(100vh + 500px))'
+    return props.appState.landscapeOrientation ? 'translateX(-500px)' : 'translateY(calc(100vh + 500px))'
   }
 
   const storeStyle = {
