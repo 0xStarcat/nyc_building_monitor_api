@@ -79,3 +79,21 @@ $second-column-left-text-padding: 8px;
     }
   }
 }
+
+@media screen and (orientation: portrait) {
+  #selectedLayer {
+    .headerBar {
+      height: 60px;
+      padding-bottom: $tiny-spacing;
+    }
+
+    .information-box {
+      font-size: 14px;
+      margin-top: -$medium-spacing;
+
+      .info-section {
+        padding-bottom: $tiny-spacing;
+      }
+    }
+  }
+}

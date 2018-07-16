@@ -8,8 +8,16 @@ import { deactivateSideBar } from '../Store/AppState/actions'
 import './style.scss'
 
 const SideBar = props => {
+  const getActiveTransform = () => {
+    return props.appState.landscapeOrientation ? 'translateX(0)' : 'translateY(calc(100vh - 500px))'
+  }
+
+  const getInactiveTransform = () => {
+    return props.appState.landscapeOrientation ? 'translateX(500px)' : 'translateY(calc(100vh + 500px))'
+  }
+
   const storeStyle = {
-    transform: props.appState.sidebarActive ? 'translateX(0)' : 'translateX(-500px)'
+    transform: props.appState.sidebarActive ? getActiveTransform() : getInactiveTransform()
   }
 
   const collapseSidebar = () => {

@@ -3,7 +3,8 @@ import * as appStateActions from '../actions'
 export const initialState = {
   allLayersLoaded: false,
   selectedLayer: null,
-  sidebarActive: false
+  sidebarActive: false,
+  landscapeOrientation: window.matchMedia('(orientation: landscape)').matches
 }
 
 export const appStateReducer = (appState = Object.freeze(initialState), action = { data: [] }) => {
