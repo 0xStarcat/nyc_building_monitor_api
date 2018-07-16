@@ -5,6 +5,7 @@ from requests_api import violation_ecb_request
 from requests_api import violation_hpd_request
 from requests_api import service_calls_dob_request
 from requests_api import service_calls_hpd_request
+from requests_api import service_calls_status_request
 from requests_api import permit_request
 
 from migrations import buildings_migration
@@ -24,6 +25,8 @@ def update_data():
   conn.commit()
   conn.close()
 
+def check_call_statuses():
+  service_calls_status_request.check_statuses()
 
 
 def request():

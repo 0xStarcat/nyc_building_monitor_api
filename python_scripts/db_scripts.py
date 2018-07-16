@@ -15,4 +15,5 @@ def update():
   log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
   api_requests.request()
   api_requests.update_data()
+  # api_requests.check_call_statuses()
 

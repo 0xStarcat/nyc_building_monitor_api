@@ -4,7 +4,9 @@ import requests
 import json 
 import csv
 
-def get_next_day_to_request(c, table_name, source):
+def get_next_day_to_request(conn, table_name, source):
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
   c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn=table_name, cn1="source", source=source))
   entry = c.fetchone() 
   if entry:
@@ -29,9 +31,11 @@ def get_start_date(table_name, source):
 
 def request_single_row_from_api(url):
   print("requesting from: ", url)
-  return json.loads(requests.get(url))
+  return json.loads(requests.get(url).text)
 
-def request_from_api(c, url, source, seed_method):
+def request_from_api(conn, url, source, seed_method=None):
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
   print("requesting from: ", url)
   offset = 0
   limit = 50000  
@@ -54,8 +58,9 @@ def request_from_api(c, url, source, seed_method):
       for data in request_data:
         data["source"] = source
 
-    seed_method(c, request_data)
-    conn.commit()
+    if seed_method:
+      seed_method(c, request_data)
+      conn.commit()
     count += len(request_data)
     print("  * " + str(count) + " records seeded.")
     request_data = []
