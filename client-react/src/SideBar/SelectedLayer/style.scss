@@ -1,7 +1,6 @@
 @import '../../SharedStyles/index.scss';
 
 $left-padding: 20px;
-$small-spacing: 20px;
 $header-margin-bottom: 20px;
 $top-padding: 12px;
 $second-column-width: 240px;
@@ -40,27 +39,15 @@ $second-column-left-text-padding: 8px;
   }
 
   button {
-    cursor: pointer;
-    border: 1px solid black;
     border-radius: 50%;
     width: 80px;
     height: 80px;
-    outline-width: 0;
+
     margin-left: ($sidebar-width / 2) - 40px;
     margin-top: -40px;
     text-align: center;
     line-height: 80px;
     display: inline-block;
-  }
-
-  button:hover {
-    border: 1px dotted black;
-    box-shadow: 0 0 20px 2px lightgray;
-  }
-
-  button:active {
-    border: 1px inset black;
-    box-shadow: 0 0 4px 2px gray;
   }
 
   .information-box {

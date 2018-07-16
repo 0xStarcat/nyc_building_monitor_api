@@ -75,7 +75,7 @@ class LayersMenu extends Component {
   }
 
   shouldComponentUpdate() {
-    return !this.props.store.appState.allLayersLoaded
+    return !this.props.store.allLayersLoaded
   }
 
   render() {
@@ -150,7 +150,11 @@ class LayersMenu extends Component {
 
 const mapStateToProps = state => {
   return {
-    store: state
+    store: {
+      neighborhoods: state.neighborhoods,
+      censusTracts: state.censusTracts,
+      allLayersLoaded: state.appState.allLayersLoaded
+    }
   }
 }
 

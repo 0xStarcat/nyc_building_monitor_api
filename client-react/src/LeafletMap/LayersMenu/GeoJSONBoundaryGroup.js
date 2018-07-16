@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { GeoJSON, LayerGroup } from 'react-leaflet'
 import CensusTractPopup from '../Popups/CensusTractPopup'
 import { createSelector } from 'reselect'
-import { handleUpdateSelectedLayer } from '../../Store/AppState/actions'
+import { updateSelectedLayer, activateSideBar } from '../../Store/AppState/actions'
 
 class GeoJSONBoundaryGroup extends Component {
   constructor(props) {
@@ -17,8 +17,8 @@ class GeoJSONBoundaryGroup extends Component {
   }
 
   onClick(event) {
-    console.log(event.target.feature.properties)
-    this.props.dispatch(handleUpdateSelectedLayer(event.target.feature.properties))
+    this.props.dispatch(activateSideBar())
+    this.props.dispatch(updateSelectedLayer(event.target.feature.properties))
   }
 
   onEachFeature(feature, layer) {

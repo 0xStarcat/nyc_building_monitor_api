@@ -10,7 +10,7 @@ import json
 import csv
 
 def get_next_day_to_request(table_name, source):
-  conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)
+  conn = sqlite3.connect('../nyc_data_map.sqlite', timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
@@ -41,7 +41,7 @@ def request_single_row_from_api(url):
   return json.loads(requests.get(url))
 
 def request_from_api(url, source, seed_method):
-  conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)
+  conn = sqlite3.connect('../nyc_data_map.sqlite', timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   

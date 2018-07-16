@@ -2,16 +2,23 @@ import * as appStateActions from '../actions'
 
 export const initialState = {
   allLayersLoaded: false,
-  selectedLayer: null
+  selectedLayer: null,
+  sidebarActive: false
 }
 
 export const appStateReducer = (appState = Object.freeze(initialState), action = { data: [] }) => {
   switch (action.type) {
-    case appStateActions.HANDLE_ALL_LAYERS_LOADED: {
+    case appStateActions.ALL_LAYERS_LOADED: {
       return { ...appState, allLayersLoaded: true }
     }
-    case appStateActions.HANDLE_UPDATE_SELECTED_LAYER: {
+    case appStateActions.UPDATE_SELECTED_LAYER: {
       return { ...appState, selectedLayer: action.data }
+    }
+    case appStateActions.ACTIVATE_SIDEBAR: {
+      return { ...appState, sidebarActive: true }
+    }
+    case appStateActions.DEACTIVATE_SIDEBAR: {
+      return { ...appState, sidebarActive: false }
     }
 
     default:

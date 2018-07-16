@@ -24,8 +24,7 @@ class App extends Component {
       <div className="App">
         <Router history={history}>
           <Switch>
-            <Route exact path="/" render={routeProps => <MapPage store={this.props.store} />} />
-            <Route exact path="/charts" render={routeProps => <ChartPage store={this.props.store} />} />
+            <Route exact path="/" render={routeProps => <MapPage />} />
             <Route exact path="/about" render={routeProps => <AboutPage />} />
           </Switch>
         </Router>
@@ -34,13 +33,4 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    store: state
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  null
-)(App)
+export default connect()(App)

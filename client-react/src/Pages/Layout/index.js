@@ -7,8 +7,7 @@ import './style.scss'
 const Layout = props => {
   return (
     <div id="pageLayout">
-      <SideBar selectedLayer={props.selectedLayer} />
-      <div id="sidebarGap" />
+      <SideBar dispatch={props.dispatch} appState={props.appState} />
       <div id="mainContent">{props.children}</div>
     </div>
   )
@@ -16,7 +15,7 @@ const Layout = props => {
 
 const mapStateToProps = state => {
   return {
-    selectedLayer: state.appState.selectedLayer
+    appState: state.appState
   }
 }
 export default connect(mapStateToProps)(Layout)

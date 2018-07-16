@@ -1,19 +1,21 @@
-export const HANDLE_ALL_LAYERS_LOADED = 'HANDLE_ALL_LAYERS_LOADED'
-export const HANDLE_UPDATE_SELECTED_LAYER = 'HANDLE_UPDATE_SELECTED_LAYER'
+export const ALL_LAYERS_LOADED = 'ALL_LAYERS_LOADED'
+export const UPDATE_SELECTED_LAYER = 'UPDATE_SELECTED_LAYER'
+export const ACTIVATE_SIDEBAR = 'ACTIVATE_SIDEBAR'
+export const DEACTIVATE_SIDEBAR = 'DEACTIVATE_SIDEBAR'
 
-export const handleAllLayersLoaded = event => ({
-  type: HANDLE_ALL_LAYERS_LOADED
+export const allLayersLoaded = event => ({
+  type: ALL_LAYERS_LOADED
 })
 
-export const handleUpdateSelectedLayer = event => ({
-  type: HANDLE_UPDATE_SELECTED_LAYER,
+export const updateSelectedLayer = event => ({
+  type: UPDATE_SELECTED_LAYER,
   data: event
 })
 
-export const allLayersLoaded = () => dispatch => {
-  dispatch(handleAllLayersLoaded())
-}
+export const activateSideBar = event => ({
+  type: ACTIVATE_SIDEBAR
+})
 
-export const updateSelectedLayer = () => dispatch => {
-  dispatch(handleUpdateSelectedLayer())
-}
+export const deactivateSideBar = event => ({
+  type: DEACTIVATE_SIDEBAR
+})

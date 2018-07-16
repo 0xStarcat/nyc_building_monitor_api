@@ -1,5 +1,4 @@
 import React from 'react'
-
 import './style.scss'
 
 const SelectedLayer = props => {
@@ -20,7 +19,7 @@ const SelectedLayer = props => {
               </span>
             </div>
           </div>
-          <button>Explore</button>
+          <button className="sidebar-button">Explore</button>
           <div className="information-box">
             <div className="info-section">
               <div className="title">
@@ -35,7 +34,7 @@ const SelectedLayer = props => {
                 <div>${props.selectedLayer.rentMedian2017}</div>
               </div>
               <div className="row-box">
-                <label>% White Population (2010)</label>
+                <label>White Population (2010)</label>
                 <div>{props.selectedLayer.racePercentWhite2010}%</div>
               </div>
               <div className="row-box">
@@ -45,7 +44,7 @@ const SelectedLayer = props => {
             </div>
             <div className="info-section">
               <div className="title">
-                <h5>2010-Present</h5>
+                <h5>2010 - Present</h5>
               </div>
               <div className="row-box">
                 <label>Rent Change</label>
