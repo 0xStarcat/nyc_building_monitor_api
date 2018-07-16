@@ -1,23 +1,14 @@
-import os,sys,inspect
-sys.path.insert(1, os.path.join(sys.path[0], '../../python_scripts/seeds'))
-
-from seeds import violations_seeds
-
 import sqlite3
 import datetime
 import requests
 import json 
 import csv
 
-def get_next_day_to_request(table_name, source):
-  conn = sqlite3.connect('../nyc_data_map.sqlite', timeout=10)
-  c = conn.cursor()
-  c.execute('pragma foreign_keys=on;')
-
+def get_next_day_to_request(c, table_name, source):
   c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn=table_name, cn1="source", source=source))
   entry = c.fetchone() 
   if entry:
-    if table_name == violations_seeds.violations_table and source != "HPD":
+    if table_name == 'violations' and source != "HPD":
       return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")
     else:
       return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
@@ -25,13 +16,13 @@ def get_next_day_to_request(table_name, source):
     return get_start_date(table_name, source)
 
 def get_today(table_name, source):
-  if table_name == violations_seeds.violations_table and source != "HPD":
+  if table_name == 'violations' and source != "HPD":
     return datetime.date.today().strftime("%Y%m%d")
   else:
     return datetime.date.today().strftime("%Y-%m-%d")
 
 def get_start_date(table_name, source):
-  if table_name == violations_seeds.violations_table and source != "HPD":
+  if table_name == 'violations' and source != "HPD":
     return "20100101"
   else:
     return "2010-01-01"
@@ -40,11 +31,7 @@ def request_single_row_from_api(url):
   print("requesting from: ", url)
   return json.loads(requests.get(url))
 
-def request_from_api(url, source, seed_method):
-  conn = sqlite3.connect('../nyc_data_map.sqlite', timeout=10)
-  c = conn.cursor()
-  c.execute('pragma foreign_keys=on;')
-  
+def request_from_api(c, url, source, seed_method):
   print("requesting from: ", url)
   offset = 0
   limit = 50000  

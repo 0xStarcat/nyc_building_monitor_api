@@ -1,8 +1,4 @@
-import os,sys,inspect
-sys.path.insert(1, os.path.join(sys.path[0], '../../python_scripts'))
-
 import sqlite3
-
 
 from requests_api import violation_dob_request
 from requests_api import violation_ecb_request

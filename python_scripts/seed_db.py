@@ -1,6 +1,3 @@
-import os,sys,inspect
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
 import sqlite3
 import json
 import csv
