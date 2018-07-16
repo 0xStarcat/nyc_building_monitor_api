@@ -13,3 +13,5 @@ nyc_data_map.sqlite-journal
 .DS_Store
 cache.db.bak
 python_scripts/update.py
+
+build
