@@ -1,14 +1,27 @@
 const { db } = require(__dirname + '/../models/sequelize.js')
 
-const constructNeighborhoodJSON = data => {
+const constructNeighborhoodBoundaryJSON = data => {
   return {
     features: data.map(row => {
-      console.log(row)
       return {
         type: 'Feature',
         geometry: JSON.parse(row['geometry']),
         properties: {
-          name: row['name'],
+          name: row.name
+        }
+      }
+    })
+  }
+}
+
+const constructNeighborhoodJSON = data => {
+  return {
+    features: data.map(row => {
+      return {
+        type: 'Feature',
+        geometry: JSON.parse(row['geometry']),
+        properties: {
+          name: row.name,
           parentBoundaryName: row.borough.name,
           incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
           incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
@@ -31,8 +44,30 @@ const constructNeighborhoodJSON = data => {
 }
 
 module.exports = {
+  boundaries: async (req, res) => {
+    db.Neighborhood.findAll({
+      include: []
+    }).then(data => {
+      res.json(constructNeighborhoodBoundaryJSON(data))
+    })
+  },
   index: async (req, res) => {
-    db.Neighborhood.findAll().then(data => {
+    db.Neighborhood.findAll({
+      include: [
+        {
+          model: db.Borough
+        },
+        {
+          model: db.Income
+        },
+        {
+          model: db.Rent
+        },
+        {
+          model: db.RacialMakeup
+        }
+      ]
+    }).then(data => {
       res.json(constructNeighborhoodJSON(data))
     })
   }

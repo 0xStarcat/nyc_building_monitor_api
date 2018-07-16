@@ -45,6 +45,7 @@ class GeoJSONBoundaryGroup extends Component {
   }
 
   render() {
+    console.log('rendering GEOboundary')
     return (
       <LayerGroup ref={this.layerGroupRef}>
         {this.props.features.map((feature, index) => {

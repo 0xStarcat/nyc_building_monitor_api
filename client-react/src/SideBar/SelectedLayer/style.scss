@@ -1,11 +1,94 @@
 @import '../../SharedStyles/index.scss';
 
+$left-padding: 20px;
+$small-spacing: 20px;
+$header-margin-bottom: 20px;
+$top-padding: 12px;
+$second-column-width: 240px;
+$second-column-left-text-padding: 8px;
+
 #selectedLayer {
+  box-sizing: border-box;
+
   .headerBar {
-    height: 100px;
     background-color: $primaryBackground;
-    .headerTitle {
-      color: white;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100px;
+    padding-left: $small-spacing;
+    padding-bottom: $small-spacing;
+
+    .headerSubTitle {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+
+      span:first-child {
+        align-self: stretch;
+        flex-grow: 0;
+        width: $second-column-width;
+      }
+
+      span:nth-child(2) {
+        align-self: stretch;
+        flex-grow: 1;
+        padding-left: $second-column-left-text-padding;
+      }
+    }
+  }
+
+  button {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    outline-width: 0;
+    margin-left: ($sidebar-width / 2) - 40px;
+    margin-top: -40px;
+    text-align: center;
+    line-height: 80px;
+    display: inline-block;
+  }
+
+  button:hover {
+    border: 1px dotted black;
+    box-shadow: 0 0 20px 2px lightgray;
+  }
+
+  button:active {
+    border: 1px inset black;
+    box-shadow: 0 0 4px 2px gray;
+  }
+
+  .information-box {
+    padding-left: $small-spacing;
+
+    .info-section {
+      border-bottom: 1px solid black;
+      margin-bottom: $small-spacing;
+      padding-bottom: $small-spacing;
+    }
+
+    .row-box {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      padding-top: $top-padding;
+
+      label {
+        flex-grow: 0;
+        width: $second-column-width;
+      }
+      div {
+        align-self: stretch;
+        border-left: 1px dotted black;
+        flex-grow: 1;
+        padding-left: $second-column-left-text-padding;
+        text-align: left;
+      }
     }
   }
 }

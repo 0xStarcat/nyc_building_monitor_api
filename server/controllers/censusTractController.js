@@ -1,6 +1,6 @@
 const { db } = require(__dirname + '/../models/sequelize.js')
 
-const constructCensusTractJson = data => {
+const constructCensusTractJson = (data, boroughData) => {
   return {
     features: data.map(row => {
       return {
@@ -9,6 +9,7 @@ const constructCensusTractJson = data => {
         properties: {
           name: row['name'],
           parentBoundaryName: row.neighborhood.name,
+          topParentBoundaryName: boroughData.find(borough => borough.id === row.borough_id).name,
           // churnPercent: parseFloat((row.total_sales / row.total_buildings) * 100),
           incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
           incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
@@ -52,25 +53,27 @@ const constructCensusTractJson = data => {
 
 module.exports = {
   index: async (req, res) => {
-    db.CensusTract.findAll({
-      include: [
-        {
-          model: db.Neighborhood
-        },
-        {
-          model: db.Income
-        },
-        {
-          model: db.Rent
-        },
-        {
-          model: db.RacialMakeup
-        }
-      ]
-    }).then(data => {
-      const json = constructCensusTractJson(data)
-      // console.log(json)
-      res.json(json)
+    db.Borough.findAll().then(boroughData => {
+      db.CensusTract.findAll({
+        include: [
+          {
+            model: db.Neighborhood
+          },
+          {
+            model: db.Income
+          },
+          {
+            model: db.Rent
+          },
+          {
+            model: db.RacialMakeup
+          }
+        ]
+      }).then(data => {
+        const json = constructCensusTractJson(data, boroughData)
+        // console.log(json)
+        res.json(json)
+      })
     })
   }
 }

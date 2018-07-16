@@ -19,17 +19,18 @@ const db = {
   sequelize: sequelize
 }
 
+db.Borough = sequelize.import(__dirname + '/Borough.js')
 db.Neighborhood = sequelize.import(__dirname + '/Neighborhood.js')
 db.CensusTract = sequelize.import(__dirname + '/CensusTract.js')
 db.Income = sequelize.import(__dirname + '/Income.js')
 db.Rent = sequelize.import(__dirname + '/Rent.js')
 db.RacialMakeup = sequelize.import(__dirname + '/RacialMakeup.js')
-// db.Building = sequelize.import(__dirname + '/Building.js')
+db.Building = sequelize.import(__dirname + '/Building.js')
 // db.Violation = sequelize.import(__dirname + '/Violation.js')
 // db.Sale = sequelize.import(__dirname + '/Sale.js')
 // db.Permit = sequelize.import(__dirname + '/Permit.js')
 // db.ServiceCall = sequelize.import(__dirname + '/ServiceCall.js')
-// db.BuildingEvent = sequelize.import(__dirname + '/BuildingEvent.js')
+db.BuildingEvent = sequelize.import(__dirname + '/BuildingEvent.js')
 
 // http://docs.sequelizejs.com/manual/tutorial/associations.html
 // db.BuildingEvent.prototype.getItem = function(options) {
@@ -42,22 +43,28 @@ db.RacialMakeup = sequelize.import(__dirname + '/RacialMakeup.js')
 //   ](options)
 // }
 
+db.Borough.hasMany(db.Neighborhood, { foreignKey: 'borough_id', sourceKey: 'id' })
+db.Borough.hasMany(db.CensusTract, { foreignKey: 'borough_id', sourceKey: 'id' })
+
+db.Neighborhood.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.Neighborhood.hasMany(db.RacialMakeup, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.CensusTract, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 // db.Neighborhood.hasMany(db.Building, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
+// db.Neighborhood.hasMany(db.BuildingEvent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Rent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Income, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 
-// db.CensusTract.belongsTo(db.RacialMakeup, { foreignKey: 'racial_makeup_id', targetKey: 'id' })
+db.CensusTract.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.CensusTract.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
-// db.CensusTract.hasMany(db.Building, { foreignKey: 'census_tract_id', sourceKey: 'id' })
-// db.CensusTract.hasMany(db.BuildingEvent, { foreignKey: 'census_tract_id', sourceKey: 'id' })
+db.CensusTract.hasMany(db.Building, { foreignKey: 'census_tract_id', sourceKey: 'id' })
+db.CensusTract.hasMany(db.BuildingEvent, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 db.CensusTract.hasOne(db.Rent, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 db.CensusTract.hasOne(db.Income, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 db.CensusTract.hasOne(db.RacialMakeup, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 
-// db.Building.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
-// db.Building.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
+// db.Building.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
+db.Building.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
+db.Building.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
 // db.Building.hasMany(db.Sale, { foreignKey: 'building_id', sourceKey: 'id' })
 // db.Building.hasMany(db.Permit, { foreignKey: 'building_id', sourceKey: 'id' })
 // db.Building.hasMany(db.Violation, { foreignKey: 'building_id', sourceKey: 'id' })

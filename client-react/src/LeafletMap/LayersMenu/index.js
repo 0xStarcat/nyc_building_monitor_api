@@ -84,7 +84,7 @@ class LayersMenu extends Component {
 
     return (
       <LayersControl collapsed={true} ref={this.layerControlRef} position={this.props.position}>
-        <Overlay ref={this.props.neighborhoodOverlayRef} checked name="Neighborhood Boundaries">
+        {/*<Overlay ref={this.props.neighborhoodOverlayRef} checked name="Neighborhood Boundaries">
           <Pane style={{ zIndex: 400 }}>
             <GeoJSONBoundaryGroup
               onLoad={this.layerLoaded}
@@ -93,7 +93,7 @@ class LayersMenu extends Component {
               style={neighborhoodBoundaryStyle}
             />
           </Pane>
-        </Overlay>
+        </Overlay>*/}
         <Overlay checked name="Street and Landmark Labels">
           <Pane style={{ zIndex: 410 }}>
             <TileLayer

@@ -16,7 +16,7 @@ import './App.scss'
 class App extends Component {
   componentWillMount() {
     this.props.dispatch(readCensusTracts())
-    this.props.dispatch(readNeighborhoods())
+    // this.props.dispatch(readNeighborhoods())
   }
 
   render() {
