@@ -34,6 +34,22 @@ module.exports = function(sequelize, DataTypes) {
       neighborhood_id: {
         type: DataTypes.INTEGER,
         field: 'neighborhood_id'
+      },
+      totalViolations: {
+        type: DataTypes.INTEGER,
+        field: 'total_violations'
+      },
+      totalSales: {
+        type: DataTypes.INTEGER,
+        field: 'total_sales'
+      },
+      totalServiceCalls: {
+        type: DataTypes.INTEGER,
+        field: 'total_service_calls'
+      },
+      totalServiceCallsOpenOverMonth: {
+        type: DataTypes.INTEGER,
+        field: 'total_service_calls_open_over_month'
       }
     },
     {

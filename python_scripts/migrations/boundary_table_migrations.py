@@ -16,6 +16,15 @@ def update_all(c, conn):
     conn.commit()
 
 def update_data(c, table):
+  if table == tables[0]:
+    column_name = 'census_tracts_id'
+  if table == tables[1]:
+    column_name = 'neighborhoods_id'
+  if table == tables[2]:
+    column_name = 'community_districts_id'
+  if table == tables[3]:
+    column_name = 'boroughs_id'
+
   c.execute('SELECT * FROM {tn}'\
     .format(tn=table))
   
@@ -25,28 +34,28 @@ def update_data(c, table):
     print(table + " - updating row " + str(index) + '/' + str(len(results)))
 
     # Violations
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND census_tract_id={id}'\
-      .format(event='violation', id=row[0]))
+    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+      .format(event='violation', cn=column_name, id=row[0]))
 
     violations_count = len(c.fetchall())
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col1, value=violations_count, id=row[0]))
 
-    # # sales
+    # sales
 
-    # c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND census_tract_id={id}'\
-    #   .format(event='sale', id=row[0]))
+    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+      .format(event='sale', cn=column_name, id=row[0]))
 
-    # sales_count = len(c.fetchall())
+    sales_count = len(c.fetchall())
 
-    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-    #   .format(tn=table, cn=col2, value=sales_count, id=row[0]))
+    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
+      .format(tn=table, cn=col2, value=sales_count, id=row[0]))
 
     # permits
 
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND census_tract_id={id}'\
-      .format(event='permit', id=row[0]))
+    c.execute('SELECT * FROM permits WHERE {cn}={id}'\
+      .format(event='permit', cn=column_name, id=row[0]))
 
     permits_count = len(c.fetchall())
 
@@ -55,8 +64,8 @@ def update_data(c, table):
 
     # service calls
 
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND census_tract_id={id}'\
-      .format(event='service_call', id=row[0]))
+    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+      .format(event='service_call', cn=column_name, id=row[0]))
 
     service_calls = c.fetchall()
     service_calls_count = len(service_calls)

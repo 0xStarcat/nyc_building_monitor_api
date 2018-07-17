@@ -23,12 +23,12 @@ import config
 sqlite_file = config.DATABASE_URL
 
 def drop_buildings_data_tables(c):
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=building_events_seeds.building_events_table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=service_calls_seeds.service_calls_table))
+  # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=building_events_seeds.building_events_table))
+  # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=service_calls_seeds.service_calls_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permits_seeds.permits_table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
+  # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
+  # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
 
 def drop_buildings_table(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=buildings_seeds.buildings_table))
@@ -131,7 +131,7 @@ def seed():
 
   # seed_boundary_tables(c, conn)
   # seed_buildings(c, conn)
-  create_buildings_data_tables(c)
+  # create_buildings_data_tables(c)
   # seed_buildings_data(c)  
   conn.commit()
   conn.close()
@@ -141,7 +141,7 @@ def test():
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM census_tracts')
+  c.execute('SELECT * FROM sales')
   all_rows = c.fetchall()
   print(all_rows[0])
 
@@ -165,36 +165,3 @@ def test():
     # print(row[1])
   conn.commit()
   conn.close()
-
-def fix_sources():
-  conn = sqlite3.connect(sqlite_file, timeout=10)
-  c = conn.cursor()
-
-  c.execute('SELECT * FROM violations WHERE source="dob"')
-  entries = c.fetchall()
-  for index, row in enumerate(entries):
-    print("updating violations dob: " + str(index) + "/" + str(len(entries)))
-    c.execute('UPDATE violations SET source=\'{value}\' WHERE id={id}'\
-      .format(value="DOB", id=row[0]))
-  conn.commit()
-  c.execute('SELECT * FROM violations WHERE source="ecb"')
-  entries = c.fetchall()
-  for index, row in enumerate(entries):
-    print("updating violations ecb: " + str(index) + "/" + str(len(entries)))
-    c.execute('UPDATE violations SET source=\'{value}\' WHERE id={id}'\
-      .format(value="ECB", id=row[0]))
-  conn.commit()
-  c.execute('SELECT * FROM violations WHERE source="hpd"')
-  entries = c.fetchall()
-  for index, row in enumerate(entries):
-    print("updating violations hpd: " + str(index) + "/" + str(len(entries)))
-    c.execute('UPDATE violations SET source=\'{value}\' WHERE id={id}'\
-      .format(value="HPD", id=row[0]))
-  conn.commit()
-  c.execute('SELECT * FROM permits WHERE source="dob"')
-  entries = c.fetchall()
-  for index, row in enumerate(entries):
-    print("updating permits dob: " + str(index) + "/" + str(len(entries)))
-    c.execute('UPDATE permits SET source=\'{value}\' WHERE id={id}'\
-      .format(value="DOB", id=row[0]))
-  conn.commit()
