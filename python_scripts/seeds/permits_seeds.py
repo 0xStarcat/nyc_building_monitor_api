@@ -73,11 +73,11 @@ def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER REFERENCES {ref_table1}(id), {col2} INTEGER REFERENCES {ref_table2}(id), {col3} INTEGER REFERENCES {ref_table3}(id), {col4} INTEGER REFERENCES {ref_table4}(id), {col5} INTEGER REFERENCES {ref_table5}(id), {col6} TEXT, {col7} TEXT, {col8} TEXT, {col9} TEXT, {col10} TEXT, {col11} TEXT, {col12} TEXT, {col13} TEXT, {col14} TEXT, {col15} TEXT)'\
     .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3, col4=permit_col4, col5=permit_col5, col6=permit_col6, col7=permit_col7, col8=permit_col8, col9=permit_col9, col10=permit_col10, col11=permit_col11, col12=permit_col12, col13=permit_col13, col14=permit_col14, col15=permit_col15, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table, ref_table5=permit_clusters_seeds.permit_clusters_table))
 
-  c.execute('CREATE INDEX idx_permit_census_tract_id ON {tn}({col1})'.format(tn=permits_table, col1=permit_col1))
-  c.execute('CREATE INDEX idx_permit_neighborhood_id ON {tn}({col2})'.format(tn=permits_table, col2=permit_col1))
-  c.execute('CREATE INDEX idx_permit_community_district_id ON {tn}({col3})'.format(tn=permits_table, col3=permit_col1))
-  c.execute('CREATE INDEX idx_permit_borough_id ON {tn}({col4})'.format(tn=permits_table, col4=permit_col1))
-  c.execute('CREATE INDEX idx_permit_permit_cluster_id ON {tn}({col5})'.format(tn=permits_table, col5=permit_col1))
+  c.execute('CREATE INDEX idx_permit_borough_id ON {tn}({col1})'.format(tn=permits_table, col4=permit_col1))
+  c.execute('CREATE INDEX idx_permit_community_district_id ON {tn}({col2})'.format(tn=permits_table, col3=permit_col2))
+  c.execute('CREATE INDEX idx_permit_neighborhood_id ON {tn}({col3})'.format(tn=permits_table, col2=permit_col3))
+  c.execute('CREATE INDEX idx_permit_census_tract_id ON {tn}({col4})'.format(tn=permits_table, col1=permit_col4))
+  c.execute('CREATE INDEX idx_permit_permit_cluster_id ON {tn}({col5})'.format(tn=permits_table, col5=permit_col5))
   c.execute('CREATE INDEX idx_permit_type ON {tn}({col9})'.format(tn=permits_table, col9=permit_col5))
   c.execute('CREATE INDEX idx_permit_owner_business_name ON {tn}({col10})'.format(tn=permits_table, col10=permit_col6))
   c.execute('CREATE INDEX idx_permit_street_name_and_house_number ON {tn}({col15}, {col14})'.format(tn=permits_table, col14=permit_col10, col15=permit_col11))
@@ -131,7 +131,7 @@ def seed_permits_from_json(c, permit_json):
       print(" ++ seeding a cluster", permit_cluster_id)
 
     # create permit
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14} ,{col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14} ,{col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3, col4=permit_col4, col5=permit_col5, col6=permit_col6, col7=permit_col7, col8=permit_col8, col9=permit_col9, col10=permit_col10, col11=permit_col11, col12=permit_col12, col13=permit_col13, col14=permit_col14, col15=permit_col15), (fkeys[0], fkeys[1], fkeys[2], fkeys[3], permit_cluster_id, str(date), str(geometry), str(source), str(permit_type), str(owner_business_name), str(owner_first_name), str(owner_last_name), str(job_start_date), str(house_number), str(street_name)))
 
     csv_helpers.write_csv(c, permit, config.PERMITS_CSV_URL, index == 0)
