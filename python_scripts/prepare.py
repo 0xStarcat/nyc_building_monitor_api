@@ -1,5 +1,7 @@
-import db_scripts
-from seeds import sales_seeds
-db_scripts.prepare()
+import seed_db
+
+
+seed_db.drop()
+seed_db.seed()
 
 

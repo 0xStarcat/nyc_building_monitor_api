@@ -13,6 +13,8 @@ from seeds import racial_makeup_seeds
 from seeds import violations_seeds
 from seeds import sales_seeds
 from seeds import permits_seeds
+from seeds import permit_clusters_seeds
+
 from seeds import service_calls_seeds
 from seeds import building_events_seeds
 
@@ -23,6 +25,7 @@ sqlite_file = 'nyc_data_map.sqlite'
 def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=building_events_seeds.building_events_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=service_calls_seeds.service_calls_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permits_seeds.permits_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
@@ -46,6 +49,7 @@ def clear_csvs():
 
 def create_buildings_data_tables(c):
   sales_seeds.create_table(c)
+  permit_clusters_seeds.create_table(c)
   permits_seeds.create_table(c)
   service_calls_seeds.create_table(c)
   violations_seeds.create_table(c)
@@ -55,7 +59,7 @@ def seed_buildings_data(c):
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
   sales_seeds.seed_sales(c, sales_csv)
 
-def seed_buildings(c):
+def seed_buildings(c, conn):
   buildings_seeds.create_table(c)
 
   mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
@@ -82,7 +86,7 @@ def seed_buildings(c):
   buildings_seeds.add_counts_to_boundary_data(c)
   conn.commit()
 
-def seed_boundary_tables(c):
+def seed_boundary_tables(c, conn):
   borough_json = json.load(open('data/boundary_data/boroughs.geojson'))
   community_district_json = json.load(open('data/boundary_data/community_districts.geojson'))
   neighborhood_json = json.load(open('data/boundary_data/neighborhoods.geojson'))
@@ -123,11 +127,12 @@ def seed():
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
 
-  # seed_boundary_tables(c)
-  # seed_buildings(c)
-  # create_buildings_data_tables(c)
-  seed_buildings_data(c)  
+  # seed_boundary_tables(c, conn)
+  # seed_buildings(c, conn)
+  create_buildings_data_tables(c)
+  # seed_buildings_data(c)  
   conn.commit()
   conn.close()
 
@@ -136,9 +141,9 @@ def test():
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM census_tracts WHERE total_service_calls_open_over_month > 0')
+  c.execute('SELECT * FROM census_tracts')
   all_rows = c.fetchall()
-  print(len(all_rows))
+  print(all_rows[0])
 
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()

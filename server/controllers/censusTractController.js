@@ -5,7 +5,7 @@ const constructCensusTractJson = (data, boroughData) => {
     features: data.map(row => {
       return {
         type: 'Feature',
-        geometry: JSON.parse(row['geometry']),
+        geometry: JSON.parse(row.geometry),
         properties: {
           id: row.id,
           name: row.name,
@@ -39,7 +39,8 @@ const constructCensusTractJson = (data, boroughData) => {
           // ),
           // violationsAverageBeforeSalePerBuilding: parseFloat(row.avg_violation_count_3years_before_sale),
           violationsTotal: parseFloat(row.total_violations),
-          violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2))
+          violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
+          representativePoint: JSON.parse(row.representativePoint)
           // violationsNonCommunityPerBuilding: parseFloat(
           //   ((row.total_violations - row.total_service_calls_with_violation_result) / row.total_buildings).toFixed(2)
           // ),

@@ -50,6 +50,10 @@ module.exports = function(sequelize, DataTypes) {
       total_service_calls_open_over_month: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls_open_over_month'
+      },
+      representativePoint: {
+        type: DataTypes.JSON,
+        field: 'representative_point'
       }
       // total_service_calls_with_violation_result: {
       //   type: DataTypes.INTEGER,

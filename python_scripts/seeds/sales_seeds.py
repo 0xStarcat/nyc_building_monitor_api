@@ -81,11 +81,11 @@ def get_building_match(c, sale):
 
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} INT)'\
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} INT, UNIQUE({col1}, {col2}) ON CONFLICT REPLACE)'\
     .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, bldg_table=buildings_seeds.buildings_table))
 
   c.execute('CREATE INDEX idx_sale_building_id ON {tn}({col1})'.format(tn=sales_table, col1=sale_col1))
-
+  c.execute('CREATE TRIGGER insert_sale_with_price BEFORE INSERT ON {tn} FOR EACH ROW WHEN (SELECT price FROM {tn} WHERE date = NEW.date AND building_id = NEW.building_id) > NEW.price BEGIN SELECT RAISE(IGNORE); END;'.format(tn=sales_table))
 def seed_sales(c, sale_csv):
   print("Seeding sales...")
 
@@ -111,6 +111,7 @@ def seed_sales(c, sale_csv):
     # Create Sale
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}) VALUES ({building_id}, \'{date}\', \"{price}\")'\
       .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, building_id=building_id, date=date, price=price))
+
 
     insertion_id = c.lastrowid
 

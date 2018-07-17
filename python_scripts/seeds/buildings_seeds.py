@@ -4,7 +4,7 @@ from seeds import community_districts_seeds
 from seeds import neighborhoods_seeds
 from seeds import census_tracts_seeds
 
-from shapely.geometry import mapping, shape, Point
+from shapely.geometry import shape, Point
 
 buildings_table = 'buildings'
 bldg_col1 = 'borough_id'

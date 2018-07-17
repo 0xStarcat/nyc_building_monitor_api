@@ -1,2 +1,4 @@
-import db_scripts
-db_scripts.test()
+import seed_db
+
+seed_db.test()
+
