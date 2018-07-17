@@ -45,5 +45,7 @@ def request():
   log_helper.write_to_log(" ++ hpd violations added: " + str(r) + "\n")
   r = permit_request.make_request(conn)
   log_helper.write_to_log(" ++ permits added: " + str(r) + "\n")
+  conn.commit()
+  conn.close()
 
 

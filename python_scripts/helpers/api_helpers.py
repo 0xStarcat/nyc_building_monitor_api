@@ -66,7 +66,6 @@ def request_from_api(conn, url, source, seed_method=None):
     request_data = []
 
   conn.commit()
-  conn.close()
 
   return count
 
