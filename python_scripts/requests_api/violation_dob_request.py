@@ -4,7 +4,9 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from helpers import api_helpers
 from seeds import violations_seeds
 import sqlite3
-conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)
+import config
+
+conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
 
 # Boro = 3 (brooklyn)
 # Issued between dates

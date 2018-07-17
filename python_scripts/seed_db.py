@@ -19,8 +19,8 @@ from seeds import service_calls_seeds
 from seeds import building_events_seeds
 
 from helpers import csv_helpers
-
-sqlite_file = 'nyc_data_map.sqlite'
+import config
+sqlite_file = config.DATABASE_URL
 
 def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=building_events_seeds.building_events_table))

@@ -6,9 +6,10 @@ from helpers import api_helpers
 from seeds import service_calls_seeds
 
 table = service_calls_seeds.service_calls_table
-  
+import config
+
 def check_statuses():
-  conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)
+  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 

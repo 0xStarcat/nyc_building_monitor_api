@@ -12,9 +12,10 @@ from migrations import buildings_migration
 from migrations import boundary_table_migrations
 
 from helpers import log_helper
+import config
 
 def update_data():
-  conn = sqlite3.connect('nyc_data_map.sqlite', timeout=10)
+  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   
@@ -30,17 +31,19 @@ def check_call_statuses():
 
 
 def request():
-  r = service_calls_dob_request.make_request()
+  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
+
+  r = service_calls_dob_request.make_request(conn)
   log_helper.write_to_log(" ++ dob service calls added: " + str(r) + "\n")
-  r = service_calls_hpd_request.make_request()
+  r = service_calls_hpd_request.make_request(conn)
   log_helper.write_to_log(" ++ hpd service calls added: " + str(r) + "\n")
-  r = violation_dob_request.make_request()
+  r = violation_dob_request.make_request(conn)
   log_helper.write_to_log(" ++ dob violations added: " + str(r) + "\n")
-  r = violation_ecb_request.make_request()
+  r = violation_ecb_request.make_request(conn)
   log_helper.write_to_log(" ++ ecb violations added: " + str(r) + "\n")
-  r = violation_hpd_request.make_request()
+  r = violation_hpd_request.make_request(conn)
   log_helper.write_to_log(" ++ hpd violations added: " + str(r) + "\n")
-  r = permit_request.make_request()
+  r = permit_request.make_request(conn)
   log_helper.write_to_log(" ++ permits added: " + str(r) + "\n")
 
 
