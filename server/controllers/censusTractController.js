@@ -7,7 +7,8 @@ const constructCensusTractJson = (data, boroughData) => {
         type: 'Feature',
         geometry: JSON.parse(row['geometry']),
         properties: {
-          name: row['name'],
+          id: row.id,
+          name: row.name,
           parentBoundaryName: row.neighborhood.name,
           topParentBoundaryName: boroughData.find(borough => borough.id === row.borough_id).name,
           // churnPercent: parseFloat((row.total_sales / row.total_buildings) * 100),
@@ -57,21 +58,24 @@ module.exports = {
       db.CensusTract.findAll({
         include: [
           {
-            model: db.Neighborhood
+            model: db.Neighborhood,
+            attributes: ['name']
           },
           {
-            model: db.Income
+            model: db.Income,
+            attributes: ['median_income_2017', 'median_income_change_2011_2017']
           },
           {
-            model: db.Rent
+            model: db.Rent,
+            attributes: ['median_rent_2017', 'median_rent_change_2011_2017']
           },
           {
-            model: db.RacialMakeup
+            model: db.RacialMakeup,
+            attributes: ['percent_white_2010']
           }
         ]
       }).then(data => {
         const json = constructCensusTractJson(data, boroughData)
-        // console.log(json)
         res.json(json)
       })
     })

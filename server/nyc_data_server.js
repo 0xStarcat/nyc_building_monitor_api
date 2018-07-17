@@ -1,5 +1,8 @@
 const { app } = require('./app')
-const port = 5001
-const server = app.listen(port, () => console.log(`Listening on port ${port}`))
+const port = process.env.NODE_ENV !== 'test' ? 5001 : 1234
 
-module.exports = { server }
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => console.log(`Listening on port ${port}`))
+}
+
+module.exports = app

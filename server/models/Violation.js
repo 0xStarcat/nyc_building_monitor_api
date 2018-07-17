@@ -11,13 +11,21 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'building_id'
       },
-      issue_date: {
+      date: {
         type: DataTypes.STRING,
-        field: 'issue_date'
+        field: 'date'
       },
       description: {
         type: DataTypes.STRING,
         field: 'description'
+      },
+      penaltyImposed: {
+        type: DataTypes.STRING,
+        field: 'penalty_imposed'
+      },
+      source: {
+        type: DataTypes.STRING,
+        field: 'source'
       }
     },
     {

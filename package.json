@@ -1,11 +1,13 @@
 {
   "name": "nyc_building_justice",
   "version": "1.0.0",
-  "description": "A NYC buildings accountability site monitoring building violations, 311 calls, sales, and permits across all five boroughs.",
+  "description":
+    "A NYC buildings accountability site monitoring building violations, 311 calls, sales, and permits across all five boroughs.",
   "main": "server/nyc_data_server.js",
   "scripts": {
     "nodemon": "nodemon server/nyc_data_server.js",
     "start": "pm2 start server/nyc_data_server.js",
+    "test": "NODE_ENV=test jest --watch --forceExit",
     "babel_server": "babel server --out-dir build/server"
   },
   "author": "",
@@ -18,12 +20,16 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "express": "^4.16.3",
+    "jest": "^23.4.1",
+    "nock": "^9.4.2",
     "nodemon": "^1.17.5",
     "sequelize": "^4.38.0",
     "sqlite3": "^4.0.1",
     "webpack": "3.8.1"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
+    "supertest": "^3.1.0",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.8"
   }

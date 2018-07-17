@@ -6,6 +6,8 @@ const sequelize = new Sequelize('sqlite://nyc_data_map.sqlite', {
     acquire: 30000,
     idle: 10000
   },
+  logging: false,
+  // logging: process.env.NODE_ENV === 'test' ? false : true,
   define: {
     timestamps: false
   },
@@ -26,10 +28,10 @@ db.Income = sequelize.import(__dirname + '/Income.js')
 db.Rent = sequelize.import(__dirname + '/Rent.js')
 db.RacialMakeup = sequelize.import(__dirname + '/RacialMakeup.js')
 db.Building = sequelize.import(__dirname + '/Building.js')
-// db.Violation = sequelize.import(__dirname + '/Violation.js')
-// db.Sale = sequelize.import(__dirname + '/Sale.js')
-// db.Permit = sequelize.import(__dirname + '/Permit.js')
-// db.ServiceCall = sequelize.import(__dirname + '/ServiceCall.js')
+db.Violation = sequelize.import(__dirname + '/Violation.js')
+db.Sale = sequelize.import(__dirname + '/Sale.js')
+db.Permit = sequelize.import(__dirname + '/Permit.js')
+db.ServiceCall = sequelize.import(__dirname + '/ServiceCall.js')
 db.BuildingEvent = sequelize.import(__dirname + '/BuildingEvent.js')
 
 // http://docs.sequelizejs.com/manual/tutorial/associations.html
@@ -65,10 +67,10 @@ db.CensusTract.hasOne(db.RacialMakeup, { foreignKey: 'census_tract_id', sourceKe
 // db.Building.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.Building.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
 db.Building.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
-// db.Building.hasMany(db.Sale, { foreignKey: 'building_id', sourceKey: 'id' })
-// db.Building.hasMany(db.Permit, { foreignKey: 'building_id', sourceKey: 'id' })
-// db.Building.hasMany(db.Violation, { foreignKey: 'building_id', sourceKey: 'id' })
-// db.Building.hasMany(db.ServiceCall, { foreignKey: 'building_id', sourceKey: 'id' })
+db.Building.hasMany(db.Sale, { foreignKey: 'building_id', sourceKey: 'id' })
+db.Building.hasMany(db.Permit, { foreignKey: 'building_id', sourceKey: 'id' })
+db.Building.hasMany(db.Violation, { foreignKey: 'building_id', sourceKey: 'id' })
+db.Building.hasMany(db.ServiceCall, { foreignKey: 'building_id', sourceKey: 'id' })
 
 db.RacialMakeup.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
 db.RacialMakeup.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
@@ -79,12 +81,12 @@ db.Income.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 
 db.Rent.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
 db.Rent.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
 
-// db.Sale.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
+db.Sale.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
 
-// db.Permit.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
-// db.ServiceCall.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
+db.Permit.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
+db.ServiceCall.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
 
-// db.Violation.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
+db.Violation.belongsTo(db.Building, { foreignKey: 'building_id', targetKey: 'id' })
 // db.Violation.belongsTo(db.BuildingEvent, { foreignKey: 'eventable_id', constraints: false, as: 'violation' })
 
 // db.BuildingEvent.hasMany(db.Violation, {

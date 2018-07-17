@@ -11,9 +11,9 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'building_id'
       },
-      sale_date: {
+      date: {
         type: DataTypes.STRING,
-        field: 'sale_date'
+        field: 'date'
       },
       price: {
         type: DataTypes.INTEGER,

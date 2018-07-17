@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
         field: 'id',
         primaryKey: true
       },
+      date: {
+        type: DataTypes.STRING,
+        field: 'date'
+      },
       building_id: {
         type: DataTypes.INTEGER,
         field: 'building_id'
@@ -22,6 +26,22 @@ module.exports = function(sequelize, DataTypes) {
       resolution_violation: {
         type: DataTypes.BOOLEAN,
         field: 'resolution_violation'
+      },
+      resolution_no_action: {
+        type: DataTypes.BOOLEAN,
+        field: 'resolution_no_action'
+      },
+      unable_to_investigate: {
+        type: DataTypes.BOOLEAN,
+        field: 'unable_to_investigate'
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        field: 'status'
+      },
+      open_over_month: {
+        type: DataTypes.BOOLEAN,
+        field: 'open_over_month'
       }
     },
     {

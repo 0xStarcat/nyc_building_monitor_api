@@ -11,9 +11,9 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'building_id'
       },
-      issue_date: {
+      date: {
         type: DataTypes.STRING,
-        field: 'issue_date'
+        field: 'date'
       },
       geometry: {
         type: DataTypes.JSON,

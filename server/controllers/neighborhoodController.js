@@ -22,7 +22,7 @@ const constructNeighborhoodJSON = data => {
         geometry: JSON.parse(row['geometry']),
         properties: {
           name: row.name,
-          parentBoundaryName: row.borough.name,
+          // parentBoundaryName: row.borough.name,
           incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
           incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
           rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
@@ -55,16 +55,16 @@ module.exports = {
     db.Neighborhood.findAll({
       include: [
         {
-          model: db.Borough
+          model: db.Income,
+          attributes: ['median_income_2017', 'median_income_change_2011_2017']
         },
         {
-          model: db.Income
+          model: db.Rent,
+          attributes: ['median_rent_2017', 'median_rent_change_2011_2017']
         },
         {
-          model: db.Rent
-        },
-        {
-          model: db.RacialMakeup
+          model: db.RacialMakeup,
+          attributes: ['percent_white_2010']
         }
       ]
     }).then(data => {

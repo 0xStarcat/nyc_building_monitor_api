@@ -17,6 +17,7 @@ app.use((req, res, next) => {
 })
 const neighborhoods = require('./routes/neighborhoodRoutes')
 const census_tracts = require('./routes/censusTractRoutes')
+const buildings = require('./routes/buildingsRoutes')
 
 //Define what happens then a user visits the root route
 app.get('/', function(req, res) {
@@ -31,27 +32,11 @@ app.get('/', function(req, res) {
 })
 
 app.use('/neighborhoods', neighborhoods)
-app.use('/tracts', census_tracts)
+app.use('/census-tracts', census_tracts)
+app.use('/buildings', buildings)
 
 app.get('/boundaries/:type/:fileName', function(req, res) {
   var file = './data/boundary_data/' + req.params['type'] + '/' + req.params['fileName'] + '.geojson'
-  fs.readFile(file, function(err, content) {
-    res.write(content)
-    res.end()
-  })
-})
-
-app.get('/violations/:fileName', function(req, res) {
-  var file = './data/violations_data/geojson/' + req.params['fileName'] + '.geojson'
-  fs.readFile(file, function(err, content) {
-    res.write(content)
-    res.end()
-  })
-})
-
-app.get('/buildings/:fileName', function(req, res) {
-  var file = './data/buildings_data/geojson/' + req.params['fileName'] + '.geojson'
-  console.log(file)
   fs.readFile(file, function(err, content) {
     res.write(content)
     res.end()
