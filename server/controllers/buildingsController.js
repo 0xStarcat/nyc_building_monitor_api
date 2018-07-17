@@ -50,8 +50,13 @@ module.exports = {
           ]
         }
       ]
-    }).then(data => {
-      res.json(constructBuildingJson(data))
     })
+      .then(data => {
+        res.json(constructBuildingJson(data))
+      })
+      .catch(data => {
+        console.log('ERROR', data)
+        res.json({ errors: data })
+      })
   }
 }

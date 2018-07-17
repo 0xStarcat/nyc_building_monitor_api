@@ -6,7 +6,7 @@ const sequelize = new Sequelize('sqlite://nyc_data_map.sqlite', {
     acquire: 30000,
     idle: 10000
   },
-  logging: false,
+  // logging: false,
   // logging: process.env.NODE_ENV === 'test' ? false : true,
   define: {
     timestamps: false
