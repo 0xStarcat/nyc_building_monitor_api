@@ -6,7 +6,8 @@ from seeds import buildings_seeds
 from seeds import building_events_seeds
 import datetime
 from helpers import csv_helpers
- 
+import config
+
 violations_table = 'violations'
 vio_col1 = 'building_id'
 vio_col2 = 'date'
@@ -97,4 +98,4 @@ def seed_violations(c, violation_json):
       .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'violation', insertion_id, date))
 
     # write csv row
-    csv_helpers.write_csv(c, violation, 'data/violations_data/csv/nyc_violations_data.csv', index == 0)
+    csv_helpers.write_csv(c, violation, config.VIOLATIONS_CSV_URL, index == 0)

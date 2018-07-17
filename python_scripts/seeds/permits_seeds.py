@@ -4,7 +4,7 @@ from seeds import building_events_seeds
 from seeds import permit_clusters_seeds
 
 from helpers import csv_helpers
-
+import config
 
 from shapely.geometry import Point, mapping
 import datetime
@@ -115,5 +115,5 @@ def seed_permits_from_json(c, permit_json):
       c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
         .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'permit', insertion_id, date))
 
-    csv_helpers.write_csv(c, permit, 'data/permit_data/csv/nyc_permits_data.csv', index == 0)
+    csv_helpers.write_csv(c, permit, config.PERMITS_CSV_URL, index == 0)
 

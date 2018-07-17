@@ -3,6 +3,7 @@ from seeds import buildings_seeds
 from seeds import building_events_seeds
 import datetime
 from helpers import csv_helpers
+import config 
 
 service_calls_table = 'service_calls'
 call_col1 = 'building_id'
@@ -117,4 +118,4 @@ def seed_service_calls_from_json(c, service_calls_json):
       .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'service_call', insertion_id, date))
 
     # write csv row
-    csv_helpers.write_csv(c, call, 'data/service_calls_data/csv/nyc_service_calls_data.csv', index == 0)
+    csv_helpers.write_csv(c, call, config.SERVICE_CALLS_CSV_URL, index == 0)

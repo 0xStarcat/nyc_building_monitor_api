@@ -53,3 +53,12 @@
 ***
 03:57PM on July 17, 2018
  ++ dob service calls added: 0
+06:03PM on July 17, 2018
+ ++ dob service calls added: 0
+ ++ hpd service calls added: 0
+ ++ dob violations added: 0
+ ++ ecb violations added: 0
+ ++ hpd violations added: 227
+ ++ permits added: 53
+ ++ boundary counts updated
+***
