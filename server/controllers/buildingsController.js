@@ -3,17 +3,17 @@ const { db } = require(__dirname + '/../models/sequelize.js')
 const constructBuildingJson = data => {
   return {
     features: data.map(row => {
-      console.log(row)
       return {
         type: 'Feature',
         geometry: JSON.parse(row['geometry']),
         properties: {
-          violations: row.violations,
-          sales: row.sales,
-          totalViolations: row.totalViolations,
-          totalSales: row.totalSales,
-          totalServiceCalls: row.totalServiceCalls,
-          totalServiceCallsOpenOverMonth: row.totalServiceCallsOpenOverMonth
+          name: row.address,
+          parentBoundaryName: row.neighborhood.name,
+          topParentBoundaryName: row.borough.name,
+          violationsTotal: row.totalViolations,
+          salesTotal: row.totalSales,
+          serviceCallsTotal: row.totalServiceCalls,
+          serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth
         }
       }
     })
@@ -25,7 +25,17 @@ module.exports = {
     db.Building.findAll({
       where: {
         census_tract_id: req.params['id']
-      }
+      },
+      include: [
+        {
+          model: db.Neighborhood,
+          attributes: ['name']
+        },
+        {
+          model: db.Borough,
+          attributes: ['name']
+        }
+      ]
     })
       .then(data => {
         res.json(constructBuildingJson(data))

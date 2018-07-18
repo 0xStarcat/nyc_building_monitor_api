@@ -32,7 +32,7 @@ def convert_building_polygon_to_point(geometry):
   return polygon.representative_point()
 
 def find_foreign_keys(c, building):
-
+  # TODO - see if geo matching or data matching produces better results.
   if building["properties"]["CT2010"]: 
     c.execute('SELECT * FROM census_tracts WHERE {cn1}={boro_code} and {cn2}={ct_name}'.format(cn1="boro_code", boro_code=building["properties"]["BoroCode"], cn2="CTLabel", ct_name=building["properties"]["CT2010"].zfill(6)))
     ct = c.fetchone()

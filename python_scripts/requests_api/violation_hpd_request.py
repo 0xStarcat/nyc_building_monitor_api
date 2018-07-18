@@ -3,7 +3,6 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from helpers import api_helpers
 from seeds import violations_seeds
-import sqlite3
 
 
 def make_request(conn):

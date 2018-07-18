@@ -47,11 +47,12 @@ db.BuildingEvent = sequelize.import(__dirname + '/BuildingEvent.js')
 
 db.Borough.hasMany(db.Neighborhood, { foreignKey: 'borough_id', sourceKey: 'id' })
 db.Borough.hasMany(db.CensusTract, { foreignKey: 'borough_id', sourceKey: 'id' })
+db.Borough.hasMany(db.Building, { foreignKey: 'borough_id', sourceKey: 'id' })
 
 db.Neighborhood.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.Neighborhood.hasMany(db.RacialMakeup, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.CensusTract, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
-// db.Neighborhood.hasMany(db.Building, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
+db.Neighborhood.hasMany(db.Building, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 // db.Neighborhood.hasMany(db.BuildingEvent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Rent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Income, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
@@ -64,7 +65,7 @@ db.CensusTract.hasOne(db.Rent, { foreignKey: 'census_tract_id', sourceKey: 'id' 
 db.CensusTract.hasOne(db.Income, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 db.CensusTract.hasOne(db.RacialMakeup, { foreignKey: 'census_tract_id', sourceKey: 'id' })
 
-// db.Building.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
+db.Building.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.Building.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })
 db.Building.belongsTo(db.CensusTract, { foreignKey: 'census_tract_id', targetKey: 'id' })
 db.Building.hasMany(db.Sale, { foreignKey: 'building_id', sourceKey: 'id' })

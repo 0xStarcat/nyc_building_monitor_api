@@ -11,9 +11,9 @@ def get_next_day_to_request(conn, table_name, source):
   entry = c.fetchone() 
   if entry:
     if table_name == 'violations' and source != "HPD":
-      return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")
+      return (datetime.datetime.strptime(str(entry[2]), '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")
     else:
-      return (datetime.datetime.strptime(entry[2], '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+      return (datetime.datetime.strptime(str(entry[2]), '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
   else:
     return get_start_date(table_name, source)
 

@@ -1,5 +1,5 @@
 {
-  "name": "nyc_building_justice",
+  "name": "nyc_building_monitor_api",
   "version": "1.0.0",
   "description":
     "A NYC buildings accountability site monitoring building violations, 311 calls, sales, and permits across all five boroughs.",
