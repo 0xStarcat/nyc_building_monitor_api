@@ -1,44 +1,16 @@
 const { db } = require(__dirname + '/../models/sequelize.js')
 
-const constructBuildingJson = data => {
-  return {
-    features: data.map(row => {
-      return {
-        type: 'Feature',
-        geometry: JSON.parse(row['geometry']),
-        properties: {
-          name: row.address,
-          parentBoundaryName: row.neighborhood.name,
-          topParentBoundaryName: row.borough.name,
-          violationsTotal: row.totalViolations,
-          salesTotal: row.totalSales,
-          serviceCallsTotal: row.totalServiceCalls,
-          serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth
-        }
-      }
-    })
-  }
-}
+const { constructViolationJson } = require(__dirname + '/helpers/jsonHelpers.js')
 
 module.exports = {
-  censusTract: async (req, res) => {
-    db.Building.findAll({
+  violations: async (req, res) => {
+    db.Violation.findAll({
       where: {
-        census_tract_id: req.params['id']
-      },
-      include: [
-        {
-          model: db.Neighborhood,
-          attributes: ['name']
-        },
-        {
-          model: db.Borough,
-          attributes: ['name']
-        }
-      ]
+        building_id: req.params['id']
+      }
     })
       .then(data => {
-        res.json(constructBuildingJson(data))
+        res.json(constructViolationJson(data))
       })
       .catch(data => {
         console.log('ERROR', data)
