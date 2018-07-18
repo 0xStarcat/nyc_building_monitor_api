@@ -1,7 +1,6 @@
 import seed_db
 
-
-# seed_db.drop()
+print("running...")
+seed_db.drop()
 seed_db.seed()
-
-
+print("complete.")

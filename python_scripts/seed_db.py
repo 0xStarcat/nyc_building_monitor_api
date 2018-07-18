@@ -1,6 +1,5 @@
 import sqlite3
 import json
-import csv
 
 from seeds import boroughs_seeds
 from seeds import community_districts_seeds
@@ -25,8 +24,8 @@ sqlite_file = config.DATABASE_URL
 def drop_buildings_data_tables(c):
   # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=building_events_seeds.building_events_table))
   # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=service_calls_seeds.service_calls_table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permits_seeds.permits_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
   # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
   # c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
 
@@ -43,17 +42,17 @@ def drop_boundary_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=boroughs_seeds.boroughs_table))
 
 def clear_csvs():
-  csv_helpers.clear_csv('data/violations_data/csv/nyc_violations_data.csv')
-  csv_helpers.clear_csv('data/permit_data/csv/nyc_permits_data.csv')
-  csv_helpers.clear_csv('data/service_calls_data/csv/nyc_service_calls_data.csv')
+  csv_helpers.clear_csv(config.VIOLATIONS_CSV_URL)
+  csv_helpers.clear_csv(config.PERMITS_CSV_URL)
+  csv_helpers.clear_csv(config.SERVICE_CALLS_CSV_URL)
 
 def create_buildings_data_tables(c):
-  sales_seeds.create_table(c)
+  # sales_seeds.create_table(c)
   permit_clusters_seeds.create_table(c)
   permits_seeds.create_table(c)
-  service_calls_seeds.create_table(c)
-  violations_seeds.create_table(c)
-  building_events_seeds.create_table(c)
+  # service_calls_seeds.create_table(c)
+  # violations_seeds.create_table(c)
+  # building_events_seeds.create_table(c)
 
 def seed_buildings_data(c):
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
@@ -111,17 +110,17 @@ def seed_boundary_tables(c, conn):
   conn.commit()
 
 def drop():
-  clear_csvs()
 
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
+  # clear_csvs()
   drop_buildings_data_tables(c)
   # drop_buildings_table(c)
   # drop_boundary_tables(c)
-  conn.commit()
-  conn.close()
+  # conn.commit()
+  # conn.close()
 
 def seed():
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -131,7 +130,7 @@ def seed():
 
   # seed_boundary_tables(c, conn)
   # seed_buildings(c, conn)
-  # create_buildings_data_tables(c)
+  create_buildings_data_tables(c)
   # seed_buildings_data(c)  
   conn.commit()
   conn.close()

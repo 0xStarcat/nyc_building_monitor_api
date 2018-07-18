@@ -8,6 +8,15 @@ def get_record_from_coordinates(geometry, records, geo_index):
   else:
     return None
 
+def get_record_from_coordinates_point(geometry, records, geo_index):
+  geo = geometry
+  print(geo)
+  match = next((record for record in records if shape(json.loads(record[geo_index])).contains(geo)), False) 
+  if match:
+    return match
+  else:
+    return None
+
 def get_representative_point_geojson(geometry):
 	polygon = shape(geometry)
 	return mapping(polygon.representative_point())
