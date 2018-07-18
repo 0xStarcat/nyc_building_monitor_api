@@ -99,7 +99,7 @@ module.exports = {
         return {
           type: 'Feature',
           properties: {
-            violationId: { label: 'ID', value: row.violation_id },
+            name: { label: 'Id', value: row.violation_id },
             source: { label: 'Source', value: row.source },
             date: { label: 'Date', value: row.date },
             description: { label: 'Description', value: row.description },
