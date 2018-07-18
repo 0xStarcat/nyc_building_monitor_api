@@ -6,23 +6,39 @@ module.exports = {
           type: 'Feature',
           geometry: JSON.parse(row.geometry),
           properties: {
-            id: row.id,
-            name: row.name,
-            parentBoundaryName: row.neighborhood.name,
-            topParentBoundaryName: boroughData.find(borough => borough.id === row.borough_id).name,
+            id: { label: '', value: row.id },
+            name: { label: 'Number', value: row.name },
+            parentBoundaryName: { label: 'Neighborhood', value: row.neighborhood.name },
+            topParentBoundaryName: {
+              label: 'Borough',
+              value: boroughData.find(borough => borough.id === row.borough_id).name
+            },
             // churnPercent: parseFloat((row.total_sales / row.total_buildings) * 100),
-            incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
-            incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
-            rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
-            rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
-            racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
-            buildingsTotal: parseFloat(row.total_buildings),
-            salesTotal: parseFloat(row.total_sales),
-            permitsTotal: parseFloat(row.total_permits),
-            serviceCallsTotal: parseFloat(row.total_service_calls),
-            serviceCallsPercentOpenOneMonth: parseFloat(
-              ((row.total_service_calls_open_over_month / row.total_service_calls) * 100).toFixed(2)
-            ),
+            incomeMedian2017: {
+              label: 'Median Income (2017)',
+              value: parseFloat((row.income || {}).median_income_2017)
+            },
+            incomeChange20112017: {
+              label: 'Income Change',
+              value: parseFloat((row.income || {}).median_income_change_2011_2017)
+            },
+            rentMedian2017: { label: 'Median Rent (2017)', value: parseFloat((row.rent || {}).median_rent_2017) },
+            rentChange20112017: {
+              label: 'Rent Change',
+              value: parseFloat((row.rent || {}).median_rent_change_2011_2017)
+            },
+            racePercentWhite2010: {
+              label: 'White Population (2010)',
+              value: (row.racial_makeup || {}).percent_white_2010
+            },
+            buildingsTotal: { label: 'Total Buildings', value: parseFloat(row.total_buildings) },
+            salesTotal: { label: 'Total Sales', value: parseFloat(row.total_sales) },
+            permitsTotal: { label: 'Total New Building Permits', value: parseFloat(row.total_permits) },
+            serviceCallsTotal: { label: 'Total 311 Calls', value: parseFloat(row.total_service_calls) },
+            serviceCallsPercentOpenOneMonth: {
+              label: '311 Calls Open ( > 1 Month)',
+              value: parseFloat((row.total_service_calls_open_over_month / row.total_service_calls) * 100).toFixed(2)
+            },
             // serviceCallsPercentWithViolation: parseFloat(
             //   ((row.total_service_calls_with_violation_result / row.total_service_calls) * 100).toFixed(2)
             // ),
@@ -37,8 +53,11 @@ module.exports = {
             //   ((row.total_sales_prior_violations / row.total_sales) * 100).toFixed(2)
             // ),
             // violationsAverageBeforeSalePerBuilding: parseFloat(row.avg_violation_count_3years_before_sale),
-            violationsTotal: parseFloat(row.total_violations),
-            violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
+            violationsTotal: { label: 'Total Violations', value: parseFloat(row.total_violations) },
+            violationsPerBuilding: {
+              label: 'Violations per Building',
+              value: parseFloat((row.total_violations / row.total_buildings).toFixed(2))
+            },
             representativePoint: JSON.parse(row.representativePoint)
             // violationsNonCommunityPerBuilding: parseFloat(
             //   ((row.total_violations - row.total_service_calls_with_violation_result) / row.total_buildings).toFixed(2)
@@ -58,13 +77,17 @@ module.exports = {
           type: 'Feature',
           geometry: JSON.parse(row['geometry']),
           properties: {
-            name: row.address,
-            parentBoundaryName: row.neighborhood.name,
-            topParentBoundaryName: row.borough.name,
-            violationsTotal: row.totalViolations,
-            salesTotal: row.totalSales,
-            serviceCallsTotal: row.totalServiceCalls,
-            serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth
+            id: { label: 'Id', value: row.id },
+            name: { label: 'Address', value: row.address },
+            parentBoundaryName: { label: 'Neighborhood', value: row.neighborhood.name },
+            topParentBoundaryName: { label: 'Borough', value: row.borough.name },
+            violationsTotal: { label: 'Total Violations', value: row.totalViolations },
+            salesTotal: { label: 'Total Sales', value: row.totalSales },
+            serviceCallsTotal: { label: 'Total 311 Calls', value: row.totalServiceCalls },
+            serviceCallsPercentOpenOneMonth: {
+              label: '311 Calls Open ( > 1 Month)',
+              value: row.totalServiceCallsOpenOverMonth
+            }
           }
         }
       })
