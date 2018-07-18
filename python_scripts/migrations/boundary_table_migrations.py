@@ -2,7 +2,7 @@ tables = ['census_tracts', 'neighborhoods', 'community_districts', 'boroughs']
 
 col1 = 'total_violations'
 col2 = 'total_sales'
-col3 = 'total_permits'
+col3 = 'total_permits' # new building permit (permit_type NB) only
 col4 = 'total_service_calls'
 col5 = 'total_service_calls_with_violation_result'
 col6 = 'total_service_calls_with_no_action_result'
@@ -54,8 +54,8 @@ def update_data(c, table):
 
     # permits
 
-    c.execute('SELECT * FROM permits WHERE {cn}={id}'\
-      .format(event='permit', cn=column_name, id=row[0]))
+    c.execute('SELECT * FROM permits WHERE {cn}={id} AND {cn2}=\'{type}\''\
+      .format(event='permit', cn=column_name, cn2='permit_type', id=row[0], type='NB'))
 
     permits_count = len(c.fetchall())
 
