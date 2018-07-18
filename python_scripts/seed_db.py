@@ -140,7 +140,7 @@ def test():
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM sales')
+  c.execute('SELECT * FROM permit_clusters')
   all_rows = c.fetchall()
   print(all_rows[0])
 

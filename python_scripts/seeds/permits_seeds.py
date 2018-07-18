@@ -125,19 +125,19 @@ def seed_permits_from_json(c, permit_json):
     street_name = permit["street_name"]
     job_start_date = convert_date_format(permit["job_start_date"]) if "job_start_date" in permit else ""
 
-    permit_cluster = get_permit_cluster_match(c, geometry)
+    permit_cluster = get_permit_cluster_match(c, geometry_json)
 
     if permit_cluster:
       permit_cluster_id = permit_cluster[0]
       # print (" ^^ joining to permit cluster")
     else:
-      permit_clusters_seeds.seed_cluster_from_permit(c, permit, geometry, fkeys)
+      permit_clusters_seeds.seed_cluster_from_permit(c, permit, geometry_json, fkeys)
       permit_cluster_id = c.lastrowid
       print(" ++ seeding a cluster", permit_cluster_id)
 
     # create permit
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14} ,{col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3, col4=permit_col4, col5=permit_col5, col6=permit_col6, col7=permit_col7, col8=permit_col8, col9=permit_col9, col10=permit_col10, col11=permit_col11, col12=permit_col12, col13=permit_col13, col14=permit_col14, col15=permit_col15), (fkeys["borough_id"], fkeys["community_district_id"], fkeys["neighborhood_id"], fkeys["census_tract_id"], permit_cluster_id, str(date), str(geometry), str(source), str(permit_type), str(owner_business_name), str(owner_first_name), str(owner_last_name), str(job_start_date), str(house_number), str(street_name)))
+      .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3, col4=permit_col4, col5=permit_col5, col6=permit_col6, col7=permit_col7, col8=permit_col8, col9=permit_col9, col10=permit_col10, col11=permit_col11, col12=permit_col12, col13=permit_col13, col14=permit_col14, col15=permit_col15), (fkeys["borough_id"], fkeys["community_district_id"], fkeys["neighborhood_id"], fkeys["census_tract_id"], permit_cluster_id, str(date), str(geometry_json), str(source), str(permit_type), str(owner_business_name), str(owner_first_name), str(owner_last_name), str(job_start_date), str(house_number), str(street_name)))
 
     csv_helpers.write_csv(c, permit, config.PERMITS_CSV_URL, index == 0)
 
