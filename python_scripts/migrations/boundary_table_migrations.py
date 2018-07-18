@@ -17,13 +17,13 @@ def update_all(c, conn):
 
 def update_data(c, table):
   if table == tables[0]:
-    column_name = 'census_tracts_id'
+    column_name = 'census_tract_id'
   if table == tables[1]:
-    column_name = 'neighborhoods_id'
+    column_name = 'neighborhood_id'
   if table == tables[2]:
-    column_name = 'community_districts_id'
+    column_name = 'community_district_id'
   if table == tables[3]:
-    column_name = 'boroughs_id'
+    column_name = 'borough_id'
 
   c.execute('SELECT * FROM {tn}'\
     .format(tn=table))

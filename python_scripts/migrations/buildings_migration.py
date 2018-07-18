@@ -28,13 +28,13 @@ def update_data(c):
 
     # # sales
 
-    # c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND building_id={id}'\
-    #   .format(event='sale', id=row[0]))
+    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND building_id={id}'\
+      .format(event='sale', id=row[0]))
 
-    # sales_count = len(c.fetchall())
+    sales_count = len(c.fetchall())
 
-    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-    #   .format(tn=table, cn=col2, value=sales_count, id=row[0]))
+    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
+      .format(tn=table, cn=col2, value=sales_count, id=row[0]))
 
     # service calls
 

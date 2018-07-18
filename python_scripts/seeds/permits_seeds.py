@@ -38,7 +38,6 @@ def find_foreign_keys(c, permit):
     return None
 
   if permit["gis_census_tract"]: 
-    print(permit["gis_census_tract"].zfill(6))
     c.execute('SELECT * FROM census_tracts WHERE {cn1}={boro_code} and {cn2}={ct_name}'.format(cn1="boro_code", boro_code=borough_code, cn2="CTLabel", ct_name=permit["gis_census_tract"]))
     ct = c.fetchone()
   else:
@@ -130,7 +129,7 @@ def seed_permits_from_json(c, permit_json):
 
     if permit_cluster:
       permit_cluster_id = permit_cluster[0]
-      print (" ^^ joining to permit cluster")
+      # print (" ^^ joining to permit cluster")
     else:
       permit_clusters_seeds.seed_cluster_from_permit(c, permit, geometry, fkeys)
       permit_cluster_id = c.lastrowid

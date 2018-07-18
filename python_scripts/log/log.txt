@@ -94,3 +94,13 @@
 08:41PM on July 17, 2018
 08:41PM on July 17, 2018
 08:42PM on July 17, 2018
+08:43PM on July 17, 2018
+ ++ permits added: 110676
+ ++ boundary counts updated
+ ++ building counts updated
+***
+09:26PM on July 17, 2018
+ ++ dob service calls added: 0
+***
+09:38PM on July 17, 2018
+ ++ dob service calls added: 0

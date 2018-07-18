@@ -9,7 +9,7 @@ table = service_calls_seeds.service_calls_table
 import config
 
 def check_statuses():
-  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
+  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
