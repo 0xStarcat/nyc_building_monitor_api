@@ -9,6 +9,7 @@ def get_next_day_to_request(conn, table_name, source):
   c.execute('pragma foreign_keys=on;')
   c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn=table_name, cn1="source", source=source))
   entry = c.fetchone() 
+  print("Latest entry: ", entry)
   if entry:
     if table_name == 'violations' and source != "HPD":
       return (datetime.datetime.strptime(str(entry[2]), '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")

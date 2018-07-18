@@ -140,9 +140,10 @@ def test():
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM permits')
+  c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn='violations', cn1="source", source='HPD'))
+  # c.execute('SELECT * FROM permits')
   all_rows = c.fetchall()
-  print(all_rows[1])
+  print(all_rows[0])
 
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()
