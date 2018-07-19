@@ -17,6 +17,9 @@ def create_table(c):
 
 def create_row_from_sale(c, sale, building):
   # Create Conversion
+  building_id = building[0]
+  date = sale
+
   c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}) VALUES ({building_id}, \'{date}\', \"{source}\", \'{converted_from}\', \'{converted_to}\')'\
     .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, building_id=building_id, date=date, source=source, converted_from=converted_from, converted_to=converted_to))
 
