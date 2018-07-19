@@ -159,12 +159,12 @@ def clear_violations():
   conn.close()
 
 def sample():
-  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
+  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM violations')
+  c.execute('SELECT * FROM boroughs')
   all_rows = c.fetchall()
-  print(all_rows[1000])
+  print(all_rows[0])
 
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()

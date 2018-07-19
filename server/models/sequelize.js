@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('sqlite://nyc_data_map.sqlite', {
+const dbPath = __dirname + '../../../nyc_data_map.sqlite'
+const sequelize = new Sequelize('sqlite://' + dbPath, {
   pool: {
     max: 5,
     min: 0,
