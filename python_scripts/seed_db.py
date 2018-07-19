@@ -139,9 +139,8 @@ def seed():
 def sample():
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
-  
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM service_calls')
+  c.execute('SELECT * FROM buildings')
   all_rows = c.fetchall()
   print(all_rows[1000])
 

@@ -62,6 +62,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_bldg_neighborhood_id ON {tn}({col3})'.format(tn=buildings_table, col3=bldg_col3))
   c.execute('CREATE INDEX idx_bldg_community_district_id ON {tn}({col2})'.format(tn=buildings_table, col2=bldg_col2))
   c.execute('CREATE INDEX idx_bldg_borough_id ON {tn}({col1})'.format(tn=buildings_table, col1=bldg_col1))
+  c.execute('CREATE INDEX idx_bldg_block_and_bbl ON {tn}({col7}, {col21})'.format(tn=buildings_table, col7=bldg_col7, col21=bldg_col21))
 
 def seed_buildings(c, building_json):
   print("Seeding Buildings...")
@@ -73,15 +74,15 @@ def seed_buildings(c, building_json):
     residential_units = building["properties"]["UnitsRes"]
 
     if (int(residential_units) == 0):
-      print("  * no residential units", str(index) + "/" + str(len(building_json)))
+      # print("  * no res units", str(index) + "/" + str(len(building_json["features"])))
       continue
     if "BBL" not in building["properties"] or "Block" not in building["properties"] or "Lot" not in building["properties"] or "Address" not in building["properties"]:
-      print("  * Missing Block, Lot, BBL, or Address", "Building: " + str(index) + "/" + str(len(building_json["features"])))
+      # print("  * Missing geo information", str(index) + "/" + str(len(building_json["features"])))
       continue
 
     foreign_keys = find_foreign_keys(c, building)
     if foreign_keys == None:
-      print("  * no CT matches found", str(index) + "/" + str(len(building_json)))
+      print("  * no CT", str(index) + "/" + str(len(building_json["features"])))
       continue
 
     borough_id = foreign_keys["borough_id"]

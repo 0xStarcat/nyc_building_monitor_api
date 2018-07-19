@@ -34,6 +34,29 @@ def request_single_row_from_api(url):
   print("requesting from: ", url)
   return json.loads(requests.get(url).text)
 
+def request_from_api_no_seed(url):
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  print("requesting from: ", url)
+  offset = 0
+  limit = 50000  
+  request_data = []
+  count = 0
+
+  def request(off):
+    r = requests.get(url+'&$limit='+str(limit)+'&$offset=' + str(off))
+
+    data = json.loads(r.text)
+    for d in data:
+      request_data.append(d)
+    return data
+
+  while len(request(offset)) > 0:
+    offset = offset + limit
+    print("records retrieved: ", len(request_data))
+
+  return request_data
+
 def request_from_api(conn, url, source, seed_method=None, write_to_csv=False):
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')

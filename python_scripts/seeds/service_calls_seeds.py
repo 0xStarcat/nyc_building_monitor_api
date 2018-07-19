@@ -66,7 +66,8 @@ def is_open_over_month(status, processed_date):
   return (status.lower() == "open" or status.lower() == "pending") and (datetime.date.today() - datetime.datetime.strptime(processed_date, "%Y%m%d").date()).days > 30
 
 def get_building_match(c, bbl):
-  c.execute('SELECT * FROM buildings WHERE bbl=\"{bbl}\"'.format(bbl=bbl))
+  block = bbl[1:6].lstrip("0")
+  c.execute('SELECT * FROM buildings WHERE block=\'{block}\' AND bbl=\"{bbl}\"'.format(block=block.lstrip("0"), bbl=bbl))
   return c.fetchone()
 
 def create_table(c):
@@ -102,7 +103,7 @@ def seed_service_calls_from_json(c, service_calls_json, write_to_csv=False):
     open_over_month = is_open_over_month(status, date)
     description = call["descriptor"]
     address = call["incident_address"] if "incident_address" in call else ""
-    building_match = get_building_match(c, call["bbl"])
+    building_match = get_building_match(c, call["bbl"]) if "bbl" in call else None
     
     if not building_match: 
       print("  * no building match found", "call: " + str(index) + "/" + str(len(service_calls_json)))
