@@ -81,6 +81,7 @@ module.exports = {
             name: { label: 'Address', value: row.address },
             parentBoundaryName: { label: 'Neighborhood', value: row.neighborhood.name },
             topParentBoundaryName: { label: 'Borough', value: row.borough.name },
+            yearBuild: { label: 'Year Build', value: row.yearBuilt },
             violationsTotal: { label: 'Total Violations', value: row.totalViolations },
             salesTotal: { label: 'Total Sales', value: row.totalSales },
             serviceCallsTotal: { label: 'Total 311 Calls', value: row.totalServiceCalls },
@@ -99,11 +100,48 @@ module.exports = {
         return {
           type: 'Feature',
           properties: {
-            name: { label: 'Id', value: row.violation_id },
+            name: { label: 'Id', value: row.unique_key },
+            parentBoundaryName: { label: 'Address', value: row.building.address },
             source: { label: 'Source', value: row.source },
             date: { label: 'Date', value: row.date },
             description: { label: 'Description', value: row.description },
             penalty: { label: 'Penalty', value: row.penaltyImposed }
+          }
+        }
+      })
+    }
+  },
+  constructServiceCallJson: data => {
+    return {
+      features: data.map(row => {
+        return {
+          type: 'Feature',
+          properties: {
+            name: { label: 'Id', value: row.violation_id },
+            parentBoundaryName: { label: 'Address', value: row.building.address },
+            source: { label: 'Source', value: row.source },
+            date: { label: 'Date', value: row.date },
+            description: { label: 'Description', value: row.description },
+            resolutionViolation: { label: 'Resulted in violation', value: row.resolution_violation },
+            resolutionNoAction: { label: 'Resulted in no action', value: row.resolution_no_action },
+            resolutionUnableToInvestigate: { label: 'Unable to investigate', value: row.unable_to_investigate },
+            openOverMonth: { label: 'Open for over 1 month', value: row.open_over_month }
+          }
+        }
+      })
+    }
+  },
+  constructSaleJson: data => {
+    return {
+      features: data.map(row => {
+        return {
+          type: 'Feature',
+          properties: {
+            name: { label: 'Id', value: row.unique_key },
+            parentBoundaryName: { label: 'Address', value: row.building.address },
+            date: { label: 'Date', value: row.date },
+            price: { label: 'Price', value: row.price },
+            address: { label: 'Address', value: row.building.address }
           }
         }
       })

@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         field: 'address'
       },
-      year_built: {
+      yearBuilt: {
         type: DataTypes.STRING,
         field: 'year_built'
       },

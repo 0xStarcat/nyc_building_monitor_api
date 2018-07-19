@@ -13,4 +13,28 @@ describe('/buildings', () => {
       expect(response.headers['content-type']).toMatch('json')
     })
   })
+
+  describe('GET /buildings/:id/service-calls', () => {
+    it('returns a 200 code', async () => {
+      const response = await request(server).get('/buildings/1/service-calls')
+      expect(response.status).toEqual(200)
+    })
+
+    it('returns the appropriate headers', async () => {
+      const response = await request(server).get('/buildings/1/service-calls')
+      expect(response.headers['content-type']).toMatch('json')
+    })
+  })
+
+  describe('GET /buildings/:id/sales', () => {
+    it('returns a 200 code', async () => {
+      const response = await request(server).get('/buildings/1/sales')
+      expect(response.status).toEqual(200)
+    })
+
+    it('returns the appropriate headers', async () => {
+      const response = await request(server).get('/buildings/1/sales')
+      expect(response.headers['content-type']).toMatch('json')
+    })
+  })
 })
