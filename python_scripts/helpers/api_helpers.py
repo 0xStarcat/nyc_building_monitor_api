@@ -35,8 +35,6 @@ def request_single_row_from_api(url):
   return json.loads(requests.get(url).text)
 
 def request_from_api_no_seed(url):
-  c = conn.cursor()
-  c.execute('pragma foreign_keys=on;')
   print("requesting from: ", url)
   offset = 0
   limit = 50000  
@@ -47,6 +45,7 @@ def request_from_api_no_seed(url):
     r = requests.get(url+'&$limit='+str(limit)+'&$offset=' + str(off))
 
     data = json.loads(r.text)
+    print(data)
     for d in data:
       request_data.append(d)
     return data

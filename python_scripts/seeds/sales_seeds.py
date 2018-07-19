@@ -4,11 +4,14 @@ import xlrd
 
 from seeds import buildings_seeds
 from seeds import building_events_seeds
+from seeds import conversions_seeds
+
 import datetime
 sales_table = 'sales'
 sale_col1 = 'building_id'
 sale_col2 = 'date'
 sale_col3 = 'price'
+sale_col4 = 'building_class_at_sale'
 
 def fix_brooklyn_csv():
   filename = "data/sales_data/csv/brooklyn_sales_2010-2017-backup.csv"
@@ -81,11 +84,19 @@ def get_building_match(c, sale):
 
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} INT, UNIQUE({col1}, {col2}) ON CONFLICT REPLACE)'\
-    .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, bldg_table=buildings_seeds.buildings_table))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} INT, {col4} TEXT, UNIQUE({col1}, {col2}) ON CONFLICT REPLACE)'\
+    .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, col4=sale_col4, bldg_table=buildings_seeds.buildings_table))
 
   c.execute('CREATE INDEX idx_sale_building_id ON {tn}({col1})'.format(tn=sales_table, col1=sale_col1))
   c.execute('CREATE TRIGGER insert_sale_with_price BEFORE INSERT ON {tn} FOR EACH ROW WHEN (SELECT price FROM {tn} WHERE date = NEW.date AND building_id = NEW.building_id) > NEW.price BEGIN SELECT RAISE(IGNORE); END;'.format(tn=sales_table))
+
+def class_is_residential(bldg_class):
+  c = bldg_class[:1].lower()
+  return c == "a" or c == "b"
+
+def class_is_non_residential(bldg_class):
+  return
+
 def seed_sales(c, sale_csv):
   print("Seeding sales...")
 
@@ -108,10 +119,12 @@ def seed_sales(c, sale_csv):
     building_id = building_match[0]
     date = datetime.datetime.strptime(sale[20], "%m/%d/%Y").strftime("%Y%m%d")
     price = get_price(sale)
+    bldg_class_at_sale = sale[18]
+    bldg_class_now = building_match[22]
     
     # Create Sale
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}) VALUES ({building_id}, \'{date}\', \"{price}\")'\
-      .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, building_id=building_id, date=date, price=price))
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES ({building_id}, \'{date}\', \"{price}\", \'{bldg_class_at_sale}\')'\
+      .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, building_id=building_id, date=date, price=price, bldg_class_at_sale=bldg_class_at_sale))
 
 
     insertion_id = c.lastrowid
@@ -125,5 +138,7 @@ def seed_sales(c, sale_csv):
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'sale', insertion_id, date))
 
-
+    # Create Conversion if needed
+    if False:
+      conversions_seeds.create_row_from_sale(c, sale, building)
 

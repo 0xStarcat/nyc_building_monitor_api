@@ -14,6 +14,7 @@ from seeds import violations_seeds
 from seeds import sales_seeds
 from seeds import permits_seeds
 from seeds import permit_clusters_seeds
+from seeds import conversions_seeds
 
 from seeds import service_calls_seeds
 from seeds import building_events_seeds
@@ -49,11 +50,18 @@ def clear_csvs():
 
 def create_buildings_data_tables(c):
   sales_seeds.create_table(c)
+  conversions_seeds.create_table(c)
   permit_clusters_seeds.create_table(c)
   permits_seeds.create_table(c)
   service_calls_seeds.create_table(c)
   violations_seeds.create_table(c)
   building_events_seeds.create_table(c)
+
+def create_boundaries_tables(c):
+  boroughs_seeds.create_table(c)
+  community_districts_seeds.create_table(c)
+  neighborhoods_seeds.create_table(c)
+  census_tracts_seeds.create_table(c)
 
 def seed_buildings_data(c):
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
@@ -116,10 +124,12 @@ def drop():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
-  clear_csvs()
-  drop_buildings_data_tables(c)
-  drop_buildings_table(c)
-  drop_boundary_tables(c)
+  # clear_csvs()
+  # drop_buildings_data_tables(c)
+  # drop_buildings_table(c)
+  # drop_boundary_tables(c)
+
+  clear_violations()
   conn.commit()
   conn.close()
 
@@ -129,6 +139,7 @@ def seed():
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on')
 
+  create_boundaries_tables(c)
   seed_boundary_tables(c, conn)
   seed_buildings(c, conn)
   create_buildings_data_tables(c)
@@ -136,11 +147,22 @@ def seed():
   conn.commit()
   conn.close()
 
+def clear_violations():
+  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
+  c.execute('DELETE FROM building_events WHERE eventable=\'{type}\''.format(type="violation"))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
+  violations_seeds.create_table(c)
+  conn.commit()
+  conn.close()
+
 def sample():
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM buildings')
+  c.execute('SELECT * FROM violations')
   all_rows = c.fetchall()
   print(all_rows[1000])
 

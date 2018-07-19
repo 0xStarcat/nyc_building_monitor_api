@@ -56,7 +56,12 @@ def get_date(violation):
     return False
 
 def get_bbl(boro_id, violation):
-  return int(str(boro_id) + str(violation["block"].lstrip("0").zfill(5) + str(violation["lot"].lstrip("0").zfill(4))))
+  try: 
+    bbl = int(str(boro_id) + str(violation["block"].lstrip("0").zfill(5) + str(violation["lot"].lstrip("0").zfill(4))))
+  except:
+    print("  * unable to get BBL")
+    return None
+  return bbl
 
 def get_building_match(c, violation):
   if "boroid" in violation:
@@ -64,14 +69,17 @@ def get_building_match(c, violation):
   elif "boro" in violation:
     boro_id = violation["boro"]
   else:
+    print("  X no BORO")
     return None
 
   if "block" not in violation or "lot" not in violation:
+    print("  X no block or lot")
     return None
 
   if boro_id and violation["block"] and violation["lot"]:
     bbl = get_bbl(boro_id, violation)
-    c.execute('SELECT * FROM buildings WHERE bbl=\'{bbl}\''.format(bbl=bbl))
+    block = violation["block"].lstrip("0")
+    c.execute('SELECT * FROM buildings WHERE block=\'{block}\' AND bbl=\"{bbl}\"'.format(block=block.lstrip("0"), bbl=bbl))
     return c.fetchone()
   else:
     return None
@@ -93,7 +101,7 @@ def seed_violations(c, violation_json, write_to_csv=False):
     building_match = get_building_match(c, violation)
 
     if not building_match:
-      print("  * no building match found", "call: " + str(index) + "/" + str(len(violation_json)))
+      print("  * no building match found", str(index) + "/" + str(len(violation_json)))
       continue
 
     building_id = building_match[0]
@@ -101,7 +109,7 @@ def seed_violations(c, violation_json, write_to_csv=False):
     date = get_date(violation)
 
     if date == False:
-      print("  * no issue_date or inspectiondate found", "call: " + str(index) + "/" + str(len(violation_json)))
+      print("  * no issue_date or inspectiondate found", str(index) + "/" + str(len(violation_json)))
       continue
 
     description = get_description(violation)

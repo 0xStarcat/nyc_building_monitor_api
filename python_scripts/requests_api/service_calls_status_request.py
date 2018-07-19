@@ -19,8 +19,9 @@ def check_statuses():
   open_calls = c.fetchall()
   print("Found " + str(len(open_calls)) + " open calls to check")
   
-  url = 'https://data.cityofnewyork.us/resource/fhrw-4uyv.json?$where= created_date between "'+ api_helpers.get_next_day_to_request(conn, table, source) + '" and "' + api_helpers.get_today(table, source) + '"& (agency DOB OR agency HPD) AND status Open'
+  url = 'https://data.cityofnewyork.us/resource/fhrw-4uyv.json?$where= created_date between "'+ api_helpers.get_next_day_to_request(conn, table, source) + '" and "' + api_helpers.get_today(table, source) + '"& agency \'DOB\' OR agency \'HPD\' AND status \'Open\'&'
   api_response = api_helpers.request_from_api_no_seed(url)
+  print(api_response)
   print(str(len(api_response)))
 
   for index, call in enumerate(open_calls):
@@ -41,7 +42,7 @@ def check_statuses():
       print(" ++ Updating status of ", call[9], index + "/" + str(len(open_calls)))
       
       c.execute('DELETE FROM {tn} WHERE {cn}={value}'.format(tn=table, cn="id", value=call[0]))
-      seed_service_calls_from_json(c, api_call)
+      service_calls_seeds.seed_service_calls_from_json(c, api_call)
       conn.commit()
 
 

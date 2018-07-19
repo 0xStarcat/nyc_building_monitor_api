@@ -87,7 +87,7 @@ def seed_service_calls_from_json(c, service_calls_json, write_to_csv=False):
     
     resolution_description = call["resolution_description"] if "resolution_description" in call else "unknown"
     if call_is_duplicate(resolution_description):
-      print("  * duplicate complaint found", "call: " + str(index) + "/" + str(len(service_calls_json)))
+      # print("  * duplicate complaint found", "call: " + str(index) + "/" + str(len(service_calls_json)))
       continue
 
     resolution_violation = resulted_in_violation(resolution_description)

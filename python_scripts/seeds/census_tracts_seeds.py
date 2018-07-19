@@ -27,21 +27,17 @@ ct_col16 = 'total_service_calls_open_over_month'
 ct_col17 = 'representative_point'
 ct_col18 = 'service_calls_average_days_to_resolve'
 
-def create_census_tracts_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} TEXT, {col5} TEXT, {col6} INT, {col7} TEXT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} INT, {col15} INT, {col16} INT, {col17} TEXT, {col18}, INT)'\
-    .format(tn=census_tracts_table, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, col1=ct_col1, col2=ct_col2, col3=ct_col3, col4=ct_col4, col5=ct_col5, col6=ct_col6, col7=ct_col7, col8=ct_col8, col9=ct_col9, col10=ct_col10, col11=ct_col11, col12=ct_col12, col13=ct_col13, col14=ct_col14, col15=ct_col15, col16=ct_col16, col17=ct_col17, col18=ct_col18))
-
-def seed_census_tracts(c, census_tract_json):
-  print("** Seeding Census Tracts...")
-  
-
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} TEXT, {col5} TEXT, {col6} INT, {col7} TEXT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} INT, {col15} INT, {col16} INT, {col17} TEXT, {col18}, INT)'\
-    .format(tn=census_tracts_table, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, col1=ct_col1, col2=ct_col2, col3=ct_col3, col4=ct_col4, col5=ct_col5, col6=ct_col6, col7=ct_col7, col8=ct_col8, col9=ct_col9, col10=ct_col10, col11=ct_col11, col12=ct_col12, col13=ct_col13, col14=ct_col14, col15=ct_col15, col16=ct_col16, col17=ct_col17, col18=ct_col18))
+def create_table(c):
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} TEXT, {col5} TEXT, {col6} INT, {col7} TEXT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} INT, {col15} INT, {col16} INT, {col17} TEXT, {col18} INT, {col19} INT, {col20} INT, {col21} INT)'\
+    .format(tn=census_tracts_table, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, col1=ct_col1, col2=ct_col2, col3=ct_col3, col4=ct_col4, col5=ct_col5, col6=ct_col6, col7=ct_col7, col8=ct_col8, col9=ct_col9, col10=ct_col10, col11=ct_col11, col12=ct_col12, col13=ct_col13, col14=ct_col14, col15=ct_col15, col16=ct_col16, col17=ct_col17, col18=ct_col18, col19=ct_col19, col20=ct_col20, col21=ct_col21))
 
   c.execute('CREATE INDEX idx_ct_neighborhood_id ON {tn}({col3})'.format(tn=census_tracts_table, col3=ct_col3))
   c.execute('CREATE INDEX idx_ct_community_district_id ON {tn}({col2})'.format(tn=census_tracts_table, col2=ct_col2))
   c.execute('CREATE INDEX idx_ct_borough_id ON {tn}({col1})'.format(tn=census_tracts_table, col1=ct_col1))
   c.execute('CREATE INDEX idx_ct_boro_code ON {tn}({col6})'.format(tn=census_tracts_table, col6=ct_col6))
+
+def seed_census_tracts(c, census_tract_json):
+  print("** Seeding Census Tracts...")
 
   c.execute('SELECT * FROM {tn}'.format(tn=neighborhoods_seeds.neighborhoods_table))
   neighborhoods = c.fetchall()

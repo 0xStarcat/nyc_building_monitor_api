@@ -7,6 +7,8 @@ from seeds import census_tracts_seeds
 from shapely.geometry import shape, Point
 
 buildings_table = 'buildings'
+all_buildings_table = 'all_buildings'
+
 bldg_col1 = 'borough_id'
 bldg_col2 = 'community_district_id'
 bldg_col3 = 'neighborhood_id'
@@ -28,6 +30,10 @@ bldg_col18 = 'total_service_calls_unable_to_investigate_result'
 bldg_col19 = 'total_service_calls_open_over_month'
 bldg_col20 = 'service_calls_average_days_to_resolve'
 bldg_col21 = 'bbl'
+bldg_col22 = 'bldg_class'
+bldg_col23 = 'residential'
+bldg_col24 = 'former_residential'
+bldg_col25 = 'converted_residential'
 
 def convert_building_polygon_to_point(geometry):
   polygon = shape(geometry)
@@ -53,8 +59,9 @@ def find_foreign_keys(c, building):
     return None
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} INTEGER NOT NULL REFERENCES {ref_table4}(id), {col5} INT, {col6} TEXT, {col7} TEXT, {col8} TEXT, {col9} TEXT, {col10} TEXT, {col11} INTEGER, {col12} INTEGER, {col13} INTEGER, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, {col19} INTEGER, {col20} INTEGER, {col21} INTEGER)'\
-    .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col13=bldg_col13, col14=bldg_col14, col15=bldg_col15, col16=bldg_col16, col17=bldg_col17, col18=bldg_col18, col19=bldg_col19, col20=bldg_col20, col21=bldg_col21, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table))
+  # Residential buildings
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} INTEGER NOT NULL REFERENCES {ref_table4}(id), {col5} INT, {col6} TEXT, {col7} TEXT, {col8} TEXT, {col9} TEXT, {col10} TEXT, {col11} INTEGER, {col12} INTEGER, {col13} INTEGER, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, {col19} INTEGER, {col20} INTEGER, {col21} INTEGER, {col22} TEXT, {col23} BOOLEAN, {col24} BOOLEAN, {col25} BOOLEAN)'\
+    .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col13=bldg_col13, col14=bldg_col14, col15=bldg_col15, col16=bldg_col16, col17=bldg_col17, col18=bldg_col18, col19=bldg_col19, col20=bldg_col20, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23, col24=bldg_col24, col25=bldg_col25, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table))
 
   c.execute('CREATE INDEX idx_bldg_block_and_lot ON {tn}({col7}, {col8})'.format(tn=buildings_table, col7=bldg_col7, col8=bldg_col8))
   c.execute('CREATE INDEX idx_bldg_address ON {tn}({col9})'.format(tn=buildings_table, col9=bldg_col9))
@@ -63,6 +70,17 @@ def create_table(c):
   c.execute('CREATE INDEX idx_bldg_community_district_id ON {tn}({col2})'.format(tn=buildings_table, col2=bldg_col2))
   c.execute('CREATE INDEX idx_bldg_borough_id ON {tn}({col1})'.format(tn=buildings_table, col1=bldg_col1))
   c.execute('CREATE INDEX idx_bldg_block_and_bbl ON {tn}({col7}, {col21})'.format(tn=buildings_table, col7=bldg_col7, col21=bldg_col21))
+  c.execute('CREATE INDEX idx_bldg_class ON {tn}({col22})'.format(tn=buildings_table, col22=bldg_col22))
+  
+  c.execute('CREATE INDEX idx_bldg_census_tract_and_residential ON {tn}({col4}, {col23})'.format(tn=buildings_table, col4=bldg_col4, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_neighborhood_and_residential ON {tn}({col3}, {col23})'.format(tn=buildings_table, col3=bldg_col3, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_community_district_and_residential ON {tn}({col2}, {col23})'.format(tn=buildings_table, col2=bldg_col2, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_borough_and_residential ON {tn}({col1}, {col23})'.format(tn=buildings_table, col1=bldg_col1, col23=bldg_col23))
+
+  c.execute('CREATE INDEX idx_bldg_census_tract_residential_and_former ON {tn}({col4}, {col23}, {col24})'.format(tn=buildings_table, col4=bldg_col4, col23=bldg_col23, col24=bldg_col24))
+  c.execute('CREATE INDEX idx_bldg_neighborhood_residential_and_former ON {tn}({col3}, {col23}, {col24})'.format(tn=buildings_table, col3=bldg_col3, col23=bldg_col23, col24=bldg_col24))
+  c.execute('CREATE INDEX idx_bldg_community_district_residential_and_former ON {tn}({col2}, {col23}, {col24})'.format(tn=buildings_table, col2=bldg_col2, col23=bldg_col23, col24=bldg_col24))
+  c.execute('CREATE INDEX idx_bldg_borough_residential_and_former ON {tn}({col1}, {col23}, {col24})'.format(tn=buildings_table, col1=bldg_col1, col23=bldg_col23, col24=bldg_col24))
 
 def seed_buildings(c, building_json):
   print("Seeding Buildings...")
@@ -73,9 +91,6 @@ def seed_buildings(c, building_json):
     
     residential_units = building["properties"]["UnitsRes"]
 
-    if (int(residential_units) == 0):
-      # print("  * no res units", str(index) + "/" + str(len(building_json["features"])))
-      continue
     if "BBL" not in building["properties"] or "Block" not in building["properties"] or "Lot" not in building["properties"] or "Address" not in building["properties"]:
       # print("  * Missing geo information", str(index) + "/" + str(len(building_json["features"])))
       continue
@@ -98,9 +113,10 @@ def seed_buildings(c, building_json):
     address = building["properties"]["Address"]
     geometry = json.dumps(building["geometry"], separators=(',',':'))
     year_built = building["properties"]["YearBuilt"]
+    bldg_class = building["properties"]["BldgClass"]
     
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col21}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col21=bldg_col21), (borough_id, community_district_id, neighborhood_id, census_tract_id, boro_code, ct_2010, block, lot, address, geometry, year_built, residential_units, bbl))
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col21}, {col22}, {col23}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+      .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23), (borough_id, community_district_id, neighborhood_id, census_tract_id, boro_code, ct_2010, block, lot, address, geometry, year_built, residential_units, bbl, bldg_class, int(residential_units) > 0))
 
 def add_counts_to_boundary_data(c):
   # Census Tracts
