@@ -78,8 +78,23 @@ def get_price(sale):
     pass
   return price
 
+def get_bbl(boro_id, sale):
+  try: 
+    bbl = int(str(boro_id) + str(int(float(sale[4])).lstrip("0").zfill(5) + str(int(float(sale[5])).lstrip("0").zfill(4))))
+  except:
+    print("  * unable to get BBL")
+    return None
+  return bbl
+
 def get_building_match(c, sale):
-  c.execute('SELECT * FROM buildings WHERE block={v_block} AND lot={v_lot}'.format(v_block=str(int(float(sale[4]))), v_lot=str(int(float(sale[5])))))
+  boro_id = int(sale[0])
+  bbl = get_bbl(boro_id, sale)
+
+  if not bbl:
+    print("  * NO BBL")
+    return None
+
+  c.execute('SELECT * FROM buildings WHERE block={block} AND bbl={bbl}'.format(block=str(int(float(sale[4]))), bbl=bbl))
   return c.fetchone()
 
 
@@ -90,12 +105,21 @@ def create_table(c):
   c.execute('CREATE INDEX idx_sale_building_id ON {tn}({col1})'.format(tn=sales_table, col1=sale_col1))
   c.execute('CREATE TRIGGER insert_sale_with_price BEFORE INSERT ON {tn} FOR EACH ROW WHEN (SELECT price FROM {tn} WHERE date = NEW.date AND building_id = NEW.building_id) > NEW.price BEGIN SELECT RAISE(IGNORE); END;'.format(tn=sales_table))
 
+def get_residential_r_class(bldg_class):
+  if bldg_class[0].lower() != "r":
+    return False
+
+  try:
+    return bldg_class.lower() == "rr" or int(bldg_class[1]) >= 0
+  except: 
+    return False
+
 def class_is_residential(bldg_class):
-  c = bldg_class[:1].lower()
-  return c == "a" or c == "b"
+  cl = bldg_class[:1].lower()
+  return cl == "a" or cl == "b" or cl == "c" or cl == "d" or cl == "l" or get_residential_r_class(bldg_class) or cl == "s" or bldg_class.lower() == "v0"
 
 def class_is_non_residential(bldg_class):
-  return
+  return not class_is_residential(bldg_class)
 
 def seed_sales(c, sale_csv):
   print("Seeding sales...")
@@ -120,6 +144,7 @@ def seed_sales(c, sale_csv):
     date = datetime.datetime.strptime(sale[20], "%m/%d/%Y").strftime("%Y%m%d")
     price = get_price(sale)
     bldg_class_at_sale = sale[18]
+    bldg_class_after_sale = sale[2]
     bldg_class_now = building_match[22]
     
     # Create Sale
