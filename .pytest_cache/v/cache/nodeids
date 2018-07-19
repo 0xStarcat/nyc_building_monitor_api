@@ -1,0 +1,12 @@
+[
+  "python_scripts/tests/violations_seeds_test.py::test_get_violation_id_with_violationid",
+  "python_scripts/tests/violations_seeds_test.py::test_get_violation_id_with_ecb_violation_number",
+  "python_scripts/tests/violations_seeds_test.py::test_get_violation_id_with_number",
+  "python_scripts/tests/violations_seeds_test.py::test_get_violation_id_with_non_field",
+  "python_scripts/tests/violations_seeds_test.py::test_get_description_with_violation_description",
+  "python_scripts/tests/violations_seeds_test.py::test_get_description_with_description",
+  "python_scripts/tests/violations_seeds_test.py::test_get_description_with_non_field",
+  "python_scripts/tests/violations_seeds_test.py::test_get_bbl_1",
+  "python_scripts/tests/violations_seeds_test.py::test_get_bbl_2",
+  "python_scripts/tests/violations_seeds_test.py::test_get_bbl_3"
+]

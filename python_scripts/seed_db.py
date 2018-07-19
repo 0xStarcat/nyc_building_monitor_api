@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import csv
 
 from seeds import boroughs_seeds
 from seeds import community_districts_seeds
@@ -26,8 +27,8 @@ def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=service_calls_seeds.service_calls_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permits_seeds.permits_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
 
 def drop_buildings_table(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=buildings_seeds.buildings_table))
@@ -135,15 +136,14 @@ def seed():
   conn.commit()
   conn.close()
 
-def test():
-  conn = sqlite3.connect(sqlite_file, timeout=10)
+def sample():
+  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
   
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM {tn} WHERE {cn1}=\'{source}\' order by date desc'.format(tn='violations', cn1="source", source='HPD'))
-  # c.execute('SELECT * FROM permits')
+  c.execute('SELECT * FROM service_calls')
   all_rows = c.fetchall()
-  print(all_rows[0])
+  print(all_rows[1000])
 
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()

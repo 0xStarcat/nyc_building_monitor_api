@@ -34,7 +34,7 @@ def request_single_row_from_api(url):
   print("requesting from: ", url)
   return json.loads(requests.get(url).text)
 
-def request_from_api(conn, url, source, seed_method=None):
+def request_from_api(conn, url, source, seed_method=None, write_to_csv=False):
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   print("requesting from: ", url)
@@ -60,7 +60,7 @@ def request_from_api(conn, url, source, seed_method=None):
         data["source"] = source
 
     if seed_method:
-      seed_method(c, request_data)
+      seed_method(c, request_data, write_to_csv)
       conn.commit()
     count += len(request_data)
     print("  * " + str(count) + " records seeded.")

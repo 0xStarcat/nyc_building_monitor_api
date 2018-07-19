@@ -120,12 +120,15 @@ module.exports = {
             name: { label: 'Id', value: row.violation_id },
             parentBoundaryName: { label: 'Address', value: row.building.address },
             source: { label: 'Source', value: row.source },
+            status: { label: 'Status', value: row.status },
             date: { label: 'Date', value: row.date },
             description: { label: 'Description', value: row.description },
-            resolutionViolation: { label: 'Resulted in violation', value: row.resolution_violation },
-            resolutionNoAction: { label: 'Resulted in no action', value: row.resolution_no_action },
-            resolutionUnableToInvestigate: { label: 'Unable to investigate', value: row.unable_to_investigate },
-            openOverMonth: { label: 'Open for over 1 month', value: row.open_over_month }
+            resolutionDescription: { label: 'Resolution Description', value: row.resolutionDescription },
+            resolutionViolation: { label: 'Resulted in violation', value: row.resolutionViolation },
+            resolutionNoAction: { label: 'Resulted in no action', value: row.resolutionNoAction },
+            resolutionUnableToInvestigate: { label: 'Unable to investigate', value: row.unableToInvestigate },
+            openOverMonth: { label: 'Open for over 1 month', value: row.openOverMonth },
+            daysToResolve: { label: 'Days to Resolve', value: row.daysToClose }
           }
         }
       })
@@ -137,11 +140,9 @@ module.exports = {
         return {
           type: 'Feature',
           properties: {
-            name: { label: 'Id', value: row.unique_key },
-            parentBoundaryName: { label: 'Address', value: row.building.address },
+            name: { label: 'Id', value: row.building.address },
             date: { label: 'Date', value: row.date },
-            price: { label: 'Price', value: row.price },
-            address: { label: 'Address', value: row.building.address }
+            price: { label: 'Price', value: row.price }
           }
         }
       })

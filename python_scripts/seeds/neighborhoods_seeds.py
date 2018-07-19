@@ -24,10 +24,11 @@ def seed_neighborhoods(c, neighborhood_json):
   neigh_col12 = 'total_service_calls_unable_to_investigate_result'
   neigh_col13 = 'total_service_calls_open_over_month'
   neigh_col14 = 'representative_point'
+  neigh_col15 = 'service_calls_average_days_to_resolve'
 
 
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} TEXT, {col4} TEXT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} TEXT, UNIQUE({col3}))'\
-    .format(tn=neighborhoods_table, ref_table=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, col1=neigh_col1, col2=neigh_col2, col3=neigh_col3, col4=neigh_col4, col5=neigh_col5, col6=neigh_col6, col7=neigh_col7, col8=neigh_col8, col9=neigh_col9, col10=neigh_col10, col11=neigh_col11, col12=neigh_col12, col13=neigh_col13, col14=neigh_col14))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} TEXT, {col4} TEXT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} TEXT, {col15} INT, UNIQUE({col3}))'\
+    .format(tn=neighborhoods_table, ref_table=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, col1=neigh_col1, col2=neigh_col2, col3=neigh_col3, col4=neigh_col4, col5=neigh_col5, col6=neigh_col6, col7=neigh_col7, col8=neigh_col8, col9=neigh_col9, col10=neigh_col10, col11=neigh_col11, col12=neigh_col12, col13=neigh_col13, col14=neigh_col14, col15=neigh_col15))
 
   c.execute('CREATE INDEX idx_n_community_district_id ON {tn}({col2})'.format(tn=neighborhoods_table, col2=neigh_col2))
   c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=neighborhoods_table, col1=neigh_col1))

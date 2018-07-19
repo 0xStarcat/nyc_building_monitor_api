@@ -90,11 +90,12 @@ def create_table(c):
   c.execute('CREATE INDEX idx_permit_street_name_and_house_number ON {tn}({col15}, {col14})'.format(tn=permits_table, col14=permit_col14, col15=permit_col15))
 
 
-def seed_permits_from_json(c, permit_json):
+def seed_permits_from_json(c, permit_json, write_to_csv=False):
   print("Seeding permits...")
 
   for index, permit in enumerate(permit_json):
-    print("permit: " + str(index) + "/" + str(len(permit_json)))
+    if index % 1000 == 0:
+      print("permit: " + str(index) + "/" + str(len(permit_json)))
     
     # building_match = get_building_match(c, permit["block"], permit["lot"])
 
@@ -103,7 +104,7 @@ def seed_permits_from_json(c, permit_json):
 
     # building_id = None # building_match[0] if building_match else None
     if "gis_longitude" not in permit and "gis_latitude" not in permit:
-      print("  * no geo information")
+      print("  * no geo information", "call: " + str(index) + "/" + str(len(permit_json)))
       continue
 
     geometry = get_geometry(permit["gis_longitude"], permit["gis_latitude"])
@@ -111,7 +112,7 @@ def seed_permits_from_json(c, permit_json):
     fkeys = find_foreign_keys(c, permit)
 
     if not fkeys:
-      print("  X no boundary match found")
+      print("  X no boundary match found", "call: " + str(index) + "/" + str(len(permit_json)))
       continue
 
     date = convert_date_format(permit["issuance_date"])
@@ -139,5 +140,6 @@ def seed_permits_from_json(c, permit_json):
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14} ,{col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=permits_table, col1=permit_col1, col2=permit_col2, col3=permit_col3, col4=permit_col4, col5=permit_col5, col6=permit_col6, col7=permit_col7, col8=permit_col8, col9=permit_col9, col10=permit_col10, col11=permit_col11, col12=permit_col12, col13=permit_col13, col14=permit_col14, col15=permit_col15), (fkeys["borough_id"], fkeys["community_district_id"], fkeys["neighborhood_id"], fkeys["census_tract_id"], permit_cluster_id, str(date), str(geometry_json), str(source), str(permit_type), str(owner_business_name), str(owner_first_name), str(owner_last_name), str(job_start_date), str(house_number), str(street_name)))
 
-    csv_helpers.write_csv(c, permit, config.PERMITS_CSV_URL, index == 0)
+    if write_to_csv:
+      csv_helpers.write_csv(c, permit, config.PERMITS_CSV_URL, index == 0)
 

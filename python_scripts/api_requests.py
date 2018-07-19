@@ -30,20 +30,20 @@ def check_call_statuses():
   service_calls_status_request.check_statuses()
 
 
-def request():
+def request(write_to_csv=False):
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
 
-  r = service_calls_dob_request.make_request(conn)
+  r = service_calls_dob_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ dob service calls added: " + str(r) + "\n")
-  r = service_calls_hpd_request.make_request(conn)
+  r = service_calls_hpd_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ hpd service calls added: " + str(r) + "\n")
-  r = violation_dob_request.make_request(conn)
+  r = violation_dob_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ dob violations added: " + str(r) + "\n")
-  r = violation_ecb_request.make_request(conn)
+  r = violation_ecb_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ ecb violations added: " + str(r) + "\n")
-  r = violation_hpd_request.make_request(conn)
+  r = violation_hpd_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ hpd violations added: " + str(r) + "\n")
-  r = permit_request.make_request(conn)
+  r = permit_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ permits added: " + str(r) + "\n")
   conn.commit()
   conn.close()

@@ -8,6 +8,7 @@ col5 = 'total_service_calls_with_violation_result'
 col6 = 'total_service_calls_with_no_action_result'
 col7 = 'total_service_calls_unable_to_investigate_result'
 col8 = 'total_service_calls_open_over_month'
+col9 = 'service_calls_average_days_to_resolve'
 
 def update_all(c, conn):
   for table in tables:
@@ -81,7 +82,7 @@ def update_data(c, table):
     service_calls_open_over_month = 0
 
     for event in service_calls:
-      c.execute('SELECT * FROM service_calls WHERE id={id}'.format(id=event[5]))
+      c.execute('SELECT * FROM service_calls WHERE id={id}'.format(id=event[7])) # find service call by eventable_id of building_event
       entry = c.fetchone()
       if entry[5] == True:
         service_calls_violation_result_count += 1
@@ -92,7 +93,6 @@ def update_data(c, table):
       elif entry[10] == True:
         service_calls_open_over_month += 1
 
-
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col5, value=service_calls_violation_result_count, id=row[0]))
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
@@ -102,6 +102,13 @@ def update_data(c, table):
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col8, value=service_calls_open_over_month, id=row[0]))
 
-   
+    # Average days to resolve service call
 
+    c.execute('SELECT AVG(days_to_close) from service_calls WHERE {cn} = {id} AND days_to_close IS NOT NULL'\
+      .format(cn=column_name, id=row[0]))
+
+    average = c.fetchone()
+
+    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
+      .format(tn=table, cn=col9, value=average, id=row[0]))
 

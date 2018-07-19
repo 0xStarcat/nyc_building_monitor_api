@@ -90,9 +90,10 @@ def seed_sales(c, sale_csv):
   print("Seeding sales...")
 
   for index, sale in enumerate(sale_csv):
-    print("sale: " + str(index) + "/" + str(len(sale_csv)))
+    if index % 1000 == 0:
+      print("sale: " + str(index) + "/" + str(len(sale_csv)))
     if len(sale) < 21:
-      print("  X malformed sale record")
+      print("  X malformed sale record", "sale: " + str(index) + "/" + str(len(sale_csv)))
       continue
 
     
@@ -101,7 +102,7 @@ def seed_sales(c, sale_csv):
     if building_match:
       pass
     else: 
-      print("  * no building match found")
+      print("  * no building match found", "sale: " + str(index) + "/" + str(len(sale_csv)))
       continue
 
     building_id = building_match[0]

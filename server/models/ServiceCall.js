@@ -19,19 +19,19 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         field: 'description'
       },
-      resolution_description: {
+      resolutionDescription: {
         type: DataTypes.INTEGER,
         field: 'resolution_description'
       },
-      resolution_violation: {
+      resolutionViolation: {
         type: DataTypes.BOOLEAN,
         field: 'resolution_violation'
       },
-      resolution_no_action: {
+      resolutionNoAction: {
         type: DataTypes.BOOLEAN,
         field: 'resolution_no_action'
       },
-      unable_to_investigate: {
+      unableToInvestigte: {
         type: DataTypes.BOOLEAN,
         field: 'unable_to_investigate'
       },
@@ -39,9 +39,13 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         field: 'status'
       },
-      open_over_month: {
+      openOverMonth: {
         type: DataTypes.BOOLEAN,
         field: 'open_over_month'
+      },
+      daysToClose: {
+        type: DataTypes.STRING,
+        field: 'days_to_close'
       }
     },
     {
