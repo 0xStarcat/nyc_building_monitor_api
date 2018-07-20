@@ -1,8 +1,15 @@
-const { db } = require(__dirname + '/../models/sequelize.js')
+// const { db } = require(__dirname + '/../models/sequelize.js')
 const { constructBuildingJson, constructCensusTractJson } = require(__dirname + '/helpers/jsonHelpers.js')
 
+const { dbPromise } = require('../db.js')
 module.exports = {
   index: async (req, res) => {
+    const db = await dbPromise
+    const data = await db.get('SELECT * FROM census_tracts')
+    console.log(constructCensusTractJson(data))
+    res.json(constructCensusTractJson(data))
+  },
+  indexOld: async (req, res) => {
     db.Borough.findAll().then(boroughData => {
       db.CensusTract.findAll({
         include: [
@@ -21,6 +28,10 @@ module.exports = {
           {
             model: db.RacialMakeup,
             attributes: ['percent_white_2010']
+          },
+          {
+            model: db.Building,
+            attributes: []
           }
         ]
       }).then(data => {

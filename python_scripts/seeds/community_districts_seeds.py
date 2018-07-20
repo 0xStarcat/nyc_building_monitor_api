@@ -23,10 +23,11 @@ cd_col14 = 'service_calls_average_days_to_resolve'
 cd_col15 = 'total_residential_buildings'
 cd_col16 = 'total_conversions'
 cd_col17 = 'total_conversions_to_non_residential'
+cd_col18 = 'total_evictions'
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id), {col2} TEXT, {col3} TEXT, {col4} INT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} TEXT, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, UNIQUE({col2}))'\
-    .format(tn=community_districts_table, col1=cd_col1, col2=cd_col2, col3=cd_col3, col4=cd_col4, col5=cd_col5, col6=cd_col6, col7=cd_col7, col8=cd_col8, col9=cd_col9, col10=cd_col10, col11=cd_col11, col12=cd_col12, col13=cd_col13, col14=cd_col14, col15=cd_col15, col16=cd_col16, col17=cd_col17, ref_table=boroughs_seeds.boroughs_table))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id), {col2} TEXT, {col3} TEXT, {col4} INT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} TEXT, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, UNIQUE({col2}))'\
+    .format(tn=community_districts_table, col1=cd_col1, col2=cd_col2, col3=cd_col3, col4=cd_col4, col5=cd_col5, col6=cd_col6, col7=cd_col7, col8=cd_col8, col9=cd_col9, col10=cd_col10, col11=cd_col11, col12=cd_col12, col13=cd_col13, col14=cd_col14, col15=cd_col15, col16=cd_col16, col17=cd_col17, col18=cd_col18, ref_table=boroughs_seeds.boroughs_table))
   
   c.execute('CREATE INDEX idx_cd_borough_id ON {tn}({col1})'.format(tn=community_districts_table, col1=cd_col1))
 

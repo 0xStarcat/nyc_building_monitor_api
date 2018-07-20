@@ -53,13 +53,13 @@ def clear_csvs():
 
 def create_buildings_data_tables(c):
   print("creating buildings data tables")
-  sales_seeds.create_table(c)
-  conversions_seeds.create_table(c)
-  permit_clusters_seeds.create_table(c)
-  permits_seeds.create_table(c)
-  service_calls_seeds.create_table(c)
-  violations_seeds.create_table(c)
-  building_events_seeds.create_table(c)
+  # sales_seeds.create_table(c)
+  # conversions_seeds.create_table(c)
+  # permit_clusters_seeds.create_table(c)
+  # permits_seeds.create_table(c)
+  # service_calls_seeds.create_table(c)
+  # violations_seeds.create_table(c)
+  # building_events_seeds.create_table(c)
   evictions_seeds.create_table(c)
 
 def create_boundaries_tables(c):
@@ -112,14 +112,14 @@ def seed_boundary_tables(c, conn):
   rents_csv = list(csv.reader(open("data/rent_data/censustract-medianrentall2017.csv")))[1:]
   racial_makeup_csv = list(csv.reader(open("data/race_data/nyc_race_2010_by_census_tract.csv")))[1:]
   
-  boroughs_seeds.seed_boroughs(c, borough_json)
-  conn.commit()
-  community_districts_seeds.seed_community_districts(c, community_district_json)
-  conn.commit()
-  neighborhoods_seeds.seed_neighborhoods(c, neighborhood_json)
-  conn.commit()
-  census_tracts_seeds.seed_census_tracts(c, census_tract_json)
-  conn.commit()
+  # boroughs_seeds.seed_boroughs(c, borough_json)
+  # conn.commit()
+  # community_districts_seeds.seed_community_districts(c, community_district_json)
+  # conn.commit()
+  # neighborhoods_seeds.seed_neighborhoods(c, neighborhood_json)
+  # conn.commit()
+  # census_tracts_seeds.seed_census_tracts(c, census_tract_json)
+  # conn.commit()
   incomes_seeds.seed_incomes(c, incomes_csv)
   conn.commit()
   rents_seeds.seed_rents(c, rents_csv)
@@ -134,12 +134,9 @@ def drop():
   c.execute('pragma foreign_keys=on;')
 
   # clear_csvs()
-  drop_buildings_data_tables(c)
+  # drop_buildings_data_tables(c)
   # drop_buildings_table(c)
   # drop_boundary_tables(c)
- 
-  # clear_sales()
-  # clear_conversions()
 
   conn.commit()
   conn.close()
@@ -150,12 +147,23 @@ def seed():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on')
-
+  # clear_evictions()
   # create_boundaries_tables(c)
-  # seed_boundary_tables(c, conn)
+  seed_boundary_tables(c, conn)
   # seed_buildings(c, conn)
-  create_buildings_data_tables(c)
-  seed_buildings_data(c)  
+  # create_buildings_data_tables(c)
+  # seed_buildings_data(c)  
+  conn.commit()
+  conn.close()
+
+def clear_evictions():
+  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
+  c.execute('DELETE FROM building_events WHERE eventable=\'{type}\''.format(type="eviction"))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=evictions_seeds.table))
+  evictions_seeds.create_table(c)
   conn.commit()
   conn.close()
 
@@ -196,9 +204,9 @@ def sample():
   conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM conversions WHERE converted_residential=\'{value}\''.format(value=True))
+  c.execute('SELECT * FROM evictions')
   all_rows = c.fetchall()
-  print(all_rows[400])
+  print(all_rows)
   print(str(len(all_rows)))
 
   # c.execute('SELECT * FROM violations')

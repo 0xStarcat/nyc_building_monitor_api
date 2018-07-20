@@ -9,6 +9,7 @@ col6 = 'total_service_calls_with_no_action_result'
 col7 = 'total_service_calls_unable_to_investigate_result'
 col8 = 'total_service_calls_open_over_month'
 col9 = 'service_calls_average_days_to_resolve'
+col10 = 'total_evictions'
 
 def update_all(c, conn):
   for table in tables:
@@ -111,4 +112,14 @@ def update_data(c, table):
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col9, value=average, id=row[0]))
+
+    # evictions
+
+    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+      .format(event='eviction', cn=column_name, id=row[0]))
+
+    evictions_count = len(c.fetchall())
+
+    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
+      .format(tn=table, cn=col10, value=evictions_count, id=row[0]))
 

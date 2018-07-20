@@ -19,10 +19,11 @@ boro_col14 = 'service_calls_average_days_to_resolve'
 boro_col15 = 'total_residential_buildings'
 boro_col16 = 'total_conversions'
 boro_col17 = 'total_conversions_to_non_residential'
+boro_col18 = 'total_evictions'
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} TEXT, {col2} INTEGER, {col3} TEXT, {col4} INT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} TEXT, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, UNIQUE({col1}), UNIQUE({col2}))'\
-    .format(tn=boroughs_table, col1=boro_col1, col2=boro_col2, col3=boro_col3, col4=boro_col4, col5=boro_col5, col6=boro_col6, col7=boro_col7, col8=boro_col8, col9=boro_col9, col10=boro_col10, col11=boro_col11, col12=boro_col12, col13=boro_col13, col14=boro_col14, col15=boro_col15, col16=boro_col16, col17=boro_col17))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} TEXT, {col2} INTEGER, {col3} TEXT, {col4} INT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} TEXT, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, UNIQUE({col1}), UNIQUE({col2}))'\
+    .format(tn=boroughs_table, col1=boro_col1, col2=boro_col2, col3=boro_col3, col4=boro_col4, col5=boro_col5, col6=boro_col6, col7=boro_col7, col8=boro_col8, col9=boro_col9, col10=boro_col10, col11=boro_col11, col12=boro_col12, col13=boro_col13, col14=boro_col14, col15=boro_col15, col16=boro_col16, col17=boro_col17, col18=boro_col18))
 
 def seed_boroughs(c, borough_json):
   print("** Seeding Boroughs...")

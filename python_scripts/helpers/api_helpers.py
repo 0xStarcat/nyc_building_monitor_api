@@ -67,7 +67,7 @@ def request_from_api(conn, url, source, seed_method=None, write_to_csv=False):
 
   def request(off):
     r = requests.get(url+'&$limit='+str(limit)+'&$offset=' + str(off))
-
+    
     data = json.loads(r.text)
     for d in data:
       request_data.append(d)

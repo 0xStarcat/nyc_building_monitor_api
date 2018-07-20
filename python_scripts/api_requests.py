@@ -7,6 +7,7 @@ from requests_api import service_calls_dob_request
 from requests_api import service_calls_hpd_request
 from requests_api import service_calls_status_request
 from requests_api import permit_request
+from requests_api import evictions_request
 
 from migrations import buildings_migration
 from migrations import boundary_table_migrations
@@ -33,6 +34,8 @@ def check_call_statuses():
 def request(write_to_csv=False):
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
 
+  # r = evictions_request.make_request(conn, write_to_csv)
+  # log_helper.write_to_log(" ++ evictions added: " + str(r) + "\n")
   r = service_calls_dob_request.make_request(conn, write_to_csv)
   log_helper.write_to_log(" ++ dob service calls added: " + str(r) + "\n")
   r = service_calls_hpd_request.make_request(conn, write_to_csv)
