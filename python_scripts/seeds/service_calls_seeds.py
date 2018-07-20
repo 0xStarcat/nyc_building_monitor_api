@@ -66,8 +66,8 @@ def is_open_over_month(status, processed_date):
   return (status.lower() == "open" or status.lower() == "pending") and (datetime.date.today() - datetime.datetime.strptime(processed_date, "%Y%m%d").date()).days > 30
 
 def get_building_match(c, bbl):
-  block = bbl[1:6].lstrip("0")
-  c.execute('SELECT * FROM buildings WHERE block=\'{block}\' AND bbl=\"{bbl}\"'.format(block=block.lstrip("0"), bbl=bbl))
+  # block = bbl[1:6].lstrip("0")
+  c.execute('SELECT * FROM buildings WHERE bbl=\"{bbl}\"'.format(bbl=bbl))
   return c.fetchone()
 
 def create_table(c):

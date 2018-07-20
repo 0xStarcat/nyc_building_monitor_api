@@ -26,6 +26,9 @@ ct_col15 = 'total_service_calls_unable_to_investigate_result'
 ct_col16 = 'total_service_calls_open_over_month'
 ct_col17 = 'representative_point'
 ct_col18 = 'service_calls_average_days_to_resolve'
+ct_col19 = 'total_residential_buildings'
+ct_col20 = 'total_conversions'
+ct_col21 = 'total_conversions_to_non_residential'
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} TEXT, {col5} TEXT, {col6} INT, {col7} TEXT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} INT, {col15} INT, {col16} INT, {col17} TEXT, {col18} INT, {col19} INT, {col20} INT, {col21} INT)'\
@@ -35,6 +38,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_ct_community_district_id ON {tn}({col2})'.format(tn=census_tracts_table, col2=ct_col2))
   c.execute('CREATE INDEX idx_ct_borough_id ON {tn}({col1})'.format(tn=census_tracts_table, col1=ct_col1))
   c.execute('CREATE INDEX idx_ct_boro_code ON {tn}({col6})'.format(tn=census_tracts_table, col6=ct_col6))
+  c.execute('CREATE INDEX idx_ct_boro_code_and_ctlabel ON {tn}({col6}, {col5})'.format(tn=census_tracts_table, col5=ct_col5, col6=ct_col6))
 
 def seed_census_tracts(c, census_tract_json):
   print("** Seeding Census Tracts...")

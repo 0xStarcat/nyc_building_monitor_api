@@ -15,6 +15,7 @@ from seeds import sales_seeds
 from seeds import permits_seeds
 from seeds import permit_clusters_seeds
 from seeds import conversions_seeds
+from seeds import evictions_seeds
 
 from seeds import service_calls_seeds
 from seeds import building_events_seeds
@@ -29,7 +30,9 @@ def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permits_seeds.permits_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=permit_clusters_seeds.permit_clusters_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=violations_seeds.violations_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=conversions_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=evictions_seeds.table))
 
 def drop_buildings_table(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=buildings_seeds.buildings_table))
@@ -49,6 +52,7 @@ def clear_csvs():
   csv_helpers.clear_csv(config.SERVICE_CALLS_CSV_URL)
 
 def create_buildings_data_tables(c):
+  print("creating buildings data tables")
   sales_seeds.create_table(c)
   conversions_seeds.create_table(c)
   permit_clusters_seeds.create_table(c)
@@ -56,18 +60,22 @@ def create_buildings_data_tables(c):
   service_calls_seeds.create_table(c)
   violations_seeds.create_table(c)
   building_events_seeds.create_table(c)
+  evictions_seeds.create_table(c)
 
 def create_boundaries_tables(c):
+  print("creating boundary tables")
   boroughs_seeds.create_table(c)
   community_districts_seeds.create_table(c)
   neighborhoods_seeds.create_table(c)
   census_tracts_seeds.create_table(c)
 
 def seed_buildings_data(c):
+  print("Seeding building data")
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
   sales_seeds.seed_sales(c, sales_csv)
 
 def seed_buildings(c, conn):
+  print("Seeding buildings")
   buildings_seeds.create_table(c)
 
   mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
@@ -95,6 +103,7 @@ def seed_buildings(c, conn):
   conn.commit()
 
 def seed_boundary_tables(c, conn):
+  print("Seeding boundary tables")
   borough_json = json.load(open('data/boundary_data/boroughs.geojson'))
   community_district_json = json.load(open('data/boundary_data/community_districts.geojson'))
   neighborhood_json = json.load(open('data/boundary_data/neighborhoods.geojson'))
@@ -119,29 +128,32 @@ def seed_boundary_tables(c, conn):
   conn.commit()
 
 def drop():
-
+  print("Dropping")
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
   # clear_csvs()
-  # drop_buildings_data_tables(c)
+  drop_buildings_data_tables(c)
   # drop_buildings_table(c)
   # drop_boundary_tables(c)
+ 
+  # clear_sales()
+  # clear_conversions()
 
-  clear_violations()
   conn.commit()
   conn.close()
 
 def seed():
+  print("Seeding")
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on')
 
-  create_boundaries_tables(c)
-  seed_boundary_tables(c, conn)
-  seed_buildings(c, conn)
+  # create_boundaries_tables(c)
+  # seed_boundary_tables(c, conn)
+  # seed_buildings(c, conn)
   create_buildings_data_tables(c)
   seed_buildings_data(c)  
   conn.commit()
@@ -158,13 +170,36 @@ def clear_violations():
   conn.commit()
   conn.close()
 
+def clear_sales():
+  conn = sqlite3.connect(sqlite_file, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
+  c.execute('DELETE FROM building_events WHERE eventable=\'{type}\''.format(type="sale"))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=sales_seeds.sales_table))
+  sales_seeds.create_table(c)
+  conn.commit()
+  conn.close()
+
+def clear_conversions():
+  conn = sqlite3.connect(sqlite_file, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
+  c.execute('DELETE FROM building_events WHERE eventable=\'{type}\''.format(type="conversion"))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=conversions_seeds.table))
+  conversions_seeds.create_table(c)
+  conn.commit()
+  conn.close()
+
 def sample():
   conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
-  c.execute('SELECT * FROM boroughs')
+  c.execute('SELECT * FROM conversions WHERE converted_residential=\'{value}\''.format(value=True))
   all_rows = c.fetchall()
-  print(all_rows[0])
+  print(all_rows[400])
+  print(str(len(all_rows)))
 
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()

@@ -31,12 +31,16 @@ def test_class_is_residential_3():
 # class_is_residential
 def test_class_is_residential_4():
   bldg_class = "V0"
-  assert context.seed_db.sales_seeds.class_is_residential(bldg_class) == True
+  assert context.seed_db.sales_seeds.class_is_residential(bldg_class) == False
+
+def test_class_is_residential_5():
+  bldg_class = "V1"
+  assert context.seed_db.sales_seeds.class_is_residential(bldg_class) == False
 
 # class_is_non_residential
 
 def test_class_is_non_residential_1():
-  bldg_class = "V0"
+  bldg_class = "A1"
   assert context.seed_db.sales_seeds.class_is_non_residential(bldg_class) == False
 
 def test_class_is_non_residential_2():
@@ -45,4 +49,8 @@ def test_class_is_non_residential_2():
 
 def test_class_is_non_residential_3():
   bldg_class = "F1"
+  assert context.seed_db.sales_seeds.class_is_non_residential(bldg_class) == True
+
+def test_class_is_non_residential_4():
+  bldg_class = "V0"
   assert context.seed_db.sales_seeds.class_is_non_residential(bldg_class) == True

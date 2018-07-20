@@ -78,8 +78,8 @@ def get_building_match(c, violation):
 
   if boro_id and violation["block"] and violation["lot"]:
     bbl = get_bbl(boro_id, violation)
-    block = violation["block"].lstrip("0")
-    c.execute('SELECT * FROM buildings WHERE block=\'{block}\' AND bbl=\"{bbl}\"'.format(block=block.lstrip("0"), bbl=bbl))
+    # block = violation["block"].lstrip("0")
+    c.execute('SELECT * FROM buildings WHERE bbl=\"{bbl}\"'.format(bbl=bbl))
     return c.fetchone()
   else:
     return None
