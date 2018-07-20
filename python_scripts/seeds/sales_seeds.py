@@ -104,7 +104,7 @@ def get_building_match(c, sale):
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} INT, {col4} TEXT, {col5} TEXT, {col6} TEXT, {col7} TEXT, UNIQUE({col1}, {col2}) ON CONFLICT REPLACE)'\
-    .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, col4=sale_col4, col5=sale_col5, col6=sale_col6, col7=sale_col7, bldg_table=buildings_seeds.buildings_table))
+    .format(tn=sales_table, col1=sale_col1, col2=sale_col2, col3=sale_col3, col4=sale_col4, col5=sale_col5, col6=sale_col6, col7=sale_col7, bldg_table=buildings_seeds.table))
 
   c.execute('CREATE INDEX idx_sale_building_id ON {tn}({col1})'.format(tn=sales_table, col1=sale_col1))
   c.execute('CREATE TRIGGER insert_sale_with_price BEFORE INSERT ON {tn} FOR EACH ROW WHEN (SELECT price FROM {tn} WHERE date = NEW.date AND building_id = NEW.building_id) > NEW.price BEGIN SELECT RAISE(IGNORE); END;'.format(tn=sales_table))
@@ -158,13 +158,13 @@ def seed_sales(c, sale_csv):
     insertion_id = c.lastrowid
 
     c.execute('SELECT * FROM {tn} WHERE {cn}={b_id}'\
-      .format(tn=buildings_seeds.buildings_table, cn='id', b_id=building_id))
+      .format(tn=buildings_seeds.table, cn='id', b_id=building_id))
 
     building = c.fetchone()
 
     # Create Building Event
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'sale', insertion_id, date))
+      .format(tn=building_events_seeds.table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'sale', insertion_id, date))
 
     # Create Conversion if needed
     if bldg_class_at_sale and bldg_class_after_sale and bldg_class_at_sale != bldg_class_after_sale:

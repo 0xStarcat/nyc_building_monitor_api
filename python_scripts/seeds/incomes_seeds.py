@@ -4,7 +4,7 @@ from seeds import community_districts_seeds
 from seeds import census_tracts_seeds
 from seeds import neighborhoods_seeds
 
-incomes_table = 'incomes'
+table = 'incomes'
 
 def find_tract_and_neighborhood_match(c, income):
   if income[2][:5] == "36061":
@@ -27,7 +27,7 @@ def find_tract_and_neighborhood_match(c, income):
     borough_code = ""
 
   c.execute('SELECT * FROM {tn} WHERE {cn1}={boro_code} and {cn2}=\'{ct_number}\''\
-      .format(tn=census_tracts_seeds.census_tracts_table, cn1="boro_code", cn2="name", boro_code=borough_code, ct_number=str(income[2][5:])))
+      .format(tn=census_tracts_seeds.table, cn1="boro_code", cn2="name", boro_code=borough_code, ct_number=str(income[2][5:])))
   result = c.fetchone()
   if result:
     return {
@@ -50,7 +50,7 @@ def seed_incomes(c, income_csv):
   income_col7 = 'median_income_change_2011_2017'
 
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} INTEGER NOT NULL REFERENCES {ref_table4}(id), {col5} REAL, {col6} REAL, {col7} REAL)'\
-    .format(tn=incomes_table, col1=income_col1, col2=income_col2, col3=income_col3, col4=income_col4, col5=income_col5, col6=income_col6, col7=income_col7,ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table))
+    .format(tn=table, col1=income_col1, col2=income_col2, col3=income_col3, col4=income_col4, col5=income_col5, col6=income_col6, col7=income_col7,ref_table1=boroughs_seeds.table, ref_table2=community_districts_seeds.table, ref_table3=neighborhoods_seeds.table, ref_table4=census_tracts_seeds.table))
 
   for index, row in enumerate(income_csv):
     print("income: " + str(index) + "/" + str(len(income_csv)))
@@ -84,4 +84,4 @@ def seed_incomes(c, income_csv):
      change_2011_2017 = round(mi_2017 - mi_2011, 2)
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=incomes_table, col1=income_col1, col2=income_col2, col3=income_col3, col4=income_col4, col5=income_col5, col6=income_col6, col7=income_col7), (boro_id, cd_id, n_id, ct_id, mi_2011, mi_2017, change_2011_2017))
+      .format(tn=table, col1=income_col1, col2=income_col2, col3=income_col3, col4=income_col4, col5=income_col5, col6=income_col6, col7=income_col7), (boro_id, cd_id, n_id, ct_id, mi_2011, mi_2017, change_2011_2017))

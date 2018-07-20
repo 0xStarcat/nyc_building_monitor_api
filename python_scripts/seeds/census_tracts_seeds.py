@@ -1,80 +1,74 @@
-import os,sys,inspect
-sys.path.insert(1, os.path.join(sys.path[0], '..')) 
-
-from helpers import boundary_helpers
 import json
-from seeds import neighborhoods_seeds
-from seeds import community_districts_seeds
-from seeds import boroughs_seeds
+from .. import context
 
-census_tracts_table = 'census_tracts'
-ct_col1 = 'borough_id'
-ct_col2 = 'community_district_id'
-ct_col3 = 'neighborhood_id'
-ct_col4 = 'name'
-ct_col5 = 'CTLabel'
-ct_col6 = 'boro_code'
-ct_col7 = 'geometry'
-ct_col8 = 'total_buildings'
-ct_col9 = 'total_violations'
-ct_col10 = 'total_sales'
-ct_col11 = 'total_permits'
-ct_col12 = 'total_service_calls'
-ct_col13 = 'total_service_calls_with_violation_result'
-ct_col14 = 'total_service_calls_with_no_action_result'
-ct_col15 = 'total_service_calls_unable_to_investigate_result'
-ct_col16 = 'total_service_calls_open_over_month'
-ct_col17 = 'representative_point'
-ct_col18 = 'service_calls_average_days_to_resolve'
-ct_col19 = 'total_residential_buildings'
-ct_col20 = 'total_conversions'
-ct_col21 = 'total_conversions_to_non_residential'
-ct_col22 = 'total_evictions'
+table = 'census_tracts'
+col1 = 'borough_id'
+col2 = 'neighborhood_id'
+col3 = 'name'
+col4 = 'CTLabel'
+col5 = 'boro_code'
+col6 = 'geometry'
+col7 = 'representative_point'
+col8 = 'total_buildings'
+col9 = 'total_residential_buildings'
+col10 = 'total_violations'
+col11 = 'total_sales'
+col12 = 'total_permits'
+col13 = 'total_service_calls'
+col14 = 'total_service_calls_open_over_month'
+col15 = 'service_calls_average_days_to_resolve'
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} TEXT, {col5} TEXT, {col6} INT, {col7} TEXT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} INT, {col15} INT, {col16} INT, {col17} TEXT, {col18} INT, {col19} INT, {col20} INT, {col21} INT, {col22} INT)'\
-    .format(tn=census_tracts_table, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, col1=ct_col1, col2=ct_col2, col3=ct_col3, col4=ct_col4, col5=ct_col5, col6=ct_col6, col7=ct_col7, col8=ct_col8, col9=ct_col9, col10=ct_col10, col11=ct_col11, col12=ct_col12, col13=ct_col13, col14=ct_col14, col15=ct_col15, col16=ct_col16, col17=ct_col17, col18=ct_col18, col19=ct_col19, col20=ct_col20, col21=ct_col21, col22=ct_col22))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT)'.format(tn=table))
 
-  c.execute('CREATE INDEX idx_ct_neighborhood_id ON {tn}({col3})'.format(tn=census_tracts_table, col3=ct_col3))
-  c.execute('CREATE INDEX idx_ct_community_district_id ON {tn}({col2})'.format(tn=census_tracts_table, col2=ct_col2))
-  c.execute('CREATE INDEX idx_ct_borough_id ON {tn}({col1})'.format(tn=census_tracts_table, col1=ct_col1))
-  c.execute('CREATE INDEX idx_ct_boro_code ON {tn}({col6})'.format(tn=census_tracts_table, col6=ct_col6))
-  c.execute('CREATE INDEX idx_ct_boro_code_and_ctlabel ON {tn}({col6}, {col5})'.format(tn=census_tracts_table, col5=ct_col5, col6=ct_col6))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INTEGER NOT NULL REFERENCES {ref_table}(id)".format(cn=col1, ref_table=context.boroughs_seeds.table))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INTEGER NOT NULL REFERENCES {ref_table}(id)".format(cn=col2, ref_table=context.neighborhoods_seeds.table))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col3))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col4))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col5))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col6))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col7))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col8))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=co9))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col10))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col11))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col12))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col13))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col14))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col15))
+
+  c.execute('CREATE INDEX idx_ct_neighborhood_id ON {tn}({col})'.format(tn=table, col=col3))
+  c.execute('CREATE INDEX idx_ct_borough_id ON {tn}({col})'.format(tn=table, col=col1))
+  c.execute('CREATE INDEX idx_ct_boro_code ON {tn}({col})'.format(tn=table, col=col6))
+  c.execute('CREATE UNIQUE INDEX idx_ct_boro_code_and_name ON {tn}({col1}, {col2})'.format(tn=table, col1=col5, col2=col3))
+  c.execute('CREATE UNIQUE INDEX idx_ct_boro_code_and_ctlabel ON {tn}({col1}, {col2})'.format(tn=table, col1=col5, col2=col4))
 
 def seed_census_tracts(c, census_tract_json):
   print("** Seeding Census Tracts...")
 
-  c.execute('SELECT * FROM {tn}'.format(tn=neighborhoods_seeds.neighborhoods_table))
+  c.execute('SELECT * FROM {tn}'.format(tn=context.neighborhoods_seeds.table))
   neighborhoods = c.fetchall()
 
   for index, ct in enumerate(census_tract_json["features"]):
     print("CT: " + str(index) + "/" + str(len(census_tract_json["features"])))
     
-    name = ct["properties"]["CT2010"]
-    boro_code = int(ct["properties"]["BoroCode"])
-
     if "manual_neighborhood" in ct["properties"]:
       c.execute('SELECT * FROM neighborhoods WHERE name=\'{name}\''.format(name=ct["properties"]["manual_neighborhood"]))
       neighborhood = c.fetchone()
     else:
-      neighborhood = boundary_helpers.get_record_from_coordinates(ct["geometry"], neighborhoods, 4)
+      neighborhood = context.boundary_helpers.get_record_from_coordinates(ct["geometry"], neighborhoods, 3)
     
     if not neighborhood:
-      print("  * -- no neighborhood found", boro_code, name)
+      print("  X -- no neighborhood found", boro_code, name)
       continue
 
+    name = ct["properties"]["CT2010"]
+    boro_code = int(ct["properties"]["BoroCode"])
     boro_id = neighborhood[1]
-    cd_id = neighborhood[2]
     n_id = neighborhood[0]
     ct_label = ct["properties"]["CTLabel"]
     geometry = json.dumps(ct["geometry"], separators=(',', ':'))
-    representative_point = json.dumps(boundary_helpers.get_representative_point_geojson(ct["geometry"]))
+    representative_point = json.dumps(context.boundary_helpers.get_representative_point_geojson(ct["geometry"]))
 
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col17}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=census_tracts_table, col1=ct_col1, col2=ct_col2, col3=ct_col3, col4=ct_col4, col5=ct_col5, col6=ct_col6, col7=ct_col7, col17=ct_col17), (boro_id, cd_id, n_id, name, ct_label, boro_code, geometry, representative_point))
-
-  c.execute('SELECT * FROM {tn}'.format(tn=census_tracts_table))
-  all_rows = c.fetchall()
-  # for row in all_rows:
-  #   print(row[1])
-  print(len(all_rows), " seeded")
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
+      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (boro_id, n_id, name, ct_label, boro_code, geometry, representative_point))

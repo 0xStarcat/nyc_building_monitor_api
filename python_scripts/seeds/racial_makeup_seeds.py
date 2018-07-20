@@ -3,12 +3,12 @@ from seeds import community_districts_seeds
 from seeds import census_tracts_seeds
 from seeds import neighborhoods_seeds
 
-racial_makeup_table = 'racial_makeups'
+table = 'racial_makeups'
 
 def find_foreign_keys(c, race):
 
   c.execute('SELECT * FROM {tn} WHERE {cn1}={boro_code} and {cn2}=\'{ct_number}\''\
-      .format(tn=census_tracts_seeds.census_tracts_table, cn1="boro_code", cn2="name", boro_code=int(race[2]), ct_number=str(race[3]).zfill(6)))
+      .format(tn=census_tracts_seeds.table, cn1="boro_code", cn2="name", boro_code=int(race[2]), ct_number=str(race[3]).zfill(6)))
 
   result = c.fetchone()
   if result:
@@ -32,7 +32,7 @@ def seed_racial_makeups(c, racial_makeup_csv):
 
 
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} INTEGER NOT NULL REFERENCES {ref_table4}(id), {col5} REAL)'\
-    .format(tn=racial_makeup_table, col1=race_col1, col2=race_col2, col3=race_col3, col4=race_col4, col5=race_col5,ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table))
+    .format(tn=table, col1=race_col1, col2=race_col2, col3=race_col3, col4=race_col4, col5=race_col5,ref_table1=boroughs_seeds.table, ref_table2=community_districts_seeds.table, ref_table3=neighborhoods_seeds.table, ref_table4=census_tracts_seeds.table))
 
   for index, row in enumerate(racial_makeup_csv):
     print("racial_makeup: " + str(index) + "/" + str(len(racial_makeup_csv)))
@@ -55,6 +55,6 @@ def seed_racial_makeups(c, racial_makeup_csv):
 
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}) VALUES (?, ?, ?, ?, ?)'\
-      .format(tn=racial_makeup_table, col1=race_col1, col2=race_col2, col3=race_col3, col4=race_col4, col5=race_col5), (boro_id, cd_id, n_id, ct_id,percent_white_2010))
+      .format(tn=table, col1=race_col1, col2=race_col2, col3=race_col3, col4=race_col4, col5=race_col5), (boro_id, cd_id, n_id, ct_id,percent_white_2010))
 
 

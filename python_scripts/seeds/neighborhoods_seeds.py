@@ -1,60 +1,58 @@
-import os,sys,inspect
-sys.path.insert(1, os.path.join(sys.path[0], '..')) 
-
 import json
-from seeds import boroughs_seeds
-from seeds import community_districts_seeds
-from helpers import boundary_helpers
+from .. import context
 
-neighborhoods_table = 'neighborhoods'
-neigh_col1 = 'borough_id'
-neigh_col2 = 'community_district_id'
-neigh_col3 = 'name'
-neigh_col4 = 'geometry'
-neigh_col5 = 'total_buildings'
-neigh_col6 = 'total_violations'
-neigh_col7 = 'total_sales'
-neigh_col8 = 'total_permits'
-neigh_col9 = 'total_service_calls'
-neigh_col10 = 'total_service_calls_with_violation_result'
-neigh_col11 = 'total_service_calls_with_no_action_result'
-neigh_col12 = 'total_service_calls_unable_to_investigate_result'
-neigh_col13 = 'total_service_calls_open_over_month'
-neigh_col14 = 'representative_point'
-neigh_col15 = 'service_calls_average_days_to_resolve'
-neigh_col16 = 'total_residential_buildings'
-neigh_col17 = 'total_conversions'
-neigh_col18 = 'total_conversions_to_non_residential'
-neigh_col19 = 'total_evictions'
+table = 'neighborhoods'
+col1 = 'borough_id'
+col2 = 'name'
+col3 = 'geometry'
+col4 = 'representative_point'
+col5 = 'total_buildings'
+col6 = 'total_residential_buildings'
+col7 = 'total_violations'
+col8 = 'total_sales'
+col9 = 'total_permits'
+col10 = 'total_service_calls'
+col11 = 'total_service_calls_open_over_month'
+col12 = 'service_calls_average_days_to_resolve'
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} TEXT, {col4} TEXT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} INT, {col14} TEXT, {col15} INT, {col16} INT, {col17} INT, {col18} INT, {col19} INT, UNIQUE({col3}))'\
-    .format(tn=neighborhoods_table, ref_table=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, col1=neigh_col1, col2=neigh_col2, col3=neigh_col3, col4=neigh_col4, col5=neigh_col5, col6=neigh_col6, col7=neigh_col7, col8=neigh_col8, col9=neigh_col9, col10=neigh_col10, col11=neigh_col11, col12=neigh_col12, col13=neigh_col13, col14=neigh_col14, col15=neigh_col15, col16=neigh_col16, col17=neigh_col17, col18=neigh_col18, col19=neigh_col19))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT)'.format(tn=table))
 
-  c.execute('CREATE INDEX idx_n_community_district_id ON {tn}({col2})'.format(tn=neighborhoods_table, col2=neigh_col2))
-  c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=neighborhoods_table, col1=neigh_col1))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INTEGER NOT NULL REFERENCES {ref_table}(id)".format(cn=col1, ref_table=context.boroughs_seeds.table))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col2))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col3))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(cn=col4))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col5))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col6))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col7))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col8))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col9))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col10))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col11))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(cn=col12))
+
+  c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=table, col1=col1))
+  c.execute('CREATE UNIQUE INDEX idx_n_name ON {tn}({col2})'.format(tn=table, col2=col2))
 
 def seed_neighborhoods(c, neighborhood_json):
   print("** Seeding Neighborhoods...")
 
-  c.execute('SELECT * FROM {tn}'.format(tn=community_districts_seeds.community_districts_table))
-  community_districts = c.fetchall()
+  c.execute('SELECT * FROM {tn}'.format(tn=context.boroughs_seeds.table))
+  boroughs = c.fetchall()
 
   for index, neighborhood in enumerate(neighborhood_json["features"]):
     print("Neighborhood: " + str(index) + "/" + str(len(neighborhood_json["features"])))
     
-    name = neighborhood["properties"]["neighborhood"]
-    c_district = boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], community_districts, 3)
-    if not c_district:
-      print("  * -- no community district found", name)
+    borough = context.boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], boroughs, 2)
+    if not borough:
+      print("  X -- no borough found", name)
       continue
 
-    cd_id = c_district[0]
-    boro_id = c_district[1]
-
+    boro_id = borough[0]
+    name = neighborhood["properties"]["neighborhood"]
     geo = json.dumps(neighborhood["geometry"], separators=(',',':'))
-    representative_point = json.dumps(boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
+    representative_point = json.dumps(context.boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
 
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col14}) VALUES (?, ?, ?, ?, ?)'
-      .format(tn=neighborhoods_table, col1=neigh_col1, col2=neigh_col2, col3=neigh_col3, col4=neigh_col4, col14=neigh_col14), (boro_id, cd_id, name, geo, representative_point))
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES (?, ?, ?, ?)'
+      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (boro_id, name, geo, representative_point))
 

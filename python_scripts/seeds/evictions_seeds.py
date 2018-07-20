@@ -35,7 +35,7 @@ def find_building(c, eviction):
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} TEXT, {col3} TEXT, {col4} TEXT, {col5} TEXT, {col6} TEXT, {col7} TEXT)'\
-    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, ref_table1=buildings_seeds.buildings_table))
+    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, ref_table1=buildings_seeds.table))
 
   c.execute('CREATE INDEX idx_eviction_bldg_id ON {tn}({col1})'.format(tn=table, col1=col1))
 
@@ -65,7 +65,7 @@ def seed_table(c, json, write_to_csv=False):
 
     # Create Building Event
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'eviction', insertion_id, date))
+      .format(tn=building_events_seeds.table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'eviction', insertion_id, date))
 
     # write csv row
     if write_to_csv:

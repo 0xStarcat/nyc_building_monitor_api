@@ -5,7 +5,7 @@ import datetime
 from helpers import csv_helpers
 import config 
 
-service_calls_table = 'service_calls'
+table = 'service_calls'
 call_col1 = 'building_id'
 call_col2 = 'date'
 call_col3 = 'description'
@@ -72,10 +72,10 @@ def get_building_match(c, bbl):
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} TEXT, {col4} TEXT, {col5} BOOLEAN, {col6} BOOLEAN, {col7} BOOLEAN, {col8} TEXT, {col9} TEXT, {col10} BOOLEAN, {col11} TEXT, {col12} TEXT, {col13} INT)'\
-    .format(tn=service_calls_table, col1=call_col1, col2=call_col2, col3=call_col3, col4=call_col4, col5=call_col5, col6=call_col6, col7=call_col7, col8=call_col8, col9=call_col9, col10=call_col10, col11=call_col11, col12=call_col12, col13=call_col13, bldg_table=buildings_seeds.buildings_table))
+    .format(tn=table, col1=call_col1, col2=call_col2, col3=call_col3, col4=call_col4, col5=call_col5, col6=call_col6, col7=call_col7, col8=call_col8, col9=call_col9, col10=call_col10, col11=call_col11, col12=call_col12, col13=call_col13, bldg_table=buildings_seeds.table))
 
-  c.execute('CREATE INDEX idx_call_building_id ON {tn}({col1})'.format(tn=service_calls_table, col1=call_col1))
-  c.execute('CREATE INDEX idx_call_source ON {tn}({col6})'.format(tn=service_calls_table, col6=call_col6))
+  c.execute('CREATE INDEX idx_call_building_id ON {tn}({col1})'.format(tn=table, col1=call_col1))
+  c.execute('CREATE INDEX idx_call_source ON {tn}({col6})'.format(tn=table, col6=call_col6))
 
 def seed_service_calls_from_json(c, service_calls_json, write_to_csv=False):
   print("Seeding calls...")
@@ -113,18 +113,18 @@ def seed_service_calls_from_json(c, service_calls_json, write_to_csv=False):
     
     # Create call
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=service_calls_table, col1=call_col1, col2=call_col2, col3=call_col3, col4=call_col4, col5=call_col5, col6=call_col6, col7=call_col7, col8=call_col8, col9=call_col9, col10=call_col10, col11=call_col11, col12=call_col12, col13=call_col13), (building_id, date, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, status, unique_key, open_over_month, source, closed_date, days_to_close))
+      .format(tn=table, col1=call_col1, col2=call_col2, col3=call_col3, col4=call_col4, col5=call_col5, col6=call_col6, col7=call_col7, col8=call_col8, col9=call_col9, col10=call_col10, col11=call_col11, col12=call_col12, col13=call_col13), (building_id, date, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, status, unique_key, open_over_month, source, closed_date, days_to_close))
 
     insertion_id = c.lastrowid
 
     c.execute('SELECT * FROM {tn} WHERE {cn}={b_id}'\
-      .format(tn=buildings_seeds.buildings_table, cn='id', b_id=building_id))
+      .format(tn=buildings_seeds.table, cn='id', b_id=building_id))
 
     building = c.fetchone()
 
     # Create Building Event
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'service_call', insertion_id, date))
+      .format(tn=building_events_seeds.table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'service_call', insertion_id, date))
 
     # write csv row
     if write_to_csv:

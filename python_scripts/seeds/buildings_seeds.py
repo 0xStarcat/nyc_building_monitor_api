@@ -7,7 +7,7 @@ from seeds import census_tracts_seeds
 from shapely.geometry import shape, Point
 from helpers import boundary_helpers
 
-buildings_table = 'buildings'
+table = 'buildings'
 
 bldg_col1 = 'borough_id'
 bldg_col2 = 'community_district_id'
@@ -62,19 +62,19 @@ def find_foreign_keys(c, building):
 def create_table(c):
   # Residential buildings
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} INTEGER NOT NULL REFERENCES {ref_table3}(id), {col4} INTEGER NOT NULL REFERENCES {ref_table4}(id), {col5} INT, {col6} TEXT, {col7} TEXT, {col8} TEXT, {col9} TEXT, {col10} TEXT, {col11} INTEGER, {col12} INTEGER, {col13} INTEGER, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, {col19} INTEGER, {col20} INTEGER, {col21} INTEGER, {col22} TEXT, {col23} BOOLEAN, {col24} BOOLEAN, {col25} BOOLEAN, {col26} TEXT, UNIQUE({col21}), UNIQUE({col5}, {col9}))'\
-    .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col13=bldg_col13, col14=bldg_col14, col15=bldg_col15, col16=bldg_col16, col17=bldg_col17, col18=bldg_col18, col19=bldg_col19, col20=bldg_col20, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23, col24=bldg_col24, col25=bldg_col25, col26=bldg_col26, ref_table1=boroughs_seeds.boroughs_table, ref_table2=community_districts_seeds.community_districts_table, ref_table3=neighborhoods_seeds.neighborhoods_table, ref_table4=census_tracts_seeds.census_tracts_table))
+    .format(tn=table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col13=bldg_col13, col14=bldg_col14, col15=bldg_col15, col16=bldg_col16, col17=bldg_col17, col18=bldg_col18, col19=bldg_col19, col20=bldg_col20, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23, col24=bldg_col24, col25=bldg_col25, col26=bldg_col26, ref_table1=boroughs_seeds.table, ref_table2=community_districts_seeds.table, ref_table3=neighborhoods_seeds.table, ref_table4=census_tracts_seeds.table))
 
-  c.execute('CREATE INDEX idx_bldg_block_and_lot ON {tn}({col7}, {col8})'.format(tn=buildings_table, col7=bldg_col7, col8=bldg_col8))
-  c.execute('CREATE INDEX idx_bldg_census_tract_id ON {tn}({col4})'.format(tn=buildings_table, col4=bldg_col4))
-  c.execute('CREATE INDEX idx_bldg_neighborhood_id ON {tn}({col3})'.format(tn=buildings_table, col3=bldg_col3))
-  c.execute('CREATE INDEX idx_bldg_community_district_id ON {tn}({col2})'.format(tn=buildings_table, col2=bldg_col2))
-  c.execute('CREATE INDEX idx_bldg_borough_id ON {tn}({col1})'.format(tn=buildings_table, col1=bldg_col1))
-  c.execute('CREATE INDEX idx_bldg_class ON {tn}({col22})'.format(tn=buildings_table, col22=bldg_col22))
+  c.execute('CREATE INDEX idx_bldg_block_and_lot ON {tn}({col7}, {col8})'.format(tn=table, col7=bldg_col7, col8=bldg_col8))
+  c.execute('CREATE INDEX idx_bldg_census_tract_id ON {tn}({col4})'.format(tn=table, col4=bldg_col4))
+  c.execute('CREATE INDEX idx_bldg_neighborhood_id ON {tn}({col3})'.format(tn=table, col3=bldg_col3))
+  c.execute('CREATE INDEX idx_bldg_community_district_id ON {tn}({col2})'.format(tn=table, col2=bldg_col2))
+  c.execute('CREATE INDEX idx_bldg_borough_id ON {tn}({col1})'.format(tn=table, col1=bldg_col1))
+  c.execute('CREATE INDEX idx_bldg_class ON {tn}({col22})'.format(tn=table, col22=bldg_col22))
   
-  c.execute('CREATE INDEX idx_bldg_census_tract_and_residential ON {tn}({col4}, {col23})'.format(tn=buildings_table, col4=bldg_col4, col23=bldg_col23))
-  c.execute('CREATE INDEX idx_bldg_neighborhood_and_residential ON {tn}({col3}, {col23})'.format(tn=buildings_table, col3=bldg_col3, col23=bldg_col23))
-  c.execute('CREATE INDEX idx_bldg_community_district_and_residential ON {tn}({col2}, {col23})'.format(tn=buildings_table, col2=bldg_col2, col23=bldg_col23))
-  c.execute('CREATE INDEX idx_bldg_borough_and_residential ON {tn}({col1}, {col23})'.format(tn=buildings_table, col1=bldg_col1, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_census_tract_and_residential ON {tn}({col4}, {col23})'.format(tn=table, col4=bldg_col4, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_neighborhood_and_residential ON {tn}({col3}, {col23})'.format(tn=table, col3=bldg_col3, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_community_district_and_residential ON {tn}({col2}, {col23})'.format(tn=table, col2=bldg_col2, col23=bldg_col23))
+  c.execute('CREATE INDEX idx_bldg_borough_and_residential ON {tn}({col1}, {col23})'.format(tn=table, col1=bldg_col1, col23=bldg_col23))
 
 def seed_buildings(c, building_json):
   print("Seeding Buildings...")
@@ -116,7 +116,7 @@ def seed_buildings(c, building_json):
     bldg_class = building["properties"]["BldgClass"]
     
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col21}, {col22}, {col23}, {col26}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=buildings_table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23, col26=bldg_col26), (borough_id, community_district_id, neighborhood_id, census_tract_id, boro_code, ct_2010, block, lot, address, geometry, year_built, residential_units, bbl, bldg_class, int(residential_units) > 0, representative_point))
+      .format(tn=table, col1=bldg_col1, col2=bldg_col2, col3=bldg_col3, col4=bldg_col4, col5=bldg_col5, col6=bldg_col6, col7=bldg_col7, col8=bldg_col8, col9=bldg_col9, col10=bldg_col10, col11=bldg_col11, col12=bldg_col12, col21=bldg_col21, col22=bldg_col22, col23=bldg_col23, col26=bldg_col26), (borough_id, community_district_id, neighborhood_id, census_tract_id, boro_code, ct_2010, block, lot, address, geometry, year_built, residential_units, bbl, bldg_class, int(residential_units) > 0, representative_point))
 
 def add_counts_to_boundary_data(c):
   # Census Tracts
@@ -136,10 +136,10 @@ def add_counts_to_boundary_data(c):
     residential_buildings_count = len(c.fetchall())
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=neighborhoods_seeds.neighborhoods_table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=census_tracts_seeds.census_tracts_table, cn="total_buildings", value=buildings_count, id=row[0]))
+      .format(tn=census_tracts_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))
 
   # Neighborhoods
   c.execute('SELECT * FROM neighborhoods')
@@ -158,10 +158,10 @@ def add_counts_to_boundary_data(c):
     residential_buildings_count = len(c.fetchall())
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=neighborhoods_seeds.neighborhoods_table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=neighborhoods_seeds.neighborhoods_table, cn="total_buildings", value=buildings_count, id=row[0]))
+      .format(tn=neighborhoods_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))
 
   # Community Districts
   c.execute('SELECT * FROM community_districts')
@@ -180,10 +180,10 @@ def add_counts_to_boundary_data(c):
     residential_buildings_count = len(c.fetchall())
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=neighborhoods_seeds.neighborhoods_table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=community_districts_seeds.community_districts_table, cn="total_buildings", value=buildings_count, id=row[0]))
+      .format(tn=community_districts_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))
 
   # Boroughs
   c.execute('SELECT * FROM boroughs')
@@ -202,10 +202,10 @@ def add_counts_to_boundary_data(c):
     residential_buildings_count = len(c.fetchall())
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=neighborhoods_seeds.neighborhoods_table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=boroughs_seeds.boroughs_table, cn="total_buildings", value=buildings_count, id=row[0]))
+      .format(tn=boroughs_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))
 
   c.execute('SELECT * FROM buildings')
   all_rows = c.fetchall()

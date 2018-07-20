@@ -8,7 +8,7 @@ import datetime
 from helpers import csv_helpers
 import config
 
-violations_table = 'violations'
+table = 'violations'
 vio_col1 = 'building_id'
 vio_col2 = 'date'
 vio_col3 = 'description'
@@ -86,10 +86,10 @@ def get_building_match(c, violation):
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {bldg_table}(id), {col2} TEXT, {col3} TEXT, {col4} TEXT, {col5} TEXT, {col6} TEXT)'\
-    .format(tn=violations_table, col1=vio_col1, col2=vio_col2, col3=vio_col3, col4=vio_col4,col5=vio_col5, col6=vio_col6, bldg_table=buildings_seeds.buildings_table))
+    .format(tn=table, col1=vio_col1, col2=vio_col2, col3=vio_col3, col4=vio_col4,col5=vio_col5, col6=vio_col6, bldg_table=buildings_seeds.table))
 
-  c.execute('CREATE INDEX idx_violation_building_id ON {tn}({col1})'.format(tn=violations_table, col1=vio_col1))
-  c.execute('CREATE INDEX idx_violation_source ON {tn}({col5})'.format(tn=violations_table, col5=vio_col5))
+  c.execute('CREATE INDEX idx_violation_building_id ON {tn}({col1})'.format(tn=table, col1=vio_col1))
+  c.execute('CREATE INDEX idx_violation_source ON {tn}({col5})'.format(tn=table, col5=vio_col5))
 
 def seed_violations(c, violation_json, write_to_csv=False):
   print("Seeding Violations...")
@@ -119,18 +119,18 @@ def seed_violations(c, violation_json, write_to_csv=False):
     unique_id = get_violation_id(violation)
     # Create Violation
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}) VALUES ({building_id}, \'{date}\', \"{description}\", \'{penalty_imposed}\', \'{source}\', \'{unique_id}\')'\
-      .format(tn=violations_table, col1=vio_col1, col2=vio_col2, col3=vio_col3, col4=vio_col4, col5=vio_col5, col6=vio_col6, building_id=building_id, date=date, description=description, penalty_imposed=penalty_imposed, source=source, unique_id=unique_id))
+      .format(tn=table, col1=vio_col1, col2=vio_col2, col3=vio_col3, col4=vio_col4, col5=vio_col5, col6=vio_col6, building_id=building_id, date=date, description=description, penalty_imposed=penalty_imposed, source=source, unique_id=unique_id))
 
     insertion_id = c.lastrowid
 
     c.execute('SELECT * FROM {tn} WHERE {cn}={b_id}'\
-      .format(tn=buildings_seeds.buildings_table, cn='id', b_id=building_id))
+      .format(tn=buildings_seeds.table, cn='id', b_id=building_id))
 
     building = c.fetchone()
 
     # Create Building Event
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'violation', insertion_id, date))
+      .format(tn=building_events_seeds.table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'violation', insertion_id, date))
 
     # write csv row
     if write_to_csv:

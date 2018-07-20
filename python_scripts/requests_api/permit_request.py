@@ -6,7 +6,7 @@ from seeds import permits_seeds
 import sqlite3
 
 def make_request(conn, write_to_csv=False):
-  table = permits_seeds.permits_table
+  table = permits_seeds.table
   source = "DOB"
   permit_url = 'https://data.cityofnewyork.us/resource/83x8-shf7.json?job_type=NB&residential=YES&$where=issuance_date between \''+ api_helpers.get_next_day_to_request(conn, table, source) + '\' and \'' + api_helpers.get_today(table, source) + '\'&'
 

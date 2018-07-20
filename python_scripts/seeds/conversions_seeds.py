@@ -32,7 +32,7 @@ def class_is_non_residential(bldg_class):
 
 def create_table(c):
 	c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} TEXT, {col4} TEXT, {col5} TEXT, {col6} TEXT, {col7} BOOLEAN, {col8} BOOLEAN)'\
-    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, ref_table1=buildings_seeds.buildings_table, ref_table2=sales_seeds.sales_table))
+    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, ref_table1=buildings_seeds.table, ref_table2=sales_seeds.sales_table))
 
 def create_row_from_sale(c, sale_id, date, class_from, class_to, building):
   # Create Conversion
@@ -56,4 +56,4 @@ def create_row_from_sale(c, sale_id, date, class_from, class_to, building):
 
   # Create Building Event
   c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
-    .format(tn=building_events_seeds.building_events_table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'conversion', insertion_id, date))
+    .format(tn=building_events_seeds.table, col1="borough_id", col2="community_district_id", col3="neighborhood_id", col4="census_tract_id", col5="building_id", col6="eventable", col7="eventable_id", col8="event_date"), (building[1], building[2], building[3], building[4], building[0], 'conversion', insertion_id, date))

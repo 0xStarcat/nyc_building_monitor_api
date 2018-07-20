@@ -5,14 +5,14 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from helpers import api_helpers
 from seeds import service_calls_seeds
 
-table = service_calls_seeds.service_calls_table
+table = service_calls_seeds.table
 import config
 
 def check_statuses():
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
-  table = service_calls_seeds.service_calls_table
+  table = service_calls_seeds.table
   source = None
 
   c.execute('SELECT * FROM {tn} WHERE {cn}=\'{value}\''.format(tn=table, cn='status', value='Open'))

@@ -1,15 +1,29 @@
-// const { db } = require(__dirname + '/../models/sequelize.js')
+const { db } = require(__dirname + '/../models/sequelize.js')
 const { constructBuildingJson, constructCensusTractJson } = require(__dirname + '/helpers/jsonHelpers.js')
 
-const { dbPromise } = require('../db.js')
+// const { dbPromise } = require('../db.js')
 module.exports = {
+  // index: async (req, res) => {
+  //   const db = await dbPromise
+  //   const data = await db
+  //     .all(
+  //       "SELECT c.*, \
+  //     n.name as n_name, \
+  //     (SELECT COUNT(b.id) FROM buildings b WHERE c.id = b.census_tract_id) as buildings_total, \
+  //     (\
+  //       SELECT COUNT(sc.id) FROM service_calls sc \
+  //       INNER JOIN building_events be ON c.id = be.census_tract_id \
+  //       WHERE be.eventable ='service_call' AND sc.id = be.eventable_id\
+  //     ) as service_calls_total\
+  //     FROM census_tracts c \
+  //     INNER JOIN neighborhoods n ON n.id = c.neighborhood_id\
+  //     "
+  //     )
+  //     .catch(error => console.log('ERROR', error))
+  //   console.log(data.length)
+  //   res.json(constructCensusTractJson(data))
+  // },
   index: async (req, res) => {
-    const db = await dbPromise
-    const data = await db.get('SELECT * FROM census_tracts')
-    console.log(constructCensusTractJson(data))
-    res.json(constructCensusTractJson(data))
-  },
-  indexOld: async (req, res) => {
     db.Borough.findAll().then(boroughData => {
       db.CensusTract.findAll({
         include: [
@@ -28,13 +42,10 @@ module.exports = {
           {
             model: db.RacialMakeup,
             attributes: ['percent_white_2010']
-          },
-          {
-            model: db.Building,
-            attributes: []
           }
         ]
       }).then(data => {
+        console.log(data.length)
         const json = constructCensusTractJson(data, boroughData)
         res.json(json)
       })

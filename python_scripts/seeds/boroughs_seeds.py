@@ -1,29 +1,29 @@
 import json
 from helpers import boundary_helpers
 
-boroughs_table = 'boroughs'
-boro_col1 = 'name'
-boro_col2 = 'code' 
-boro_col3 = 'geometry'
-boro_col4 = 'total_buildings'
-boro_col5 = 'total_violations'
-boro_col6 = 'total_sales'
-boro_col7 = 'total_permits'
-boro_col8 = 'total_service_calls'
-boro_col9 = 'total_service_calls_with_violation_result'
-boro_col10 = 'total_service_calls_with_no_action_result'
-boro_col11 = 'total_service_calls_unable_to_investigate_result'
-boro_col12 = 'total_service_calls_open_over_month'
-boro_col13 = 'representative_point'
-boro_col14 = 'service_calls_average_days_to_resolve'
-boro_col15 = 'total_residential_buildings'
-boro_col16 = 'total_conversions'
-boro_col17 = 'total_conversions_to_non_residential'
-boro_col18 = 'total_evictions'
+table = 'boroughs'
+col1 = 'name'
+col2 = 'code' 
+col3 = 'geometry'
+col4 = 'total_buildings'
+col5 = 'total_violations'
+col6 = 'total_sales'
+col7 = 'total_permits'
+col8 = 'total_service_calls'
+col9 = 'total_service_calls_with_violation_result'
+col10 = 'total_service_calls_with_no_action_result'
+col11 = 'total_service_calls_unable_to_investigate_result'
+col12 = 'total_service_calls_open_over_month'
+col13 = 'representative_point'
+col14 = 'service_calls_average_days_to_resolve'
+col15 = 'total_residential_buildings'
+col16 = 'total_conversions'
+col17 = 'total_conversions_to_non_residential'
+col18 = 'total_evictions'
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} TEXT, {col2} INTEGER, {col3} TEXT, {col4} INT, {col5} INT, {col6} INT, {col7} INT, {col8} INT, {col9} INT, {col10} INT, {col11} INT, {col12} INT, {col13} TEXT, {col14} INTEGER, {col15} INTEGER, {col16} INTEGER, {col17} INTEGER, {col18} INTEGER, UNIQUE({col1}), UNIQUE({col2}))'\
-    .format(tn=boroughs_table, col1=boro_col1, col2=boro_col2, col3=boro_col3, col4=boro_col4, col5=boro_col5, col6=boro_col6, col7=boro_col7, col8=boro_col8, col9=boro_col9, col10=boro_col10, col11=boro_col11, col12=boro_col12, col13=boro_col13, col14=boro_col14, col15=boro_col15, col16=boro_col16, col17=boro_col17, col18=boro_col18))
+    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14, col15=col15, col16=col16, col17=col17, col18=col18))
 
 def seed_boroughs(c, borough_json):
   print("** Seeding Boroughs...")
@@ -36,4 +36,4 @@ def seed_boroughs(c, borough_json):
     representative_point = json.dumps(boundary_helpers.get_representative_point_geojson(borough["geometry"]))
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col13}) VALUES (?, ?, ?, ?)'\
-      .format(tn=boroughs_table, col1=boro_col1, col2=boro_col2, col3=boro_col3, col13=boro_col13), (name, code, geo, representative_point))
+      .format(tn=table, col1=col1, col2=col2, col3=col3, col13=col13), (name, code, geo, representative_point))

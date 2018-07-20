@@ -1,4 +1,4 @@
-tables = ['census_tracts', 'neighborhoods', 'community_districts', 'boroughs']
+tables = ['census_tracts', 'neighborhoods', 'boroughs']
 
 col1 = 'total_violations'
 col2 = 'total_sales'
@@ -23,8 +23,6 @@ def update_data(c, table):
   if table == tables[1]:
     column_name = 'neighborhood_id'
   if table == tables[2]:
-    column_name = 'community_district_id'
-  if table == tables[3]:
     column_name = 'borough_id'
 
   c.execute('SELECT * FROM {tn}'\
@@ -36,37 +34,37 @@ def update_data(c, table):
     print(table + " - updating row " + str(index) + '/' + str(len(results)))
 
     # Violations
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+    c.execute('SELECT id, COUNT(id) FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
       .format(event='violation', cn=column_name, id=row[0]))
 
-    violations_count = len(c.fetchall())
+    violations_count = c.fetchone()[1]
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col1, value=violations_count, id=row[0]))
 
     # sales
 
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+    c.execute('SELECT id, COUNT(id) FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
       .format(event='sale', cn=column_name, id=row[0]))
 
-    sales_count = len(c.fetchall())
+    sales_count = c.fetchone()[1]
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col2, value=sales_count, id=row[0]))
 
     # permits
 
-    c.execute('SELECT * FROM permits WHERE {cn}={id} AND {cn2}=\'{type}\''\
+    c.execute('SELECT id, COUNT(id) FROM permits WHERE {cn}={id} AND {cn2}=\'{type}\''\
       .format(event='permit', cn=column_name, cn2='permit_type', id=row[0], type='NB'))
 
-    permits_count = len(c.fetchall())
+    permits_count = c.fetchone()[1]
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=table, cn=col3, value=permits_count, id=row[0]))
 
     # service calls
 
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
+    c.execute('SELECT * FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
       .format(event='service_call', cn=column_name, id=row[0]))
 
     service_calls = c.fetchall()
@@ -105,21 +103,21 @@ def update_data(c, table):
 
     # Average days to resolve service call
 
-    c.execute('SELECT AVG(days_to_close) from service_calls WHERE {cn} = {id} AND days_to_close IS NOT NULL'\
+    c.execute('SELECT AVG(days_to_close) FROM building_events JOIN service_calls ON building_events.eventable_id = service_calls.id WHERE {cn} = {id} AND eventable="service_call" AND days_to_close NOT NULL'\
       .format(cn=column_name, id=row[0]))
 
-    average = c.fetchone()
+    average = c.fetchone()[0] or None
 
-    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=table, cn=col9, value=average, id=row[0]))
+    c.execute('UPDATE {tn} SET {cn} = ? WHERE id=?'\
+      .format(tn=table, cn=col9), (average, row[0]))
 
     # evictions
 
-    c.execute('SELECT * FROM building_events WHERE eventable=\'{event}\' AND {cn}={id}'\
-      .format(event='eviction', cn=column_name, id=row[0]))
+    # c.execute('SELECT * FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
+    #   .format(event='eviction', cn=column_name, id=row[0]))
 
-    evictions_count = len(c.fetchall())
+    # evictions_count = len(c.fetchall())
 
-    c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=table, cn=col10, value=evictions_count, id=row[0]))
+    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
+    #   .format(tn=table, cn=col10, value=evictions_count, id=row[0]))
 
