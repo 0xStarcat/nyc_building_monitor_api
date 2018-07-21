@@ -1,14 +1,21 @@
+import os
 import sqlite3
 import config
 import test_context
-
 test_db = config.TEST_DB_URL
 
-def setup_db():
-  open(test_db, 'a').close()
+def new_cursor():
   conn = sqlite3.connect(test_db, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
+  c.execute('pragma recursive_triggers=on')
+  return c
+
+def setup_db():
+  open(test_db, 'a').close()
+  print("  ****** Setting up test DB ******")
+
+  c = new_cursor()
 
   try:
     test_context.context.boroughs_seeds.create_table(c)
@@ -18,5 +25,8 @@ def setup_db():
     test_context.context.building_events_seeds.create_table(c)
     test_context.context.violations_seeds.create_table(c)
   except:
-    conn.commit()
+    print("Exception")
     return
+
+def drop_db():
+  os.remove(test_db)

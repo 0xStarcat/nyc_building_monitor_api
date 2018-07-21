@@ -7,25 +7,116 @@ import setup_tests
 import factories
 
 test_db = config.TEST_DB_URL
-
+  
 def seed_db():
   setup_tests.setup_db()
   factories.seed_test_db_with_building()
 
-  
+def test_insertions():
+  c = setup_tests.new_cursor()
 
-def drop_table(c):
-  os.remove(test_db)
+  try:
+    c = setup_tests.new_cursor()
+    seed_db()
+    insertion_of_record_ecb(c)
+    setup_tests.drop_db()
 
-def test_insertion_of_record():
-  seed_db()
-  conn = sqlite3.connect(test_db, timeout=10)
-  c = conn.cursor()
-  c.execute('pragma foreign_keys=on;')
-  violation_json = [
-    { "source": "ECB", "penality_imposed": "10000", "bin":"3116172","block":"5628","boro":"5","description":"A really good violation.","disposition_comments":"Wow you should have seen that.","ecb_number":"1234","house_number":"2","isn_dob_bis_viol":"3","issue_date":"19991014","lot":"24","number":"a unique id violation","street":"fake st","violation_category":"VW*-VIOLATION - WORK W/O PERMIT DISMISSED","violation_number":"22?","violation_type":"C-CONSTRUCTION","violation_type_code":"C"}
+    c = setup_tests.new_cursor()
+    seed_db()
+    insertion_of_record_dob(c)
+    setup_tests.drop_db()
+
+    c = setup_tests.new_cursor()
+    seed_db()
+    insertion_of_record_hpd(c)
+    setup_tests.drop_db()
+  except AssertionError as error:
+    setup_tests.drop_db()
+    raise error
+
+
+def insertion_of_record_hpd(c):
+  violation_json = [ 
+    {"source": "HPD","apartment":"1234","approveddate":"2013-10-10T00:00:00.000","bbl":"1234","bin":"1234","block":"5628","boro":"NOT BRONX","boroid":"5","buildingid":"1234","censustract":"63","class":"B","communityboard":"4","councildistrict":"8","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2014-10-17T00:00:00.000","currentstatusid":"19","highhousenumber":"1234","housenumber":"123","inspectiondate":"2013-10-08T00:00:00.000","latitude":"40","longitude":"-73.926605","lot":"24","lowhousenumber":"1234","novdescription":"SECTION 27-2005 some words go here!","novid":"4706454","novissueddate":"2013-10-11T00:00:00.000","novtype":"Original","nta":"West Concourse","ordernumber":"501","originalcertifybydate":"2013-11-29T00:00:00.000","originalcorrectbydate":"2013-11-15T00:00:00.000","registrationid":"0k","story":"3","streetcode":"35020","streetname":"somewhere","violationid":"a good id","violationstatus":"Close","zip":"10451"}
   ]
-  
+
+  test_context.context.violations_seeds.seed(c, violation_json)
+
+  try: 
+    c.execute('SELECT id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entries = c.fetchall()
+    assert len(entries) == 1
+    
+    c.execute('SELECT building_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 1
+
+    c.execute('SELECT unique_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'a good id'
+
+    c.execute('SELECT date FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '20131008'
+
+    c.execute('SELECT penalty_imposed FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == ''
+
+    c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'HPD'
+
+    c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'SECTION 27-2005'
+  except AssertionError as error:
+    raise error
+
+
+def insertion_of_record_ecb(c):
+  violation_json = [
+    {"source": "ECB", "aggravated_level":"NO","amount_paid":".00","balance_due":"2400.00","bin":"4618517","block":"5628","boro":"5","certification_status":"CERTIFICATE ACCEPTED","dob_violation_number":"060711CSSCWJM08","ecb_violation_number":"unique id","ecb_violation_status":"RESOLVE","hearing_date":"20120221","hearing_status":"IN VIOLATION","hearing_time":"830","infraction_code1":"109","isn_dob_bis_extract":"946264","issue_date":"20110607","lot":"24","penality_imposed":"2400.00","respondent_city":"HUNTINGTON STAT","respondent_house_number":"34","respondent_name":"HEMPTON PARK CORPORATION","respondent_street":"W 18 ST","respondent_zip":"11746","section_law_description1":"BC 3301.2,27-1009(A)                                                        FAIL TO SAFEGUARD PERS/PROPERTY AFFECTED BY CONSTRUCTION OP","served_date":"20110715","severity":"Unknown","violation_description":"FAILURE TO SAFEGUARD ALL PERSONS & PROPERTY AFFECTED BY CONSTRUCTION OPERATIONS. FLATBED TRUCK BLOCKING ENTIRE SIDEWALK (SITE ENTRANCE) WHILE BEING UNLOADED BY UNLICENSED OPERATOR ON CRANE CD 3876. ABOVE IS","violation_type":"Construction"}
+  ]
+
+  test_context.context.violations_seeds.seed(c, violation_json)
+
+  try: 
+    c.execute('SELECT id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entries = c.fetchall()
+    assert len(entries) == 1
+    
+    c.execute('SELECT building_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 1
+
+    c.execute('SELECT unique_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'unique id'
+
+    c.execute('SELECT date FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '20110607'
+
+    c.execute('SELECT penalty_imposed FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '2400.00'
+
+    c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'ECB'
+
+    c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '109'
+  except AssertionError as error:
+    raise error
+
+
+def insertion_of_record_dob(c):
+  violation_json = [
+    { "source": "DOB", "penality_imposed": "10000", "bin":"3116172","block":"5628","lot":"24","boro":"5","description":"A really good violation.","disposition_comments":"Wow you should have seen that.","ecb_number":"1234","house_number":"2","isn_dob_bis_viol":"3","issue_date":"19991014","number":"a unique id violation","street":"fake st","violation_category":"VW*-VIOLATION - WORK W/O PERMIT DISMISSED","violation_number":"22?","violation_type":"C-CONSTRUCTION","violation_type_code":"C"}
+  ]
 
   test_context.context.violations_seeds.seed(c, violation_json)
   
@@ -50,12 +141,15 @@ def test_insertion_of_record():
     entry = c.fetchone()
     assert entry[0] == '10000'
 
+    c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'DOB'
+
     c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 'C'
   except AssertionError as error:
     raise error
-    drop_table(c)
 
 # get_violation_id
 def test_get_violation_id_with_violationid():
