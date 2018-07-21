@@ -32,7 +32,7 @@ def class_is_non_residential(bldg_class):
 
 def create_table(c):
 	c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table1}(id), {col2} INTEGER NOT NULL REFERENCES {ref_table2}(id), {col3} TEXT, {col4} TEXT, {col5} TEXT, {col6} TEXT, {col7} BOOLEAN, {col8} BOOLEAN)'\
-    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, ref_table1=buildings_seeds.table, ref_table2=sales_seeds.sales_table))
+    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, ref_table1=buildings_seeds.table, ref_table2=sales_seeds.table))
 
 def create_row_from_sale(c, sale_id, date, class_from, class_to, building):
   # Create Conversion

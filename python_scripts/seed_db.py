@@ -13,7 +13,7 @@ def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.permit_clusters_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.violations_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.conversions_seeds.table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.sales_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.evictions_seeds.table))
 
 def drop_buildings_table(c):
@@ -173,7 +173,7 @@ def clear_sales():
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on')
   c.execute('DELETE FROM building_events WHERE eventable=\'{type}\''.format(type="sale"))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.sales_table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.table))
   context.sales_seeds.create_table(c)
   conn.commit()
   conn.close()
