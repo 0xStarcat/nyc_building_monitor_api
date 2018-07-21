@@ -12,7 +12,6 @@ def new_cursor():
   return c
 
 def setup_db():
-  open(test_db, 'a').close()
   print("  ****** Setting up test DB ******")
 
   c = new_cursor()
@@ -24,9 +23,11 @@ def setup_db():
     test_context.context.buildings_seeds.create_table(c)
     test_context.context.building_events_seeds.create_table(c)
     test_context.context.violations_seeds.create_table(c)
+    test_context.context.service_calls_seeds.create_table(c)
   except:
-    print("Exception")
+    print("Failure to create test tables")
+    drop_db()
     return
 
 def drop_db():
-  os.remove(test_db)
+  open(test_db, 'w').close()

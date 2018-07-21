@@ -42,7 +42,7 @@ def check_statuses():
       print(" ++ Updating status of ", call[9], index + "/" + str(len(open_calls)))
       
       c.execute('DELETE FROM {tn} WHERE {cn}={value}'.format(tn=table, cn="id", value=call[0]))
-      service_calls_seeds.seed_service_calls_from_json(c, api_call)
+      service_calls_seeds.seed(c, api_call)
       conn.commit()
 
 

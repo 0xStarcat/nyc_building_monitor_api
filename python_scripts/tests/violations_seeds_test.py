@@ -1,12 +1,7 @@
-import os
-import sqlite3
 import json
 import test_context
-import config 
 import setup_tests
 import factories
-
-test_db = config.TEST_DB_URL
   
 def seed_db():
   setup_tests.setup_db()
