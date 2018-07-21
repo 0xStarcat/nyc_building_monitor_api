@@ -108,13 +108,12 @@ def get_building_match(c, violation):
 
   if boro_id and violation["block"] and violation["lot"]:
     bbl = get_bbl(boro_id, violation)
-    # block = violation["block"].lstrip("0")
     c.execute('SELECT id FROM buildings WHERE bbl=\"{bbl}\"'.format(bbl=bbl))
     return c.fetchone()
   else:
     return None
 
-def seed_violations(c, violation_json, write_to_csv=False):
+def seed(c, violation_json, write_to_csv=False):
   print("Seeding Violations...")
 
   for index, violation in enumerate(violation_json):
@@ -141,7 +140,7 @@ def seed_violations(c, violation_json, write_to_csv=False):
     violation_code = str(get_code(violation))
 
     # Create Violation
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col6}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (building_id, unique_id, date, description, penalty_imposed, source, violation_code))
 
     # Create Building Event
@@ -152,7 +151,7 @@ def seed_violations(c, violation_json, write_to_csv=False):
 
     building = c.fetchone()
 
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'\
+    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=context.building_events_seeds.table, col1="borough_id", col2="neighborhood_id", col3="census_tract_id", col4="building_id", col5="eventable", col6="eventable_id", col7="event_date"), (building[1], building[2], building[3], building[0], 'violation', insertion_id, date))
 
     # write csv row

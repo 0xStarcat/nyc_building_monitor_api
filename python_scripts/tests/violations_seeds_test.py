@@ -1,4 +1,61 @@
+import os
+import sqlite3
+import json
 import test_context
+import config 
+import setup_tests
+import factories
+
+test_db = config.TEST_DB_URL
+
+def seed_db():
+  setup_tests.setup_db()
+  factories.seed_test_db_with_building()
+
+  
+
+def drop_table(c):
+  os.remove(test_db)
+
+def test_insertion_of_record():
+  seed_db()
+  conn = sqlite3.connect(test_db, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  violation_json = [
+    { "source": "ECB", "penality_imposed": "10000", "bin":"3116172","block":"5628","boro":"5","description":"A really good violation.","disposition_comments":"Wow you should have seen that.","ecb_number":"1234","house_number":"2","isn_dob_bis_viol":"3","issue_date":"19991014","lot":"24","number":"a unique id violation","street":"fake st","violation_category":"VW*-VIOLATION - WORK W/O PERMIT DISMISSED","violation_number":"22?","violation_type":"C-CONSTRUCTION","violation_type_code":"C"}
+  ]
+  
+
+  test_context.context.violations_seeds.seed(c, violation_json)
+  
+  try: 
+    c.execute('SELECT id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entries = c.fetchall()
+    assert len(entries) == 1
+    
+    c.execute('SELECT building_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 1
+
+    c.execute('SELECT unique_id FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'a unique id violation'
+
+    c.execute('SELECT date FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '19991014'
+
+    c.execute('SELECT penalty_imposed FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == '10000'
+
+    c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'C'
+  except AssertionError as error:
+    raise error
+    drop_table(c)
 
 # get_violation_id
 def test_get_violation_id_with_violationid():

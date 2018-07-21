@@ -41,7 +41,7 @@ def create_table(c):
   c.execute('CREATE UNIQUE INDEX idx_ct_boro_code_and_name ON {tn}({col1}, {col2})'.format(tn=table, col1=col5, col2=col3))
   c.execute('CREATE UNIQUE INDEX idx_ct_boro_code_and_ctlabel ON {tn}({col1}, {col2})'.format(tn=table, col1=col5, col2=col4))
 
-def seed_census_tracts(c, census_tract_json):
+def seed(c, census_tract_json):
   print("** Seeding Census Tracts...")
 
   c.execute('SELECT id, borough_id, geometry FROM {tn}'.format(tn=context.neighborhoods_seeds.table))

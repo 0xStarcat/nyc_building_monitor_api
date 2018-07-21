@@ -31,7 +31,7 @@ def create_table(c):
 
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col4))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col5))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col6))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col6))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col7))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col8))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col9))
@@ -82,7 +82,7 @@ def find_foreign_keys(c, building):
       "census_tract_id": ct[0]
     }
 
-def seed_buildings(c, building_json):
+def seed(c, building_json):
   print("Seeding Buildings...")
   
   for index, building in enumerate(building_json["features"]):
@@ -119,6 +119,7 @@ def seed_buildings(c, building_json):
     bldg_class = str(building["properties"]["BldgClass"])
     residential_units = int(building["properties"]["UnitsRes"])
     
+    print(bbl)
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14}, {col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
       .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14, col15=col15), (borough_id, neighborhood_id, census_tract_id, boro_code, ct_2010, bbl, block, lot, address, geometry, representative_point, year_built, residential_units, bldg_class, residential_units > 0))
 

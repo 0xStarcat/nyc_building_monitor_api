@@ -64,23 +64,23 @@ def seed_buildings(c, conn):
   context.buildings_seeds.create_table(c)
 
   mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
-  context.buildings_seeds.seed_buildings(c, mn_building_json)
+  context.buildings_seeds.seed(c, mn_building_json)
   conn.commit()
 
   bx_building_json = json.load(open('data/buildings_data/bx_mappluto.geojson'))
-  context.buildings_seeds.seed_buildings(c, bx_building_json)
+  context.buildings_seeds.seed(c, bx_building_json)
   conn.commit()
 
   bk_building_json = json.load(open('data/buildings_data/bk_mappluto.geojson'))
-  context.buildings_seeds.seed_buildings(c, bk_building_json)
+  context.buildings_seeds.seed(c, bk_building_json)
   conn.commit()
 
   qn_building_json = json.load(open('data/buildings_data/qn_mappluto.geojson'))
-  context.buildings_seeds.seed_buildings(c, qn_building_json)
+  context.buildings_seeds.seed(c, qn_building_json)
   conn.commit()
 
   si_building_json = json.load(open('data/buildings_data/si_mappluto.geojson'))
-  context.buildings_seeds.seed_buildings(c, si_building_json)
+  context.buildings_seeds.seed(c, si_building_json)
   conn.commit()
 
   # adds total_buildings number to boundary data tables
@@ -94,11 +94,11 @@ def seed_boundary_tables(c, conn):
   census_tract_json = json.load(open('data/boundary_data/census_tracts_2010.geojson'))
   
   
-  context.boroughs_seeds.seed_boroughs(c, borough_json)
+  context.boroughs_seeds.seed(c, borough_json)
   conn.commit()
-  context.neighborhoods_seeds.seed_neighborhoods(c, neighborhood_json)
+  context.neighborhoods_seeds.seed(c, neighborhood_json)
   conn.commit()
-  context.census_tracts_seeds.seed_census_tracts(c, census_tract_json)
+  context.census_tracts_seeds.seed(c, census_tract_json)
   conn.commit()
   
 
@@ -190,13 +190,14 @@ def clear_conversions():
   conn.close()
 
 def sample():
-  conn = sqlite3.connect(sqlite_file, timeout=10)
+  conn = sqlite3.connect(backup_sqlite_file, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
-  c.execute('SELECT id FROM building_events WHERE census_tract_id=1 AND eventable="service_call"')
-  all_rows = c.fetchall()
-  print(str(len(all_rows)))
+  c.execute('SELECT * FROM violations')
+
+  all_rows = c.fetchone()
+  print(all_rows)
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()
   # print(len(all_rows))

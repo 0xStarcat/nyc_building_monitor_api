@@ -35,7 +35,7 @@ def create_table(c):
   c.execute('CREATE UNIQUE INDEX idx_boro_code ON {tn}({col})'.format(tn=table, col=col2))
 
 
-def seed_boroughs(c, borough_json):
+def seed(c, borough_json):
   print("** Seeding Boroughs...")
 
   for index, borough in enumerate(borough_json["features"]):

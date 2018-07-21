@@ -33,7 +33,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=table, col1=col1))
   c.execute('CREATE UNIQUE INDEX idx_n_name ON {tn}({col2})'.format(tn=table, col2=col2))
 
-def seed_neighborhoods(c, neighborhood_json):
+def seed(c, neighborhood_json):
   print("** Seeding Neighborhoods...")
 
   c.execute('SELECT id, geometry FROM {tn}'.format(tn=context.boroughs_seeds.table))
