@@ -1,6 +1,5 @@
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seeds import boroughs_seeds
 from seeds import community_districts_seeds
@@ -20,3 +19,4 @@ from seeds import service_calls_seeds
 from seeds import building_events_seeds
 
 from helpers import csv_helpers
+from helpers import boundary_helpers

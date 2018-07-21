@@ -16,7 +16,7 @@ def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.sales_table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.evictions_seeds.table))
 
-def drop_table(c):
+def drop_buildings_table(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.buildings_seeds.table))
 
 def drop_boundary_tables(c):
@@ -25,7 +25,6 @@ def drop_boundary_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.incomes_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.census_tracts_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.neighborhoods_seeds.table))
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.community_districts_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.boroughs_seeds.table))
 
 def clear_csvs():
@@ -35,21 +34,25 @@ def clear_csvs():
 
 def create_buildings_data_tables(c):
   print("creating buildings data tables")
-  # context.sales_seeds.create_table(c)
-  # context.conversions_seeds.create_table(c)
-  # context.permit_clusters_seeds.create_table(c)
-  # context.permits_seeds.create_table(c)
-  # context.service_calls_seeds.create_table(c)
-  # context.violations_seeds.create_table(c)
-  # context.building_events_seeds.create_table(c)
+  context.sales_seeds.create_table(c)
+  context.conversions_seeds.create_table(c)
+  context.permit_clusters_seeds.create_table(c)
+  context.permits_seeds.create_table(c)
+  context.service_calls_seeds.create_table(c)
+  context.violations_seeds.create_table(c)
+  context.building_events_seeds.create_table(c)
   context.evictions_seeds.create_table(c)
 
 def create_boundaries_tables(c):
   print("creating boundary tables")
   context.boroughs_seeds.create_table(c)
-  context.community_districts_seeds.create_table(c)
   context.neighborhoods_seeds.create_table(c)
   context.census_tracts_seeds.create_table(c)
+
+def create_boundaries_data_tables(c):
+  context.incomes_seeds.create_table(c)
+  context.rents_seeds.create_table(c)
+  context.racial_makeup_seeds.create_table(c)
 
 def seed_buildings_data(c):
   print("Seeding building data")
@@ -87,26 +90,28 @@ def seed_buildings(c, conn):
 def seed_boundary_tables(c, conn):
   print("Seeding boundary tables")
   borough_json = json.load(open('data/boundary_data/boroughs.geojson'))
-  community_district_json = json.load(open('data/boundary_data/community_districts.geojson'))
   neighborhood_json = json.load(open('data/boundary_data/neighborhoods.geojson'))
   census_tract_json = json.load(open('data/boundary_data/census_tracts_2010.geojson'))
+  
+  
+  context.boroughs_seeds.seed_boroughs(c, borough_json)
+  conn.commit()
+  context.neighborhoods_seeds.seed_neighborhoods(c, neighborhood_json)
+  conn.commit()
+  context.census_tracts_seeds.seed_census_tracts(c, census_tract_json)
+  conn.commit()
+  
+
+def seed_boundary_table_data(c, conn):
   incomes_csv = list(csv.reader(open("data/income_data/censustract-medianhouseholdincome2017.csv")))[1:]
   rents_csv = list(csv.reader(open("data/rent_data/censustract-medianrentall2017.csv")))[1:]
   racial_makeup_csv = list(csv.reader(open("data/race_data/nyc_race_2010_by_census_tract.csv")))[1:]
-  
-  # context.boroughs_seeds.seed_boroughs(c, borough_json)
-  # conn.commit()
-  # context.community_districts_seeds.seed_community_districts(c, community_district_json)
-  # conn.commit()
-  # context.neighborhoods_seeds.seed_neighborhoods(c, neighborhood_json)
-  # conn.commit()
-  # context.census_tracts_seeds.seed_census_tracts(c, census_tract_json)
-  # conn.commit()
-  context.incomes_seeds.seed_incomes(c, incomes_csv)
+
+  context.incomes_seeds.seed(c, incomes_csv)
   conn.commit()
-  context.rents_seeds.seed_rents(c, rents_csv)
+  context.rents_seeds.seed(c, rents_csv)
   conn.commit()
-  context.racial_makeup_seeds.seed_racial_makeups(c, racial_makeup_csv)
+  context.racial_makeup_seeds.seed(c, racial_makeup_csv)
   conn.commit()
 
 def drop():
@@ -115,9 +120,9 @@ def drop():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
-  # clear_csvs()
-  # drop_buildings_data_tables(c)
-  # drop_table(c)
+  clear_csvs()
+  drop_buildings_data_tables(c)
+  # drop_buildings_table(c)
   # drop_boundary_tables(c)
 
   conn.commit()
@@ -129,12 +134,14 @@ def seed():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on')
-  # clear_evictions()
+
   # create_boundaries_tables(c)
+  # create_boundaries_data_tables(c)
   # seed_boundary_tables(c, conn)
+  # seed_boundary_table_data(c, conn)
   # seed_buildings(c, conn)
-  # create_buildings_data_tables(c)
-  # seed_buildings_data(c)  
+  create_buildings_data_tables(c)
+  seed_buildings_data(c)  
   conn.commit()
   conn.close()
 

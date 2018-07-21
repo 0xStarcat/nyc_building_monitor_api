@@ -12,6 +12,7 @@ nyc_data_map.sqlite
 nyc_data_map.backup.sqlite
 nyc_data_map.sqlite-journal
 nyc_data_map.backup.sqlite-journal
+nyc_data_map.temp.sqlite
 .DS_Store
 cache.db.bak
 python_scripts/update.py
