@@ -141,7 +141,7 @@ def seed():
   # seed_boundary_table_data(c, conn)
   # seed_buildings(c, conn)
   create_buildings_data_tables(c)
-  seed_buildings_data(c)  
+  # seed_buildings_data(c)  
   conn.commit()
   conn.close()
 
@@ -190,8 +190,9 @@ def clear_conversions():
   conn.close()
 
 def sample():
-  conn = sqlite3.connect(backup_sqlite_file, timeout=10)
+  conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
+
   c.execute('pragma foreign_keys=on;')
 
   c.execute('SELECT * FROM violations')

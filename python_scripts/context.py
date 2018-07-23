@@ -20,3 +20,6 @@ from seeds import building_events_seeds
 
 from helpers import csv_helpers
 from helpers import boundary_helpers
+
+from migrations import boundary_table_migrations
+from migrations import buildings_migration

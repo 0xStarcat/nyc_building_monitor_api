@@ -24,10 +24,12 @@ def setup_db():
     test_context.context.building_events_seeds.create_table(c)
     test_context.context.violations_seeds.create_table(c)
     test_context.context.service_calls_seeds.create_table(c)
-  except:
-    print("Failure to create test tables")
-    drop_db()
+  except Exception as error:
+    print("Failure to create test tables ")
+    print(error)
+    drop_dB()
     return
 
 def drop_db():
+  print('  * dropping test db')
   open(test_db, 'w').close()

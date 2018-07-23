@@ -25,7 +25,8 @@ def test_insertions():
     seed_db()
     insertion_of_record_hpd(c)
     setup_tests.drop_db()
-  except AssertionError as error:
+  except Exception as error:
+    print(error)
     setup_tests.drop_db()
     raise error
 

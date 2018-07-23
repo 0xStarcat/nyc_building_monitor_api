@@ -24,7 +24,7 @@ col15 = 'job_start_date'
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER REFERENCES {ref_table1}(id), {col2} INTEGER REFERENCES {ref_table2}(id), {col3} INTEGER REFERENCES {ref_table3}(id), {col4} INTEGER REFERENCES {ref_table4}(id), {col5} INTEGER REFERENCES {ref_table5}(id))'\
-    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, ref_table1=context.boroughs_seeds.table, ref_table2=context.neighborhoods_seeds.table, ref_table3=context.census_tracts_seeds.table, ref_table4=context.permit_clusters_seeds.table, ref_table5=context.buildings_seeds.table))
+    .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, ref_table1=context.boroughs_seeds.table, ref_table2=context.neighborhoods_seeds.table, ref_table3=context.census_tracts_seeds.table, ref_table4=context.permit_clusters_seeds.table, ref_table5=context.buildings_seeds.table))
 
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col6))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col7))

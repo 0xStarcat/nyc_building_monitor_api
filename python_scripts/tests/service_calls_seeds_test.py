@@ -26,7 +26,8 @@ def test_insertions():
     insertion_of_record_open(c)
     setup_tests.drop_db()
 
-  except AssertionError as error:
+  except Exception as error:
+    print(error)
     setup_tests.drop_db()
     raise error
 

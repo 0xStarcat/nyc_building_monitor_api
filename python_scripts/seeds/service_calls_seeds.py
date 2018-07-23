@@ -102,6 +102,13 @@ def seed(c, service_calls_json, write_to_csv=False):
     if index % 1000 == 0:
       print("call: " + str(index) + "/" + str(len(service_calls_json)))
     
+    building_match = get_building_match(c, call["bbl"]) if "bbl" in call else None
+    
+    if not building_match: 
+      print("  * no building match found", "call: " + str(index) + "/" + str(len(service_calls_json)))
+      continue
+
+    building_id = int(building_match[0])
     
     resolution_description = call["resolution_description"] if "resolution_description" in call else "unknown"
     if call_is_duplicate(resolution_description):
@@ -121,17 +128,15 @@ def seed(c, service_calls_json, write_to_csv=False):
     open_over_month = is_open_over_month(status, date)
     description = str(call["descriptor"])
     address = str(call["incident_address"]) if "incident_address" in call else ""
-    building_match = get_building_match(c, call["bbl"]) if "bbl" in call else None
     
-    if not building_match: 
-      print("  * no building match found", "call: " + str(index) + "/" + str(len(service_calls_json)))
-      continue
-
-    building_id = int(building_match[0])
     
     # Create call
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close))
+    try: 
+      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close))
+    except Exception as error:
+      print("ERROR", error)
+      continue
 
     # Create Building Event
     insertion_id = int(c.lastrowid)

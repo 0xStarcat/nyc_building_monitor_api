@@ -120,6 +120,11 @@ def seed(c, violation_json, write_to_csv=False):
     if index % 1000 == 0:
       print("Violation: " + str(index) + "/" + str(len(violation_json)))
     
+    date = str(get_date(violation))
+    if date == False:
+      print("  * no issue_date or inspectiondate found", str(index) + "/" + str(len(violation_json)))
+      continue
+      
     building_match = get_building_match(c, violation)
 
     if not building_match:
@@ -128,11 +133,8 @@ def seed(c, violation_json, write_to_csv=False):
 
     building_id = int(building_match[0])
     unique_id = str(get_violation_id(violation))
-    date = str(get_date(violation))
 
-    if date == False:
-      print("  * no issue_date or inspectiondate found", str(index) + "/" + str(len(violation_json)))
-      continue
+    
 
     description = str(get_description(violation))
     penalty_imposed = str(get_penalty(violation))
@@ -140,8 +142,12 @@ def seed(c, violation_json, write_to_csv=False):
     violation_code = str(get_code(violation))
 
     # Create Violation
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
-      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (building_id, unique_id, date, description, penalty_imposed, source, violation_code))
+    try:
+      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
+        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (building_id, unique_id, date, description, penalty_imposed, source, violation_code))
+    except Exception as error:
+      print("ERROR", error)
+      continue
 
     # Create Building Event
     insertion_id = c.lastrowid
