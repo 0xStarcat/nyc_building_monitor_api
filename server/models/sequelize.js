@@ -51,12 +51,12 @@ db.Borough.hasMany(db.CensusTract, { foreignKey: 'borough_id', sourceKey: 'id' }
 db.Borough.hasMany(db.Building, { foreignKey: 'borough_id', sourceKey: 'id' })
 
 db.Neighborhood.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
-db.Neighborhood.hasMany(db.RacialMakeup, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.CensusTract, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Building, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
-// db.Neighborhood.hasMany(db.BuildingEvent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
+db.Neighborhood.hasMany(db.BuildingEvent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Rent, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 db.Neighborhood.hasMany(db.Income, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
+db.Neighborhood.hasMany(db.RacialMakeup, { foreignKey: 'neighborhood_id', sourceKey: 'id' })
 
 db.CensusTract.belongsTo(db.Borough, { foreignKey: 'borough_id', targetKey: 'id' })
 db.CensusTract.belongsTo(db.Neighborhood, { foreignKey: 'neighborhood_id', targetKey: 'id' })

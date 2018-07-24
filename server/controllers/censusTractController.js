@@ -25,6 +25,7 @@ module.exports = {
   // },
   index: async (req, res) => {
     db.Borough.findAll().then(boroughData => {
+      console.log(boroughData.length)
       db.CensusTract.findAll({
         include: [
           {

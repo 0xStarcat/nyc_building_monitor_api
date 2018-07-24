@@ -1,4 +1,29 @@
 module.exports = {
+  constructNeighborhoodJson: (data, boroughData) => {
+    return {
+      features: data.map(row => {
+        return {
+          type: 'Feature',
+          geometry: JSON.parse(row.geometry),
+          properties: {
+            id: row.id,
+            name: row.name,
+            parentBoundaryName: row.borough_name, //boroughData.find(borough => borough.id === row.borough_id).name,
+            incomeMedian2017: parseFloat(row.incomeMedian2017),
+            rentMedian2017: parseFloat(row.rentMedian2017),
+            rentChange20112017: parseFloat(row.rentChange20112017),
+            racePercentWhite2010: row.racePercentWhite2010,
+            buildingsTotal: parseFloat(row.total_buildings),
+            serviceCallsPercentOpenOneMonth: parseFloat(
+              (row.total_service_calls_open_over_month / row.total_service_calls) * 100
+            ).toFixed(2),
+            violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
+            representativePoint: JSON.parse(row.representative_point)
+          }
+        }
+      })
+    }
+  },
   constructCensusTractJson: (data, boroughData) => {
     return {
       features: data.map(row => {

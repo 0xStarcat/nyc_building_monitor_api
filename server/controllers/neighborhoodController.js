@@ -1,4 +1,6 @@
 const { db } = require(__dirname + '/../models/sequelize.js')
+const { constructNeighborhoodJson } = require(__dirname + '/helpers/jsonHelpers.js')
+const { dbPromise } = require('../db.js')
 
 const constructNeighborhoodBoundaryJSON = data => {
   return {
@@ -14,35 +16,6 @@ const constructNeighborhoodBoundaryJSON = data => {
   }
 }
 
-const constructNeighborhoodJSON = data => {
-  return {
-    features: data.map(row => {
-      return {
-        type: 'Feature',
-        geometry: JSON.parse(row['geometry']),
-        properties: {
-          name: row.name,
-          // parentBoundaryName: row.borough.name,
-          incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
-          incomeChange20112017: parseFloat((row.income || {}).median_income_change_2011_2017),
-          rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
-          rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
-          racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
-          buildingsTotal: parseFloat(row.total_buildings),
-          salesTotal: parseFloat(row.total_sales),
-          permitsTotal: parseFloat(row.total_permits),
-          serviceCallsTotal: parseFloat(row.total_service_calls),
-          serviceCallsPercentOpenOneMonth: parseFloat(
-            ((row.total_service_calls_open_over_month / row.total_service_calls) * 100).toFixed(2)
-          ),
-          violationsTotal: parseFloat(row.total_violations),
-          violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2))
-        }
-      }
-    })
-  }
-}
-
 module.exports = {
   boundaries: async (req, res) => {
     db.Neighborhood.findAll({
@@ -52,23 +25,24 @@ module.exports = {
     })
   },
   index: async (req, res) => {
-    db.Neighborhood.findAll({
-      include: [
-        {
-          model: db.Income,
-          attributes: ['median_income_2017', 'median_income_change_2011_2017']
-        },
-        {
-          model: db.Rent,
-          attributes: ['median_rent_2017', 'median_rent_change_2011_2017']
-        },
-        {
-          model: db.RacialMakeup,
-          attributes: ['percent_white_2010']
-        }
-      ]
-    }).then(data => {
-      res.json(constructNeighborhoodJSON(data))
-    })
+    const db = await dbPromise
+    const data = await db
+      .all(
+        'SELECT n.*, \
+      bo.name as borough_name,\
+      inc.median_income_2017 as incomeMedian2017,\
+      r.median_rent_2017 as rentMedian2017,\
+      r.median_rent_change_2011_2017 as rentChange20112017,\
+      rm.percent_white_2010 as racePercentWhite2010\
+      FROM neighborhoods n \
+      INNER JOIN boroughs bo ON bo.id = n.borough_id\
+      INNER JOIN incomes inc ON inc.id = n.id\
+      INNER JOIN rents r ON r.id = n.id\
+      INNER JOIN racial_makeups rm ON rm.id = n.id\
+      '
+      )
+      .catch(error => console.log('ERROR', error))
+    console.log(data.length)
+    res.json(constructNeighborhoodJson(data))
   }
 }
