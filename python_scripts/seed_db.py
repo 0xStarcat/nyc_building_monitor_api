@@ -195,10 +195,10 @@ def sample():
 
   c.execute('pragma foreign_keys=on;')
 
-  c.execute('SELECT * FROM violations')
+  c.execute('SELECT * FROM census_tracts')
 
-  all_rows = c.fetchone()
-  print(all_rows)
+  all_rows = c.fetchall()
+  print(all_rows[230])
   # c.execute('SELECT * FROM violations')
   # all_rows = c.fetchall()
   # print(len(all_rows))

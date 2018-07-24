@@ -19,19 +19,15 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'borough_id'
       },
-      community_district_id: {
-        type: DataTypes.INTEGER,
-        field: 'community_district_id'
-      },
       neighborhood_id: {
         type: DataTypes.INTEGER,
         field: 'neighborhood_id'
       },
-      total_buildings: {
+      totalBuildings: {
         type: DataTypes.INTEGER,
         field: 'total_buildings'
       },
-      total_violations: {
+      totalViolations: {
         type: DataTypes.INTEGER,
         field: 'total_violations'
       },
@@ -43,11 +39,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'total_permits'
       },
-      total_service_calls: {
+      totalServiceCalls: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls'
       },
-      total_service_calls_open_over_month: {
+      totalServiceCallsOpenOverMonth: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls_open_over_month'
       },
