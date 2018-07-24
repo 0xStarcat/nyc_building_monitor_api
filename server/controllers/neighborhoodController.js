@@ -1,5 +1,5 @@
 const { db } = require(__dirname + '/../models/sequelize.js')
-const { constructNeighborhoodJson } = require(__dirname + '/helpers/jsonHelpers.js')
+const { constructNeighborhoodJson, constructBuildingJson } = require(__dirname + '/helpers/jsonHelpers.js')
 const { dbPromise } = require('../db.js')
 
 const constructNeighborhoodBoundaryJSON = data => {
@@ -44,5 +44,29 @@ module.exports = {
       .catch(error => console.log('ERROR', error))
     console.log(data.length)
     res.json(constructNeighborhoodJson(data))
+  },
+  buildings: async (req, res) => {
+    db.Building.findAll({
+      where: {
+        neighborhood_id: req.params['id']
+      },
+      include: [
+        {
+          model: db.Neighborhood,
+          attributes: ['name']
+        },
+        {
+          model: db.Borough,
+          attributes: ['name']
+        }
+      ]
+    })
+      .then(data => {
+        res.json(constructBuildingJson(data))
+      })
+      .catch(data => {
+        console.log('ERROR', data)
+        res.json({ errors: data })
+      })
   }
 }

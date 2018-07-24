@@ -59,8 +59,8 @@ module.exports = {
           properties: {
             id: row.id,
             name: row.address,
-            // parentBoundaryName: row.neighborhood.name,
-            // topParentBoundaryName: row.borough.name,
+            parentBoundaryName: row.neighborhood.name,
+            topParentBoundaryName: row.borough.name,
             yearBuild: row.yearBuilt,
             violationsTotal: row.totalViolations,
             salesTotal: row.totalSales,
