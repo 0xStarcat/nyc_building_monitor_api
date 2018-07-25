@@ -77,12 +77,13 @@ module.exports = {
         return {
           type: 'Feature',
           properties: {
-            name: { label: 'Id', value: row.unique_key },
-            parentBoundaryName: { label: 'Address', value: row.building.address },
-            source: { label: 'Source', value: row.source },
-            date: { label: 'Date', value: row.date },
-            description: { label: 'Description', value: row.description },
-            penalty: { label: 'Penalty', value: row.penaltyImposed }
+            name: row.uniqueId,
+            parentBoundaryName: row.building.address,
+            source: row.source,
+            date: row.date,
+            description: row.description,
+            penalty: row.penaltyImposed,
+            code: row.code
           }
         }
       })
@@ -94,18 +95,19 @@ module.exports = {
         return {
           type: 'Feature',
           properties: {
-            name: { label: 'Id', value: row.violation_id },
-            parentBoundaryName: { label: 'Address', value: row.building.address },
-            source: { label: 'Source', value: row.source },
-            status: { label: 'Status', value: row.status },
-            date: { label: 'Date', value: row.date },
-            description: { label: 'Description', value: row.description },
-            resolutionDescription: { label: 'Resolution Description', value: row.resolutionDescription },
-            resolutionViolation: { label: 'Resulted in violation', value: row.resolutionViolation },
-            resolutionNoAction: { label: 'Resulted in no action', value: row.resolutionNoAction },
-            resolutionUnableToInvestigate: { label: 'Unable to investigate', value: row.unableToInvestigate },
-            openOverMonth: { label: 'Open for over 1 month', value: row.openOverMonth },
-            daysToResolve: { label: 'Days to Resolve', value: row.daysToClose }
+            name: row.uniqueId,
+            parentBoundaryName: row.building.address,
+            source: row.source,
+            status: row.status,
+            date: row.date,
+            description: row.description,
+            resolutionDescription: row.resolutionDescription,
+            resolutionViolation: row.resolutionViolation,
+            resolutionNoAction: row.resolutionNoAction,
+            resolutionUnableToInvestigate: row.unableToInvestigate,
+            openOverMonth: row.openOverMonth,
+            daysToResolve: row.daysToClose,
+            closedDate: row.closedDate
           }
         }
       })

@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
         field: 'id',
         primaryKey: true
       },
+      uniqueId: {
+        type: DataTypes.STRING,
+        field: 'unique_id'
+      },
       date: {
         type: DataTypes.STRING,
         field: 'date'
@@ -46,6 +50,10 @@ module.exports = function(sequelize, DataTypes) {
       daysToClose: {
         type: DataTypes.STRING,
         field: 'days_to_close'
+      },
+      closedDate: {
+        type: DataTypes.STRING,
+        field: 'closed_date'
       }
     },
     {

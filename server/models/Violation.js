@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
         field: 'id',
         primaryKey: true
       },
+      uniqueId: {
+        type: DataTypes.STRING,
+        field: 'unique_id'
+      },
       building_id: {
         type: DataTypes.INTEGER,
         field: 'building_id'
@@ -26,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
       source: {
         type: DataTypes.STRING,
         field: 'source'
+      },
+      code: {
+        type: DataTypes.STRING,
+        field: 'violation_code'
       }
     },
     {
