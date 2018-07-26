@@ -16,7 +16,7 @@ from helpers import log_helper
 import config
 
 def update_data():
-  conn = sqlite3.connect(config.DATABASE_URL, timeout=10)
+  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
   

@@ -23,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'total_buildings'
       },
+      totalResidentialBuildings: {
+        type: DataTypes.INTEGER,
+        field: 'total_residential_buildings'
+      },
       total_violations: {
         type: DataTypes.INTEGER,
         field: 'total_violations'
@@ -35,11 +39,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'total_permits'
       },
-      total_service_calls: {
+      totalServiceCalls: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls'
       },
-      total_service_calls_open_over_month: {
+      totalServiceCallsOpenOverMonth: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls_open_over_month'
       },

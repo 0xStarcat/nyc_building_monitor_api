@@ -134,13 +134,13 @@ def add_counts_to_boundary_data(c):
 
     buildings_count = c.fetchone()[0]
 
-    c.execute('SELECT COUNT(*) FROM buildings WHERE census_tract_id={id} AND residential'\
+    c.execute('SELECT COUNT(*) FROM buildings WHERE census_tract_id={id} AND residential = 1'\
       .format(id=row[0]))
 
     residential_buildings_count = c.fetchone()[0]
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=context.neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=context.census_tracts_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=context.census_tracts_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))
@@ -156,7 +156,7 @@ def add_counts_to_boundary_data(c):
 
     buildings_count = c.fetchone()[0]
 
-    c.execute('SELECT COUNT(*) FROM buildings WHERE neighborhood_id={id} AND residential'\
+    c.execute('SELECT COUNT(*) FROM buildings WHERE neighborhood_id={id} AND residential = 1'\
       .format(id=row[0]))
 
     residential_buildings_count = c.fetchone()[0]
@@ -178,13 +178,13 @@ def add_counts_to_boundary_data(c):
 
     buildings_count = c.fetchone()[0]
 
-    c.execute('SELECT COUNT(*) FROM buildings WHERE borough_id={id} AND residential'\
+    c.execute('SELECT COUNT(*) FROM buildings WHERE borough_id={id} AND residential = 1'\
       .format(id=row[0]))
 
     residential_buildings_count = c.fetchone()[0]
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-      .format(tn=context.neighborhoods_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
+      .format(tn=context.boroughs_seeds.table, cn="total_residential_buildings", value=residential_buildings_count, id=row[0]))
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
       .format(tn=context.boroughs_seeds.table, cn="total_buildings", value=buildings_count, id=row[0]))

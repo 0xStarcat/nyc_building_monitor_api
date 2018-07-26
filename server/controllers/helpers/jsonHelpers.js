@@ -14,6 +14,9 @@ module.exports = {
             rentChange20112017: parseFloat(row.rentChange20112017),
             racePercentWhite2010: row.racePercentWhite2010,
             buildingsTotal: parseFloat(row.total_buildings),
+            residentialBuildingsTotal: parseFloat(row.total_residential_buildings),
+            serviceCallsTotal: parseFloat(row.total_service_calls),
+
             serviceCallsPercentOpenOneMonth: parseFloat(
               (row.total_service_calls_open_over_month / row.total_service_calls) * 100
             ).toFixed(2),
@@ -40,6 +43,8 @@ module.exports = {
             rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
             racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
             buildingsTotal: parseFloat(row.totalBuildings),
+            residentialBuildingsTotal: parseFloat(row.totalResidentialBuildings),
+            serviceCallsTotal: parseFloat(row.totalServiceCalls),
             serviceCallsPercentOpenOneMonth: parseFloat(
               (row.totalServiceCallsOpenOverMonth / row.totalServiceCalls) * 100
             ).toFixed(2),
