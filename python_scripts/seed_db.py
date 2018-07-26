@@ -190,14 +190,42 @@ def clear_conversions():
   conn.commit()
   conn.close()
 
-def sample():
+def rename_building_column():
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
+  c.execute('PRAGMA foreign_keys=off;')
 
+  print("making backup table")
+  c.execute('ALTER TABLE buildings RENAME TO buildings_old;')
+  c.execute('DROP INDEX idx_bldg_block_and_lot')
+  c.execute('DROP INDEX idx_bldg_census_tract_id')
+  c.execute('DROP INDEX idx_bldg_neighborhood_id')
+  c.execute('DROP INDEX idx_bldg_borough_id')
+  c.execute('DROP INDEX idx_bldg_class')
+  
+  c.execute('DROP INDEX idx_bldg_borough_and_residential')
+  c.execute('DROP INDEX idx_bldg_neighborhood_and_residential')
+  c.execute('DROP INDEX idx_bldg_census_tract_and_residential')
+
+  c.execute('DROP INDEX idx_bldg_boroid_and_address')
+  c.execute('DROP INDEX idx_bldg_bbl')
+
+  print("making new table")
+  context.buildings_seeds.create_table(c)
+  print("seeding new table...")
+  c.execute('INSERT INTO buildings (id, borough_id,neighborhood_id,census_tract_id,boro_code,CT2010,bbl,block,lot,address,geometry,representative_point,year_built,residential_units,bldg_class,residential,total_violations,total_sales,total_service_calls,total_service_calls_open_over_month,service_calls_average_days_to_resolve) SELECT * FROM buildings_old;')
+  conn.commit()
+
+  c.execute('PRAGMA foreign_keys=on;')
+
+def sample():
+  conn = sqlite3.connect(backup_sqlite_file, timeout=10)
+  c = conn.cursor()
+  # rename_building_column()
+# 
   c.execute('pragma foreign_keys=on;')
 
-  c.execute('SELECT total_residential_buildings FROM census_tracts')
-
+  c.execute('SELECT bldg_class FROM buildings')
   all_rows = c.fetchall()
   print(all_rows)
   # c.execute('SELECT * FROM violations')
@@ -218,5 +246,5 @@ def sample():
   # print(all_rows[len(all_rows) - 1])
   # for row in all_rows:
     # print(row[1])
-  conn.commit()
-  conn.close()
+  # conn.commit()
+  # conn.close()

@@ -51,6 +51,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'total_service_calls_open_over_month'
       },
+      averageDaysToResolveServiceCalls: {
+        type: DataTypes.FLOAT,
+        field: 'service_calls_average_days_to_resolve'
+      },
       representativePoint: {
         type: DataTypes.JSON,
         field: 'representative_point'

@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
         field: 'id',
         primaryKey: true
       },
+      census_tract_id: {
+        type: DataTypes.INTEGER,
+        field: 'census_tract_id'
+      },
+      neighborhood_id: {
+        type: DataTypes.INTEGER,
+        field: 'neighborhood_id'
+      },
       block: {
         type: DataTypes.STRING,
         field: 'block'
@@ -27,21 +35,25 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.JSON,
         field: 'geometry'
       },
-      census_tract_id: {
-        type: DataTypes.INTEGER,
-        field: 'census_tract_id'
+      representativePoint: {
+        type: DataTypes.JSON,
+        field: 'representative_point'
       },
-      neighborhood_id: {
+      buildingClass: {
+        type: DataTypes.STRING,
+        field: 'bldg_class'
+      },
+      residentialUnits: {
         type: DataTypes.INTEGER,
-        field: 'neighborhood_id'
+        field: 'residential_units'
+      },
+      isResidential: {
+        type: DataTypes.BOOLEAN,
+        field: 'residential'
       },
       totalViolations: {
         type: DataTypes.INTEGER,
         field: 'total_violations'
-      },
-      totalSales: {
-        type: DataTypes.INTEGER,
-        field: 'total_sales'
       },
       totalServiceCalls: {
         type: DataTypes.INTEGER,
@@ -50,6 +62,10 @@ module.exports = function(sequelize, DataTypes) {
       totalServiceCallsOpenOverMonth: {
         type: DataTypes.INTEGER,
         field: 'total_service_calls_open_over_month'
+      },
+      averageDaysToResolveServiceCalls: {
+        type: DataTypes.FLOAT,
+        field: 'service_calls_average_days_to_resolve'
       }
     },
     {

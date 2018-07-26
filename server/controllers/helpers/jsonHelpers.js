@@ -16,10 +16,10 @@ module.exports = {
             buildingsTotal: parseFloat(row.total_buildings),
             residentialBuildingsTotal: parseFloat(row.total_residential_buildings),
             serviceCallsTotal: parseFloat(row.total_service_calls),
-
             serviceCallsPercentOpenOneMonth: parseFloat(
               (row.total_service_calls_open_over_month / row.total_service_calls) * 100
             ).toFixed(2),
+            averageDaysToResolveServiceCalls: parseFloat(row.service_calls_average_days_to_resolve).toFixed(2),
             violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
             representativePoint: JSON.parse(row.representative_point)
           }
@@ -48,6 +48,7 @@ module.exports = {
             serviceCallsPercentOpenOneMonth: parseFloat(
               (row.totalServiceCallsOpenOverMonth / row.totalServiceCalls) * 100
             ).toFixed(2),
+            averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
             violationsPerBuilding: parseFloat((row.totalViolations / row.totalBuildings).toFixed(2)),
             representativePoint: JSON.parse(row.representativePoint)
           }
@@ -67,10 +68,14 @@ module.exports = {
             parentBoundaryName: row.neighborhood.name,
             topParentBoundaryName: row.borough.name,
             yearBuild: row.yearBuilt,
+            residentialUnits: row.residentialUnits,
+            isResidential: row.isResidential,
+            representativePoint: row.representativePoint,
+            buildingClass: row.buildingClass,
             violationsTotal: row.totalViolations,
-            salesTotal: row.totalSales,
             serviceCallsTotal: row.totalServiceCalls,
-            serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth
+            serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth,
+            averageDaysToResolveServiceCalls: row.averageDaysToResolveServiceCalls
           }
         }
       })
