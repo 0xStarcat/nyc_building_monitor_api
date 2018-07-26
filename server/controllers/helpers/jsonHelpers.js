@@ -20,6 +20,7 @@ module.exports = {
               (row.total_service_calls_open_over_month / row.total_service_calls) * 100
             ).toFixed(2),
             averageDaysToResolveServiceCalls: parseFloat(row.service_calls_average_days_to_resolve).toFixed(2),
+            violationsTotal: parseFloat(row.total_violations),
             violationsPerBuilding: parseFloat((row.total_violations / row.total_buildings).toFixed(2)),
             representativePoint: JSON.parse(row.representative_point)
           }
@@ -49,6 +50,7 @@ module.exports = {
               (row.totalServiceCallsOpenOverMonth / row.totalServiceCalls) * 100
             ).toFixed(2),
             averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
+            violationsTotal: parseFloat(row.totalViolations),
             violationsPerBuilding: parseFloat((row.totalViolations / row.totalBuildings).toFixed(2)),
             representativePoint: JSON.parse(row.representativePoint)
           }
@@ -74,8 +76,8 @@ module.exports = {
             buildingClass: row.buildingClass,
             violationsTotal: row.totalViolations,
             serviceCallsTotal: row.totalServiceCalls,
-            serviceCallsPercentOpenOneMonth: row.totalServiceCallsOpenOverMonth,
-            averageDaysToResolveServiceCalls: row.averageDaysToResolveServiceCalls
+            serviceCallsPercentOpenOneMonth: parseFloat(row.totalServiceCallsOpenOverMonth).toFixed(2),
+            averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2)
           }
         }
       })
