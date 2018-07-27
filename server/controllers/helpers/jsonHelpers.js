@@ -72,7 +72,7 @@ module.exports = {
             yearBuild: row.yearBuilt,
             residentialUnits: row.residentialUnits,
             isResidential: row.isResidential,
-            representativePoint: row.representativePoint,
+            representativePoint: JSON.parse(row.representativePoint),
             buildingClass: row.buildingClass,
             violationsTotal: row.totalViolations,
             serviceCallsTotal: row.totalServiceCalls,
