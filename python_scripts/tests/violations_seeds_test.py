@@ -66,6 +66,14 @@ def insertion_of_record_hpd(c):
     c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 'SECTION 27-2005'
+
+    c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'closed'
+
+    c.execute('SELECT status_description FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'VIOLATION CLOSED'
   except AssertionError as error:
     raise error
 
@@ -105,6 +113,14 @@ def insertion_of_record_ecb(c):
     c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
     assert entry[0] == '109'
+
+    c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'closed'
+
+    c.execute('SELECT status_description FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'CERTIFICATE ACCEPTED'
   except AssertionError as error:
     raise error
 
@@ -144,6 +160,14 @@ def insertion_of_record_dob(c):
     c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 'C'
+
+    c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'closed'
+
+    c.execute('SELECT status_description FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == 'VW*-VIOLATION - WORK W/O PERMIT DISMISSED'
   except AssertionError as error:
     raise error
 
@@ -199,6 +223,32 @@ def test_get_code_3():
 def test_get_code_4():
   violation = {"not_description": "hello"}
   assert test_context.context.violations_seeds.get_code(violation) == ""
+
+# get_status
+
+def test_get_status_1():
+  violation = {"violationstatus": "Close"}
+  assert test_context.context.violations_seeds.get_status(violation) == "closed"
+
+def test_get_status_2():
+  violation = {"ecb_violation_status": "RESOLVE"}
+  assert test_context.context.violations_seeds.get_status(violation) == "closed"
+
+def test_get_status_3():
+  violation = {"violation_category": "DISMISSED"}
+  assert test_context.context.violations_seeds.get_status(violation) == "closed"
+
+def test_get_status_4():
+  violation = {"violationstatus": "Open"}
+  assert test_context.context.violations_seeds.get_status(violation) == "open"
+
+def test_get_status_5():
+  violation = {"ecb_violation_status": "ACTIVE"}
+  assert test_context.context.violations_seeds.get_status(violation) == "open"
+
+def test_get_status_6():
+  violation = {"violation_category": "VIOLATION ACTIVE"}
+  assert test_context.context.violations_seeds.get_status(violation) == "open"
 
 # get bbl
 

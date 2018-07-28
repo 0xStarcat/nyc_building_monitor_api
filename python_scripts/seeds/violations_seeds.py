@@ -11,11 +11,14 @@ col4 = 'description'
 col5 = 'penalty_imposed'
 col6 = 'source'
 col7 = 'violation_code'
-
+col8 = 'status'
+col9 = 'status_description'
 # add status
   # certification_status for ECB
   # currentstatus for HPD
   # violation_category - parse string for DOB
+
+# status description
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'\
@@ -27,13 +30,17 @@ def create_table(c):
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col5))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col6))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col7))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col8))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col9))
 
   c.execute('CREATE INDEX idx_violation_building_id ON {tn}({col})'.format(tn=table, col=col1))
   c.execute('CREATE INDEX idx_violation_source ON {tn}({col})'.format(tn=table, col=col6))
   c.execute('CREATE INDEX idx_violation_code ON {tn}({col})'.format(tn=table, col=col7))
   c.execute('CREATE INDEX idx_violation_date ON {tn}({col})'.format(tn=table, col=col3))
+  c.execute('CREATE INDEX idx_violation_status ON {tn}({col})'.format(tn=table, col=col8))
 
   c.execute('CREATE UNIQUE INDEX idx_violation_unique_id ON {tn}({col})'.format(tn=table, col=col2))
+  c.execute('CREATE UNIQUE INDEX idx_violation_date_and_description ON {tn}({col1}, {col2})'.format(tn=table, col1=col3, col2=col4))
 
 def get_violation_id(violation):
   if "violationid" in violation:
@@ -43,16 +50,42 @@ def get_violation_id(violation):
   elif "number" in violation:
     return violation["number"]
   else:
-    print("No unique id found")
+    print("  * No unique id found")
     return None
+
+def get_status(violation):
+  status = ""
+  if "violationstatus" in violation: #HPD
+    status = "closed" if "close" in violation["violationstatus"].lower() else "open"
+  elif "ecb_violation_status" in violation: #ecb
+    status = "closed" if "resolve" in violation["ecb_violation_status"].lower() else "open"
+  elif "violation_category" in violation: #DOB
+    status = "open" if "active" in violation["violation_category"].lower() else "closed"
+  else:
+    print("  * no status found")
+    return None
+  return status
+
+def get_status_description(violation):
+  status_description = ""
+  if "currentstatus" in violation: #hpd
+    status_description = violation["currentstatus"]
+  elif "certification_status" in violation:
+    status_description = violation["certification_status"]
+  elif "violation_category" in violation:
+    status_description = violation["violation_category"]
+  else:
+    print("  * no violation status description")
+    return None
+  return status_description
 
 def get_description(violation):
   description = ""
   if "violation_description" in violation:
-    description = violation["violation_description"]
+    description = violation["violation_description"] #ECB
   elif "description" in violation:
-    description = violation["description"]
-  elif "novdescription" in violation:
+    description = violation["description"] #DOB
+  elif "novdescription" in violation: #HPD
     description = violation["novdescription"]
   return description
 
@@ -145,11 +178,13 @@ def seed(c, violation_json, write_to_csv=False):
     penalty_imposed = str(get_penalty(violation))
     source = violation['source'] # field added from from API call
     violation_code = str(get_code(violation))
-
+    status = get_status(violation)
+    status_description = get_status_description(violation)
+    
     # Create Violation
     try:
-      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'\
-        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (building_id, unique_id, date, description, penalty_imposed, source, violation_code))
+      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9), (building_id, unique_id, date, description, penalty_imposed, source, violation_code, status, status_description))
     except Exception as error:
       print("ERROR", error)
       continue

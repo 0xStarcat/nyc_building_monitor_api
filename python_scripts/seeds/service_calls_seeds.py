@@ -17,8 +17,7 @@ col10 = 'unable_to_investigate'
 col11 = 'open_over_month'
 col12 = 'closed_date'
 col13 = 'days_to_close'
-
-# Add complaint_type
+col14 = 'complaint_type'
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'\
@@ -36,14 +35,18 @@ def create_table(c):
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} BOOLEAN".format(tn=table, cn=col11))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col12))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col13))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col14))
 
   c.execute('CREATE INDEX idx_call_building_id ON {tn}({col})'.format(tn=table, col=col1))
   c.execute('CREATE INDEX idx_call_date ON {tn}({col})'.format(tn=table, col=col3))
+  c.execute('CREATE INDEX idx_call_status ON {tn}({col})'.format(tn=table, col=col4))
   c.execute('CREATE INDEX idx_call_source ON {tn}({col})'.format(tn=table, col=col5))
   c.execute('CREATE INDEX idx_call_res_vio ON {tn}({col})'.format(tn=table, col=col8))
   c.execute('CREATE INDEX idx_call_res_na ON {tn}({col})'.format(tn=table, col=col9))
   c.execute('CREATE INDEX idx_call_res_unable ON {tn}({col})'.format(tn=table, col=col10))
   c.execute('CREATE INDEX idx_call_open_over_month ON {tn}({col})'.format(tn=table, col=col11))
+  c.execute('CREATE INDEX idx_call_complaint_type ON {tn}({col})'.format(tn=table, col=col14))
+
   c.execute('CREATE UNIQUE INDEX idx_call_unique_id ON {tn}({col})'.format(tn=table, col=col2))
 
 def call_is_duplicate(description):
@@ -57,15 +60,15 @@ def call_is_duplicate(description):
     return False
 
 def resulted_in_violation(description):
-  if "unable to issue it" in description
+  if "unable to issue it" in description:
     return False
-  if "No violations were issued" in description
+  if "No violations were issued" in description:
     return False
 
 
-  if "violation" in description 
+  if "violation" in description:
     return True
-  elif "Violations" in description
+  elif "Violations" in description:
     return True
   else:
     return False
@@ -88,6 +91,8 @@ def took_no_action(description):
   elif "no further action" in description:
     return True
   elif "had been restored" in description:
+    return True
+  elif "removed the stop work order" in description:
     return True
   elif "The Department of Buildings investigated this complaint and closed it. If" in description:
     return True
@@ -138,12 +143,12 @@ def seed(c, service_calls_json, write_to_csv=False):
     open_over_month = is_open_over_month(status, date)
     description = str(call["descriptor"])
     address = str(call["incident_address"]) if "incident_address" in call else ""
-    
+    complaint_type = str(call["complaint_type"]) if "complaint_type" in call else ""
     
     # Create call
     try: 
-      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close))
+      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close, complaint_type))
     except Exception as error:
       print("ERROR", error, call["unique_key"])
       continue

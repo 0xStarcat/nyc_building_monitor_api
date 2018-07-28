@@ -96,6 +96,10 @@ def insertion_of_record_dob(c):
     c.execute('SELECT days_to_close FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 0
+
+    c.execute('SELECT complaint_type FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == "Building/Use"
   except AssertionError as error:
     raise error
 
@@ -164,6 +168,10 @@ def insertion_of_record_hpd(c):
     c.execute('SELECT days_to_close FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 71
+
+    c.execute('SELECT complaint_type FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == "GENERAL"
   except AssertionError as error:
     raise error
 
@@ -232,6 +240,10 @@ def insertion_of_record_open(c):
     c.execute('SELECT days_to_close FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
     assert entry[0] == None
+
+    c.execute('SELECT complaint_type FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == "GENERAL"
   except AssertionError as error:
     raise error
 

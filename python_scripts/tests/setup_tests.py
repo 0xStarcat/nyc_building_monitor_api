@@ -27,7 +27,7 @@ def setup_db():
   except Exception as error:
     print("Failure to create test tables ")
     print(error)
-    drop_dB()
+    drop_db()
     return
 
 def drop_db():

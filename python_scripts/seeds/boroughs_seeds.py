@@ -43,7 +43,7 @@ def seed(c, borough_json):
     name = borough["properties"]["BoroName"]
     code = borough["properties"]["BoroCode"]
     geo = json.dumps(borough["geometry"], separators=(',',':'))
-    representative_point = json.dumps(context.boundary_helpers.get_representative_point_geojson(borough["geometry"]))
+    representative_point = json.dumps(context.boundary_helpers.get_representative_point_geojson(borough["geometry"]), separators=(',',':'))
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES (?, ?, ?, ?)'\
       .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (name, code, geo, representative_point))

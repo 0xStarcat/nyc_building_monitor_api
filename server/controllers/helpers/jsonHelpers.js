@@ -41,7 +41,7 @@ module.exports = {
             topParentBoundaryName: boroughData.find(borough => borough.id === row.borough_id).name,
             incomeMedian2017: parseFloat((row.income || {}).median_income_2017),
             rentMedian2017: parseFloat((row.rent || {}).median_rent_2017),
-            rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017),
+            rentChange20112017: parseFloat((row.rent || {}).median_rent_change_2011_2017).toFixed(2),
             racePercentWhite2010: (row.racial_makeup || {}).percent_white_2010,
             buildingsTotal: parseFloat(row.totalBuildings),
             residentialBuildingsTotal: parseFloat(row.totalResidentialBuildings),
