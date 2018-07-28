@@ -219,13 +219,12 @@ def rename_building_column():
   c.execute('PRAGMA foreign_keys=on;')
 
 def sample():
-  conn = sqlite3.connect(backup_sqlite_file, timeout=10)
+  conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
-  # rename_building_column()
-# 
+ 
   c.execute('pragma foreign_keys=on;')
 
-  c.execute('SELECT bldg_class FROM buildings')
+  c.execute('SELECT source FROM service_calls WHERE source="HPD"')
   all_rows = c.fetchall()
   print(all_rows)
   # c.execute('SELECT * FROM violations')

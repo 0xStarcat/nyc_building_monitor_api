@@ -35,13 +35,17 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         field: 'resolution_no_action'
       },
-      unableToInvestigte: {
+      unableToInvestigate: {
         type: DataTypes.BOOLEAN,
         field: 'unable_to_investigate'
       },
       status: {
         type: DataTypes.BOOLEAN,
         field: 'status'
+      },
+      source: {
+        type: DataTypes.STRING,
+        field: 'source'
       },
       openOverMonth: {
         type: DataTypes.BOOLEAN,
