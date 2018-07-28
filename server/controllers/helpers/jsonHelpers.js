@@ -1,5 +1,5 @@
 module.exports = {
-  constructNeighborhoodJson: (data, boroughData) => {
+  constructNeighborhoodJson: data => {
     return {
       features: data.map(row => {
         return {

@@ -18,6 +18,8 @@ col11 = 'open_over_month'
 col12 = 'closed_date'
 col13 = 'days_to_close'
 
+# Add complaint_type
+
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'\
     .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, ref_table=context.buildings_seeds.table))
@@ -55,9 +57,15 @@ def call_is_duplicate(description):
     return False
 
 def resulted_in_violation(description):
-  if "violation" in description and "No violations were issued" not in description:
+  if "unable to issue it" in description
+    return False
+  if "No violations were issued" in description
+    return False
+
+
+  if "violation" in description 
     return True
-  elif "Violations" in description and "No violations were issued" not in description:
+  elif "Violations" in description
     return True
   else:
     return False
@@ -67,13 +75,15 @@ def unable_to_investigate_call(description):
     return True
   if "attempted to investigate" in description:
     return True
-  elif "Please check back later for status" in description:
-    return True
+  # elif "Please check back later for status" in description:
+  #   return True
   else:
     return False
 
 def took_no_action(description):
   if "No violations were issued" in description:
+    return True
+  elif "conditions were corrected" in description:
     return True
   elif "no further action" in description:
     return True

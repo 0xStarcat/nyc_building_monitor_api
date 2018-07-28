@@ -12,6 +12,11 @@ col5 = 'penalty_imposed'
 col6 = 'source'
 col7 = 'violation_code'
 
+# add status
+  # certification_status for ECB
+  # currentstatus for HPD
+  # violation_category - parse string for DOB
+
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'\
     .format(tn=table, col1=col1, ref_table=context.buildings_seeds.table))
