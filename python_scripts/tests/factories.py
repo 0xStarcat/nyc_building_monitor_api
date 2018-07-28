@@ -18,6 +18,13 @@ service_calls_json = [
   {"address_type":"ADDRESS","agency":"HPD","agency_name":"Department of Housing Preservation and Development","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"2015-08-20T10:20:40.000","community_board":"01 BROOKLYN","complaint_type":"GENERAL","created_date":"2015-06-10T18:39:08.000","descriptor":"BELL/BUZZER/INTERCOM","facility_type":"N/A","incident_address":"fake","incident_zip":"11206","latitude":"40","location":{"type":"Point","coordinates":[-73.94003123834,40]},"location_type":"RESIDENTIAL BUILDING","longitude":"-73.94003123833956","open_data_channel_type":"PHONE","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2015-08-20T10:20:40.000","resolution_description":"The Department of Housing Preservation and Development was not able to gain access to inspect the following conditions. The complaint has been closed. If the condition still exists, please file a new complaint.","status":"Open","street_name":"fake","unique_key":"123456","x_coordinate_state_plane":"1000876","y_coordinate_state_plane":"1"}
 ]
 
+open_service_calls_json = [
+  {"address_type":"ADDRESS","agency":"DOB","agency_name":"Department of Buildings","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"","community_board":"05 BROOKLYN","complaint_type":"Building/Use","created_date":"2018-05-18T08:53:55.000","descriptor":"Illegal Conversion Of Residential Building/Space","facility_type":"N/A","incident_address":"fake","incident_zip":"11207","latitude":"40","location":{"type":"Point","coordinates":[-73.890480139432,40]},"longitude":"-73.89048013943226","open_data_channel_type":"UNKNOWN","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2018-07-18T00:00:00.000","resolution_description":"Still open...","status":"Open","street_name":"fake","unique_key":"1234","x_coordinate_state_plane":"1014629","y_coordinate_state_plane":"1"},
+  {"address_type":"ADDRESS","agency":"HPD","agency_name":"Department of Housing Preservation and Development","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"","community_board":"01 BROOKLYN","complaint_type":"GENERAL","created_date":"2015-06-10T18:39:08.000","descriptor":"BELL/BUZZER/INTERCOM","facility_type":"N/A","incident_address":"fake","incident_zip":"11206","latitude":"40","location":{"type":"Point","coordinates":[-73.94003123834,40]},"location_type":"RESIDENTIAL BUILDING","longitude":"-73.94003123833956","open_data_channel_type":"PHONE","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2015-08-20T10:20:40.000","resolution_description":"Still open...","status":"Open","street_name":"fake","unique_key":"12345","x_coordinate_state_plane":"1000876","y_coordinate_state_plane":"1"},
+  {"address_type":"ADDRESS","agency":"HPD","agency_name":"Department of Housing Preservation and Development","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"","community_board":"01 BROOKLYN","complaint_type":"GENERAL","created_date":"2015-06-10T18:39:08.000","descriptor":"BELL/BUZZER/INTERCOM","facility_type":"N/A","incident_address":"fake","incident_zip":"11206","latitude":"40","location":{"type":"Point","coordinates":[-73.94003123834,40]},"location_type":"RESIDENTIAL BUILDING","longitude":"-73.94003123833956","open_data_channel_type":"PHONE","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2015-08-20T10:20:40.000","resolution_description":"Still open...","status":"Open","street_name":"fake","unique_key":"123456","x_coordinate_state_plane":"1000876","y_coordinate_state_plane":"1"},
+  {"address_type":"ADDRESS","agency":"HPD","agency_name":"Department of Housing Preservation and Development","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"2015-08-20T10:20:40.000","community_board":"01 BROOKLYN","complaint_type":"GENERAL","created_date":"2015-06-10T18:39:08.000","descriptor":"BELL/BUZZER/INTERCOM","facility_type":"N/A","incident_address":"fake","incident_zip":"11206","latitude":"40","location":{"type":"Point","coordinates":[-73.94003123834,40]},"location_type":"RESIDENTIAL BUILDING","longitude":"-73.94003123833956","open_data_channel_type":"PHONE","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2015-08-20T10:20:40.000","resolution_description":"The Department of Housing Preservation and Development was not able to gain access to inspect the following conditions. The complaint has been closed. If the condition still exists, please file a new complaint.","status":"Closed","street_name":"fake","unique_key":"1234567","x_coordinate_state_plane":"1000876","y_coordinate_state_plane":"1"}
+]
+
 def seed_test_db_with_building():
   conn = sqlite3.connect(test_db, timeout=10)
   c = conn.cursor()
@@ -40,5 +47,18 @@ def seed_test_db_with_buildings_violations_calls():
   test_context.context.buildings_seeds.seed(c, building_json)
   test_context.context.violations_seeds.seed(c, violations_json)
   test_context.context.service_calls_seeds.seed(c, service_calls_json)
+
+  conn.commit()
+
+def seed_test_db_with_open_service_calls():
+  conn = sqlite3.connect(test_db, timeout=10)
+  c = conn.cursor()
+  c.fetchone()
+  c.execute('pragma foreign_keys=on;')
+  test_context.context.boroughs_seeds.seed(c, borough_json)
+  test_context.context.neighborhoods_seeds.seed(c, neighborhood_json)
+  test_context.context.census_tracts_seeds.seed(c, census_tract_json)
+  test_context.context.buildings_seeds.seed(c, building_json)
+  test_context.context.service_calls_seeds.seed(c, open_service_calls_json)
 
   conn.commit()

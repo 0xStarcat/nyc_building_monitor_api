@@ -13,12 +13,7 @@ col6 = 'source'
 col7 = 'violation_code'
 col8 = 'status'
 col9 = 'status_description'
-# add status
-  # certification_status for ECB
-  # currentstatus for HPD
-  # violation_category - parse string for DOB
-
-# status description
+col10 ='ecb_number'
 
 def create_table(c):
   c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'\
@@ -32,6 +27,7 @@ def create_table(c):
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col7))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col8))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col9))
+  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col10))
 
   c.execute('CREATE INDEX idx_violation_building_id ON {tn}({col})'.format(tn=table, col=col1))
   c.execute('CREATE INDEX idx_violation_source ON {tn}({col})'.format(tn=table, col=col6))
@@ -40,7 +36,6 @@ def create_table(c):
   c.execute('CREATE INDEX idx_violation_status ON {tn}({col})'.format(tn=table, col=col8))
 
   c.execute('CREATE UNIQUE INDEX idx_violation_unique_id ON {tn}({col})'.format(tn=table, col=col2))
-  c.execute('CREATE UNIQUE INDEX idx_violation_date_and_description ON {tn}({col1}, {col2})'.format(tn=table, col1=col3, col2=col4))
 
 def get_violation_id(violation):
   if "violationid" in violation:
@@ -73,7 +68,7 @@ def get_status_description(violation):
   elif "certification_status" in violation:
     status_description = violation["certification_status"]
   elif "violation_category" in violation:
-    status_description = violation["violation_category"]
+    status_description = violation["violation_category"] + " - " + violation["disposition_comments"]
   else:
     print("  * no violation status description")
     return None
@@ -180,11 +175,11 @@ def seed(c, violation_json, write_to_csv=False):
     violation_code = str(get_code(violation))
     status = get_status(violation)
     status_description = get_status_description(violation)
-    
+    ecb_number = violation["ecb_number"] if "ecb_number" in violation else None
     # Create Violation
     try:
-      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'\
-        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9), (building_id, unique_id, date, description, penalty_imposed, source, violation_code, status, status_description))
+      c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
+        .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10), (building_id, unique_id, date, description, penalty_imposed, source, violation_code, status, status_description, ecb_number))
     except Exception as error:
       print("ERROR", error)
       continue

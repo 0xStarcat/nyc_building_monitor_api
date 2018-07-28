@@ -61,27 +61,27 @@ def seed_buildings_data(c):
 
 def seed_buildings(c, conn):
   print("Seeding buildings")
-  # context.buildings_seeds.create_table(c)
+  context.buildings_seeds.create_table(c)
 
-  # mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, mn_building_json)
-  # conn.commit()
+  mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
+  context.buildings_seeds.seed(c, mn_building_json)
+  conn.commit()
 
-  # bx_building_json = json.load(open('data/buildings_data/bx_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, bx_building_json)
-  # conn.commit()
+  bx_building_json = json.load(open('data/buildings_data/bx_mappluto.geojson'))
+  context.buildings_seeds.seed(c, bx_building_json)
+  conn.commit()
 
-  # bk_building_json = json.load(open('data/buildings_data/bk_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, bk_building_json)
-  # conn.commit()
+  bk_building_json = json.load(open('data/buildings_data/bk_mappluto.geojson'))
+  context.buildings_seeds.seed(c, bk_building_json)
+  conn.commit()
 
-  # qn_building_json = json.load(open('data/buildings_data/qn_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, qn_building_json)
-  # conn.commit()
+  qn_building_json = json.load(open('data/buildings_data/qn_mappluto.geojson'))
+  context.buildings_seeds.seed(c, qn_building_json)
+  conn.commit()
 
-  # si_building_json = json.load(open('data/buildings_data/si_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, si_building_json)
-  # conn.commit()
+  si_building_json = json.load(open('data/buildings_data/si_mappluto.geojson'))
+  context.buildings_seeds.seed(c, si_building_json)
+  conn.commit()
 
   # adds total_buildings number to boundary data tables
   context.buildings_seeds.add_counts_to_boundary_data(c)
@@ -139,7 +139,7 @@ def seed():
   # create_boundaries_data_tables(c)
   # seed_boundary_tables(c, conn)
   # seed_boundary_table_data(c, conn)
-  seed_buildings(c, conn)
+  # seed_buildings(c, conn)
 
   # create_buildings_data_tables(c)
   # seed_buildings_data(c)  

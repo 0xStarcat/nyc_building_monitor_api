@@ -23,7 +23,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_building_building_events ON {tn}({col})'.format(tn=table, col=col4))
 
   
-  c.execute('CREATE INDEX idx_building_eventables ON {tn}({col})'.format(tn=table, col='eventable'))
-  c.execute('CREATE INDEX idx_building_ct_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1='census_tract_id', col2='eventable'))
-  c.execute('CREATE INDEX idx_building_n_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1='neighborhood_id', col2='eventable'))
-  c.execute('CREATE INDEX idx_building_b_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1='borough_id', col2='eventable'))
+  c.execute('CREATE INDEX idx_building_eventables ON {tn}({col})'.format(tn=table, col=col5))
+  c.execute('CREATE INDEX idx_building_ct_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1=col3, col2=col5))
+  c.execute('CREATE INDEX idx_building_n_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1=col2, col2=col5))
+  c.execute('CREATE INDEX idx_building_b_eventables ON {tn}({col1}, {col2})'.format(tn=table, col1=col1, col2=col5))

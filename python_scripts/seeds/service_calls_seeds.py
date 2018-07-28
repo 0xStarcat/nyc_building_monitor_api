@@ -65,7 +65,6 @@ def resulted_in_violation(description):
   if "No violations were issued" in description:
     return False
 
-
   if "violation" in description:
     return True
   elif "Violations" in description:
@@ -106,6 +105,9 @@ def calculate_days_to_close(date_open, date_closed):
 def is_open_over_month(status, processed_date):
   return (status.lower() == "open" or status.lower() == "pending") and (datetime.date.today() - datetime.datetime.strptime(processed_date, "%Y%m%d").date()).days > 30
 
+def was_open_over_month(closed_date, processed_date):
+  return (datetime.datetime.strptime(closed_date, "%Y%m%d").date() - datetime.datetime.strptime(processed_date, "%Y%m%d").date()).days > 30
+
 def get_building_match(c, bbl):
   c.execute('SELECT id FROM buildings WHERE bbl=\"{bbl}\"'.format(bbl=bbl))
   return c.fetchone()
@@ -125,7 +127,7 @@ def seed(c, service_calls_json, write_to_csv=False):
 
     building_id = int(building_match[0])
     
-    resolution_description = call["resolution_description"] if "resolution_description" in call else "unknown"
+    resolution_description = call["resolution_description"] if "resolution_description" in call else "missing"
     if call_is_duplicate(resolution_description):
       # print("  * duplicate complaint found", "call: " + str(index) + "/" + str(len(service_calls_json)))
       continue
@@ -137,8 +139,8 @@ def seed(c, service_calls_json, write_to_csv=False):
     date = str(datetime.datetime.strptime(call["created_date"][:10], "%Y-%m-%d").strftime("%Y%m%d"))
     closed_date = str(datetime.datetime.strptime(call["closed_date"][:10], "%Y-%m-%d").strftime("%Y%m%d")) if "status" in call and "closed_date" in call and call["status"].lower() != "open" and call["status"].lower() != "pending" else None
     days_to_close = int(calculate_days_to_close(date, closed_date)) if closed_date else None
-    source = str(call["agency"]) if "agency" in call else "unknown"
-    status = str(call["status"]) if "status" in call else "unknown"
+    source = str(call["agency"]) if "agency" in call else "missing"
+    status = str(call["status"]).lower() if "status" in call else "missing"
     unique_id = str(call["unique_key"]) if "unique_key" in call else ""
     open_over_month = is_open_over_month(status, date)
     description = str(call["descriptor"])

@@ -11,6 +11,10 @@ def new_cursor():
   c.execute('pragma recursive_triggers=on')
   return c
 
+def new_conn():
+  conn = sqlite3.connect(test_db, timeout=10)
+  return conn
+
 def setup_db():
   print("  ****** Setting up test DB ******")
 

@@ -28,7 +28,11 @@ def update_data():
   conn.close()
 
 def check_call_statuses():
-  service_calls_status_request.check_statuses()
+  conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+
+  service_calls_status_request.check_statuses(c, conn)
 
 
 def request(write_to_csv=False):

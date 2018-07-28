@@ -167,7 +167,7 @@ def insertion_of_record_dob(c):
 
     c.execute('SELECT status_description FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
-    assert entry[0] == 'VW*-VIOLATION - WORK W/O PERMIT DISMISSED'
+    assert entry[0] == 'VW*-VIOLATION - WORK W/O PERMIT DISMISSED - Wow you should have seen that.'
   except AssertionError as error:
     raise error
 
