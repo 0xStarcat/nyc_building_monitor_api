@@ -34,6 +34,14 @@ module.exports = function(sequelize, DataTypes) {
       code: {
         type: DataTypes.STRING,
         field: 'violation_code'
+      },
+      status: {
+        type: DataTypes.STRING,
+        field: 'status'
+      },
+      statusDescription: {
+        type: DataTypes.STRING,
+        field: 'status_description'
       }
     },
     {

@@ -65,12 +65,14 @@ def get_status_description(violation):
   status_description = ""
   if "currentstatus" in violation: #hpd
     status_description = violation["currentstatus"]
-  elif "certification_status" in violation:
-    status_description = violation["certification_status"]
-  elif "violation_category" in violation:
+  elif "certification_status" in violation: #ecb
+    status_description = violation["certification_status"] #dob
+  elif "violation_category" in violation and "disposition_comments" in violation:
     status_description = violation["violation_category"] + " - " + violation["disposition_comments"]
+  elif "violation_category" in violation:
+    status_description = violation["violation_category"]
   else:
-    print("  * no violation status description")
+    # print("  * no violation status description")
     return None
   return status_description
 
@@ -161,7 +163,7 @@ def seed(c, violation_json, write_to_csv=False):
     building_match = get_building_match(c, violation)
 
     if not building_match:
-      print("  * no building match found", str(index) + "/" + str(len(violation_json)))
+      # print("  * no building match found", str(index) + "/" + str(len(violation_json)))
       continue
 
     building_id = int(building_match[0])

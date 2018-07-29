@@ -15,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         field: 'neighborhood_id'
       },
+      boroCode: {
+        type: DataTypes.INTEGER,
+        field: 'boro_code'
+      },
       block: {
         type: DataTypes.STRING,
         field: 'block'

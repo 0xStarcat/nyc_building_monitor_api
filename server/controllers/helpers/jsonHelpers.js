@@ -77,7 +77,10 @@ module.exports = {
             violationsTotal: row.totalViolations,
             serviceCallsTotal: row.totalServiceCalls,
             serviceCallsPercentOpenOneMonth: parseFloat(row.totalServiceCallsOpenOverMonth).toFixed(2),
-            averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2)
+            averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
+            boroCode: row.boroCode,
+            block: row.block,
+            lot: row.lot
           }
         }
       })
@@ -95,7 +98,9 @@ module.exports = {
             date: row.date,
             description: row.description,
             penalty: row.penaltyImposed,
-            code: row.code
+            code: row.code,
+            status: row.status,
+            statusDescription: row.statusDescription
           }
         }
       })
@@ -119,7 +124,8 @@ module.exports = {
             resolutionUnableToInvestigate: row.unableToInvestigate,
             openOverMonth: row.openOverMonth,
             daysToResolve: row.daysToClose,
-            closedDate: row.closedDate
+            closedDate: row.closedDate,
+            complaintType: row.complaintType
           }
         }
       })

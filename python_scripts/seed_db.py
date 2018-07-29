@@ -120,8 +120,8 @@ def drop():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
-  # clear_csvs()
-  # drop_buildings_data_tables(c)
+  clear_csvs()
+  drop_buildings_data_tables(c)
   # drop_buildings_table(c)
   # drop_boundary_tables(c)
 
@@ -141,7 +141,7 @@ def seed():
   # seed_boundary_table_data(c, conn)
   # seed_buildings(c, conn)
 
-  # create_buildings_data_tables(c)
+  create_buildings_data_tables(c)
   # seed_buildings_data(c)  
   conn.commit()
   conn.close()

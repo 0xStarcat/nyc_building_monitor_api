@@ -122,7 +122,7 @@ def seed(c, service_calls_json, write_to_csv=False):
     building_match = get_building_match(c, call["bbl"]) if "bbl" in call else None
     
     if not building_match: 
-      print("  * no building match found", "call: " + str(index) + "/" + str(len(service_calls_json)))
+      # print("  * no building match found", "call: " + str(index) + "/" + str(len(service_calls_json)))
       continue
 
     building_id = int(building_match[0])

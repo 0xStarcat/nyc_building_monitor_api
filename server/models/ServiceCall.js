@@ -58,6 +58,10 @@ module.exports = function(sequelize, DataTypes) {
       closedDate: {
         type: DataTypes.STRING,
         field: 'closed_date'
+      },
+      complaintType: {
+        type: DataTypes.STRING,
+        field: 'complaint_type'
       }
     },
     {
