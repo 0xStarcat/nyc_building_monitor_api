@@ -33,7 +33,7 @@ def test_insertions():
 
 def insertion_of_record_hpd(c):
   violation_json = [ 
-    {"source": "HPD","apartment":"1234","approveddate":"2013-10-10T00:00:00.000","bbl":"1234","bin":"1234","block":"5628","boro":"NOT BRONX","boroid":"5","buildingid":"1234","censustract":"63","class":"B","communityboard":"4","councildistrict":"8","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2014-10-17T00:00:00.000","currentstatusid":"19","highhousenumber":"1234","housenumber":"123","inspectiondate":"2013-10-08T00:00:00.000","latitude":"40","longitude":"-73.926605","lot":"24","lowhousenumber":"1234","novdescription":"SECTION 27-2005 some words go here!","novid":"4706454","novissueddate":"2013-10-11T00:00:00.000","novtype":"Original","nta":"West Concourse","ordernumber":"501","originalcertifybydate":"2013-11-29T00:00:00.000","originalcorrectbydate":"2013-11-15T00:00:00.000","registrationid":"0k","story":"3","streetcode":"35020","streetname":"somewhere","violationid":"a good id","violationstatus":"Close","zip":"10451"}
+    {"source": "HPD","apartment":"1234","approveddate":"2013-10-10T00:00:00.000","bbl":"1234","bin":"1234","block":"5628","boro":"NOT BRONX","boroid":"5","buildingid":"1234","censustract":"63","class":"B","communityboard":"4","councildistrict":"8","currentstatus":"VIOLATION CLOSED","currentstatusdate":"2014-10-17T00:00:00.000","currentstatusid":"19","highhousenumber":"1234","housenumber":"123","inspectiondate":"2013-10-08T00:00:00.000","latitude":"40","longitude":"-73.926605","lot":"24","lowhousenumber":"1234","novdescription":"SECTION 27-2005.1 some words go here!","novid":"4706454","novissueddate":"2013-10-11T00:00:00.000","novtype":"Original","nta":"West Concourse","ordernumber":"501","originalcertifybydate":"2013-11-29T00:00:00.000","originalcorrectbydate":"2013-11-15T00:00:00.000","registrationid":"0k","story":"3","streetcode":"35020","streetname":"somewhere","violationid":"a good id","violationstatus":"Close","zip":"10451"}
   ]
 
   test_context.context.violations_seeds.seed(c, violation_json)
@@ -65,7 +65,7 @@ def insertion_of_record_hpd(c):
 
     c.execute('SELECT violation_code FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
-    assert entry[0] == 'SECTION 27-2005'
+    assert entry[0] == 'SECTION 27-2005.1'
 
     c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()

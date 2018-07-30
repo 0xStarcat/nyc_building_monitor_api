@@ -1,4 +1,4 @@
-tables = ['census_tracts', 'neighborhoods', 'boroughs']
+tables = ['census_tracts', 'neighborhoods']
 
 col1 = 'total_violations'
 col2 = 'total_service_calls'
