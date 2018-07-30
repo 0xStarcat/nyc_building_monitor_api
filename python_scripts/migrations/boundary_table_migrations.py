@@ -19,8 +19,8 @@ def update_data(c, table):
     column_name = 'census_tract_id'
   if table == tables[1]:
     column_name = 'neighborhood_id'
-  if table == tables[2]:
-    column_name = 'borough_id'
+  # if table == tables[2]:
+  #   column_name = 'borough_id'
 
   c.execute('SELECT * FROM {tn}'\
     .format(tn=table))
