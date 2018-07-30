@@ -76,7 +76,9 @@ module.exports = {
             buildingClass: row.buildingClass,
             violationsTotal: row.totalViolations,
             serviceCallsTotal: row.totalServiceCalls,
-            serviceCallsPercentOpenOneMonth: parseFloat(row.totalServiceCallsOpenOverMonth).toFixed(2),
+            serviceCallsPercentOpenOneMonth: parseFloat(
+              row.totalServiceCallsOpenOverMonth / row.totalServiceCalls
+            ).toFixed(2),
             averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
             boroCode: row.boroCode,
             block: row.block,
