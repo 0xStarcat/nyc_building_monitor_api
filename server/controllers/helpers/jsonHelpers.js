@@ -46,12 +46,13 @@ module.exports = {
             buildingsTotal: parseFloat(row.totalBuildings),
             residentialBuildingsTotal: parseFloat(row.totalResidentialBuildings),
             serviceCallsTotal: parseFloat(row.totalServiceCalls),
+            serviceCallsPerBuilding: String((row.totalServiceCalls / row.totalBuildings).toFixed(2)),
             serviceCallsPercentOpenOneMonth: parseFloat(
               (row.totalServiceCallsOpenOverMonth / row.totalServiceCalls) * 100
             ).toFixed(2),
             averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
             violationsTotal: parseFloat(row.totalViolations),
-            violationsPerBuilding: parseFloat((row.totalViolations / row.totalBuildings).toFixed(2)),
+            violationsPerBuilding: String((row.totalViolations / row.totalBuildings).toFixed(2)),
             representativePoint: JSON.parse(row.representativePoint)
           }
         }
@@ -77,7 +78,7 @@ module.exports = {
             violationsTotal: row.totalViolations,
             serviceCallsTotal: row.totalServiceCalls,
             serviceCallsPercentOpenOneMonth: parseFloat(
-              row.totalServiceCallsOpenOverMonth / row.totalServiceCalls
+              (row.totalServiceCallsOpenOverMonth / row.totalServiceCalls) * 100
             ).toFixed(2),
             averageDaysToResolveServiceCalls: parseFloat(row.averageDaysToResolveServiceCalls).toFixed(2),
             boroCode: row.boroCode,
