@@ -19,7 +19,7 @@ const selectFullTextSearchQuery = query => {
   const houseStreetQuery = (house_number, street) =>
     `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}* address:${street}*" ORDER BY rank LIMIT 4`
   const houseStreetBoroughQuery = (house_number, street, borough_name) =>
-    `SELECT * FROM building_search WHERE house_number = "${house_number}" AND building_search MATCH ("address:${street}* borough_name:${borough_name}*") ORDER BY rank LIMIT 4`
+    `SELECT * FROM building_search WHERE building_search MATCH ("house_number:${house_number}* address:${street}* borough_name:${borough_name}*") ORDER BY rank LIMIT 4`
   const streetQuery = street =>
     `SELECT * FROM building_search WHERE building_search MATCH "address:${street}*" ORDER BY rank LIMIT 4`
 
@@ -106,7 +106,7 @@ module.exports = {
       })
   },
   search: async (req, res) => {
-    let userQuery = req.body['query'].trim()
+    let userQuery = req.body['query'].trim().replace(/@|!|#|\$|%|\^|&|\*|(|)|_|\+|{|}|\[|\]|'|"|;|:|<|>|\?|=/g, '')
     if (userQuery === '') res.json({ results: [] })
 
     const dbQuery = selectFullTextSearchQuery(userQuery)
