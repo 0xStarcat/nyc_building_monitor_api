@@ -42,7 +42,6 @@ module.exports = {
       '
       )
       .catch(error => console.log('ERROR', error))
-    console.log(data.length)
     res.json(constructNeighborhoodJson(data))
   },
   buildings: async (req, res) => {

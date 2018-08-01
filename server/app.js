@@ -1,8 +1,10 @@
-var express = require('express')
-var app = express()
-var fs = require('fs')
-var path = require('path')
+const express = require('express')
+const app = express()
+const fs = require('fs')
+const path = require('path')
+const bodyParser = require('body-parser')
 
+app.use(bodyParser.json())
 app.use(express.static(path.resolve(__dirname, '../../nyc_building_monitor_client/build')))
 app.use((req, res, next) => {
   res.set({

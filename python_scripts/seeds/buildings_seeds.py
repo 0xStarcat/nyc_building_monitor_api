@@ -3,6 +3,7 @@ from shapely.geometry import shape, Point
 import context
 
 table = 'buildings'
+virtual_table = 'building_search'
 
 col1 = 'borough_id'
 col2 = 'neighborhood_id'
@@ -59,6 +60,25 @@ def create_table(c):
 
   c.execute('CREATE UNIQUE INDEX idx_bldg_boroid_and_address ON {tn}({col1}, {col2})'.format(tn=table, col1=col4, col2=col9))
   c.execute('CREATE UNIQUE INDEX idx_bldg_bbl ON {tn}({col})'.format(tn=table, col=col6))
+
+def create_virtual_table(c):
+  c.execute('CREATE VIRTUAL TABLE {tn} USING fts5(id, house_number, address, borough_name)'.format(tn=virtual_table))
+  c.execute("SELECT * FROM {tn}".format(tn=table))
+  buildings = c.fetchall()
+
+  for (index,building) in enumerate(buildings):
+    print("seeding building: " + str(index) + '/' + str(len(buildings)))
+
+    c.execute('SELECT * FROM boroughs WHERE id={b_id}'.format(b_id=building[1]))
+    b_name = c.fetchone()[1]
+    split = building[9].strip().split(" ")
+    house_number = split[0]
+    if any(char.isdigit() for char in house_number) == False:
+      continue
+    del split[0]
+    street = " ".join(split)
+    c.execute('INSERT INTO building_search (id, house_number, address, borough_name) VALUES (?, ?, ?, ?)', (building[0], str(house_number), str(street), b_name))
+  
 
 def convert_building_polygon_to_point(geometry):
   return shape(geometry).representative_point()
