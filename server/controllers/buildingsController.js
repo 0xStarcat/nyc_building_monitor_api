@@ -15,18 +15,18 @@ const selectFullTextSearchQuery = query => {
   const split = query.split(' ')
 
   const houseQuery = house_number =>
-    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}*" ORDER BY rank LIMIT 4`
+    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}*" ORDER BY rank LIMIT 3`
   const houseStreetQuery = (house_number, street) =>
-    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}* address:${street}*" ORDER BY rank LIMIT 4`
+    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}* address:${street}*" ORDER BY rank LIMIT 3`
   const houseStreetBoroughQuery = (house_number, street, borough_name) =>
-    `SELECT * FROM building_search WHERE building_search MATCH ("house_number:${house_number}* address:${street}* borough_name:${borough_name}*") ORDER BY rank LIMIT 4`
+    `SELECT * FROM building_search WHERE building_search MATCH ("house_number:${house_number}* address:${street}* borough_name:${borough_name}*") ORDER BY rank LIMIT 3`
   const streetQuery = street =>
-    `SELECT * FROM building_search WHERE building_search MATCH "address:${street}*" ORDER BY rank LIMIT 4`
+    `SELECT * FROM building_search WHERE building_search MATCH "address:${street}*" ORDER BY rank LIMIT 3`
 
   if (!hasNumber(split[0])) {
-    return streetQuery(split.join(' ')) // If no number in first split section, do generic street search
+    return streetQuery(split.join(' ').replace(',', '')) // If no number in first split section, do generic street search
   } else if (hasNumber(split[0]) && split.length > 1) {
-    house_number = split[0]
+    house_number = split[0].replace(',', '')
     borough_name = query.split(',')[1]
     if (borough_name) {
       // if a number and a comma are present, and split has more than 1 word, do house-street-borough query
@@ -114,7 +114,7 @@ module.exports = {
     const rawDb = await dbPromise
     const data = await rawDb.all(dbQuery).catch(error => {
       console.log('ERROR', error)
-      res.json(error)
+      res.json({ errors: error })
     })
 
     const searchData = await db.Building.findAll({
@@ -125,6 +125,6 @@ module.exports = {
       include: [{ model: db.Borough, attributes: ['name'] }, { model: db.Neighborhood, attributes: ['name'] }]
     })
 
-    res.json(searchData)
+    res.json({ results: searchData })
   }
 }
