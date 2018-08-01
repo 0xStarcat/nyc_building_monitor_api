@@ -67,7 +67,8 @@ def create_virtual_table(c):
   buildings = c.fetchall()
 
   for (index,building) in enumerate(buildings):
-    print("seeding building: " + str(index) + '/' + str(len(buildings)))
+    if index % 1000 == 0:
+      print("seeding building: " + str(index) + '/' + str(len(buildings)))
 
     c.execute('SELECT * FROM boroughs WHERE id={b_id}'.format(b_id=building[1]))
     b_name = c.fetchone()[1]

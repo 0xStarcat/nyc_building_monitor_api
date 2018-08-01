@@ -4,6 +4,7 @@ const BuildingsController = require(__dirname + '/../controllers/buildingsContro
 
 router.get('/', BuildingsController.index)
 router.post('/search', BuildingsController.search)
+router.get('/:id', BuildingsController.buildingById)
 router.get('/:id/violations', BuildingsController.violationsByBuilding)
 router.get('/:id/service-calls', BuildingsController.serviceCallsByBuilding)
 router.get('/:id/sales', BuildingsController.salesByBuilding)

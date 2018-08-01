@@ -5,7 +5,8 @@ const {
   constructViolationJson,
   constructServiceCallJson,
   constructSaleJson,
-  constructBuildingJson
+  constructBuildingJson,
+  constructBuildingSearchJson
 } = require(__dirname + '/helpers/jsonHelpers.js')
 
 const hasNumber = string => /\d/.test(string)
@@ -52,6 +53,30 @@ const selectFullTextSearchQuery = query => {
 module.exports = {
   index: async (req, res) => {
     db.Building.findAll()
+      .then(data => {
+        res.json(constructBuildingJson(data))
+      })
+      .catch(data => {
+        console.log('ERROR', data)
+        res.json({ errors: data })
+      })
+  },
+  buildingById: async (req, res) => {
+    db.Building.findAll({
+      where: {
+        id: req.params['id']
+      },
+      include: [
+        {
+          model: db.Neighborhood,
+          attributes: ['name']
+        },
+        {
+          model: db.Borough,
+          attributes: ['name']
+        }
+      ]
+    })
       .then(data => {
         res.json(constructBuildingJson(data))
       })
@@ -121,10 +146,10 @@ module.exports = {
       where: {
         id: data.map(building => building.id)
       },
-      attributes: ['id', 'address'],
-      include: [{ model: db.Borough, attributes: ['name'] }, { model: db.Neighborhood, attributes: ['name'] }]
+      attributes: ['id', 'address', 'representativePoint'],
+      include: [{ model: db.Borough, attributes: ['name'] }]
     })
 
-    res.json({ results: searchData })
+    res.json(constructBuildingSearchJson(searchData))
   }
 }

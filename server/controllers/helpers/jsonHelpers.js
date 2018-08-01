@@ -89,6 +89,18 @@ module.exports = {
       })
     }
   },
+  constructBuildingSearchJson: data => {
+    return {
+      results: data.map(row => {
+        return {
+          id: row.id,
+          address: row.address,
+          boroughName: row.borough.name,
+          representativePoint: JSON.parse(row.representativePoint)
+        }
+      })
+    }
+  },
   constructViolationJson: data => {
     return {
       features: data.map(row => {
