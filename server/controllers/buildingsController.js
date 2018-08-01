@@ -111,11 +111,20 @@ module.exports = {
 
     const dbQuery = selectFullTextSearchQuery(userQuery)
 
-    const db = await dbPromise
-    const data = await db.all(dbQuery).catch(error => {
+    const rawDb = await dbPromise
+    const data = await rawDb.all(dbQuery).catch(error => {
       console.log('ERROR', error)
       res.json(error)
     })
-    res.json(data)
+
+    const searchData = await db.Building.findAll({
+      where: {
+        id: data.map(building => building.id)
+      },
+      attributes: ['id', 'address'],
+      include: [{ model: db.Borough, attributes: ['name'] }, { model: db.Neighborhood, attributes: ['name'] }]
+    })
+
+    res.json(searchData)
   }
 }
