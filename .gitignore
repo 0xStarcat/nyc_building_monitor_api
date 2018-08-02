@@ -16,7 +16,6 @@ nyc_data_map.temp.sqlite
 test_db.sqlite
 .DS_Store
 cache.db.bak
-python_scripts/update.py
 python_scripts/log/log.txt
 .pytest_cache
 nyc_data_map_backup2.sqlite
