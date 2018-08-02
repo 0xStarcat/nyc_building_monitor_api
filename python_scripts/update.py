@@ -7,8 +7,8 @@ import os
 import api_requests
 from helpers import log_helper
 
-username = os.environ(["BUILDING_MONITOR_EMAIL"])
-password = os.environ(["BUILDING_MONITIR_EMAIL_PASSWORD"])
+username = os.environ["BUILDING_MONITOR_EMAIL"]
+password = os.environ["BUILDING_MONITOR_EMAIL_PASSWORD"]
 
 print(username)
 
