@@ -12,9 +12,9 @@ def get_next_day_to_request(conn, table_name, source):
   print("Latest entry: ", entry)
   if entry:
     if table_name == 'violations' and source != "HPD":
-      return (datetime.datetime.strptime(str(entry[0]), '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y%m%d")
+      return str(entry[0])
     else:
-      return (datetime.datetime.strptime(str(entry[0]), '%Y%m%d') + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+      return (datetime.datetime.strptime(str(entry[0]), '%Y%m%d')).strftime("%Y-%m-%d")
   else:
     return get_start_date(table_name, source)
 
