@@ -12,20 +12,20 @@ password = os.environ["BUILDING_MONITOR_EMAIL_PASSWORD"]
 
 print(username)
 
-# shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
+shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
 
-# log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
-# api_requests.request(False)
-# # api_requests.check_call_statuses()
-# api_requests.update_data()
+log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
+api_requests.request(False)
+# api_requests.check_call_statuses()
+api_requests.update_data()
 
 
-# shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
-# shutil.move(config.DATABASE_BACKUP_URL, config.DATABASE_URL)
-# os.remove(config.DATABASE_TEMP_URL)
+shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
+shutil.move(config.DATABASE_BACKUP_URL, config.DATABASE_URL)
+os.remove(config.DATABASE_TEMP_URL)
 
-# log_helper.write_to_log("Database replaced\n")
-# log_helper.write_to_log("***\n")
+log_helper.write_to_log("Database replaced\n")
+log_helper.write_to_log("***\n")
 
 
 
@@ -40,7 +40,7 @@ print(msg)
 print("Message length is", len(msg))
 
 
-server = smtplib.SMTP('smtp.gmail.com:587')
+server = smtplib.SMTP('smpt.gmail.com:587')
 server.set_debuglevel(1)
 server.starttls()
 server.login(username, password)
