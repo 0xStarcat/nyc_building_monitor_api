@@ -61,6 +61,9 @@ def create_buildings_tables(c):
   # context.buildings_seeds.create_table(c)
   context.buildings_seeds.create_virtual_table(c)
 
+def create_update_tables(c):
+  context.updates_seeds.create_table(c)
+
 def seed_buildings_data(c):
   print("Seeding building data")
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
@@ -144,11 +147,10 @@ def seed():
 
   # create_boundaries_tables(c)
   # create_boundaries_data_tables(c)
-  create_buildings_tables(c)
+  # create_buildings_tables(c)
   # seed_boundary_tables(c, conn)
   # seed_boundary_table_data(c, conn)
   # seed_buildings(c, conn)
-
   # create_buildings_data_tables(c)
   # seed_buildings_data(c)  
   conn.commit()

@@ -8,27 +8,27 @@ def seed_db():
   factories.seed_test_db_with_building()
 
 def test_insertions():
-  c = setup_tests.new_cursor()
 
   try:
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_dob(c)
-    setup_tests.drop_db()
+    conn.close()
 
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_hpd(c)
-    setup_tests.drop_db()
+    conn.close()
 
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_open(c)
-    setup_tests.drop_db()
-
+    conn.close()
   except Exception as error:
     print(error)
-    setup_tests.drop_db()
     raise error
 
 def insertion_of_record_dob(c):
@@ -59,7 +59,7 @@ def insertion_of_record_dob(c):
 
     c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
-    assert entry[0] == 'Closed'
+    assert entry[0] == 'closed'
 
     c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
@@ -131,7 +131,7 @@ def insertion_of_record_hpd(c):
 
     c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
-    assert entry[0] == 'Closed'
+    assert entry[0] == 'closed'
 
     c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
@@ -203,7 +203,7 @@ def insertion_of_record_open(c):
 
     c.execute('SELECT status FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()
-    assert entry[0] == 'Open'
+    assert entry[0] == 'open'
 
     c.execute('SELECT source FROM {tn}'.format(tn=test_context.context.service_calls_seeds.table))
     entry = c.fetchone()

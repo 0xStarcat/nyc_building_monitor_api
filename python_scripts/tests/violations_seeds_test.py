@@ -8,26 +8,28 @@ def seed_db():
   factories.seed_test_db_with_building()
 
 def test_insertions():
-  c = setup_tests.new_cursor()
-
+  conn = setup_tests.new_conn()
+  c = conn.cursor()
   try:
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_ecb(c)
-    setup_tests.drop_db()
+    conn.close()
 
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_dob(c)
-    setup_tests.drop_db()
+    conn.close()
 
-    c = setup_tests.new_cursor()
     seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     insertion_of_record_hpd(c)
-    setup_tests.drop_db()
+    conn.close()
   except Exception as error:
     print(error)
-    setup_tests.drop_db()
     raise error
 
 

@@ -16,9 +16,9 @@ def test_service_calls_status_request_on_open_records():
   try:
     with_closed_api_record(c)
     with_open_api_record(c)
+    conn.close()
   except Exception as error:
     print(error)
-    setup_tests.drop_db()
     raise error
 
 def with_closed_api_record(c):

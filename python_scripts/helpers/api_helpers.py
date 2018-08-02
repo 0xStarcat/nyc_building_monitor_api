@@ -45,7 +45,8 @@ def request_from_api_no_seed(url):
     r = requests.get(url+'&$limit='+str(limit)+'&$offset=' + str(off))
 
     data = json.loads(r.text)
-    print(data)
+    if len(data) < 10:
+      print(data)
     for d in data:
       request_data.append(d)
     return data
