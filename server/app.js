@@ -5,7 +5,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
-app.use(express.static(path.resolve(__dirname, '../../nyc_building_monitor_client/build')))
+app.use(express.static(path.resolve(__dirname, '../../buildingmonitor.nyc_client/build')))
 app.use((req, res, next) => {
   res.set({
     Accept: 'application/json',
