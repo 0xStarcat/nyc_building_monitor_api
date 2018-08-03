@@ -231,7 +231,8 @@ def rename_building_column():
 def sample():
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
- 
+  c.execute('SELECT * FROM incomes WHERE neighborhood_id=10')
+  print(len(c.fetchall()))
   c.execute('pragma foreign_keys=on;')
 
   # c.execute('SELECT source FROM service_calls WHERE source="HPD"')

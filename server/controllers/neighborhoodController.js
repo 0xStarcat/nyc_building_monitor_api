@@ -28,17 +28,21 @@ module.exports = {
     const db = await dbPromise
     const data = await db
       .all(
-        'SELECT n.*, \
+        'with\
+          income as (SELECT neighborhood_id, AVG(median_income_2017) as median_income_2017 FROM incomes GROUP BY neighborhood_id),\
+          rent as (SELECT neighborhood_id, AVG(median_rent_2017) as median_rent_2017, AVG(median_rent_change_2011_2017) as median_rent_change_2011_2017 FROM rents GROUP BY neighborhood_id),\
+          race as (SELECT neighborhood_id, AVG(percent_white_2010) as percent_white_2010 FROM racial_makeups GROUP BY neighborhood_id)\
+         SELECT n.*, \
       bo.name as borough_name,\
-      inc.median_income_2017 as incomeMedian2017,\
+      i.median_income_2017 as incomeMedian2017,\
       r.median_rent_2017 as rentMedian2017,\
       r.median_rent_change_2011_2017 as rentChange20112017,\
       rm.percent_white_2010 as racePercentWhite2010\
       FROM neighborhoods n \
-      INNER JOIN boroughs bo ON bo.id = n.borough_id\
-      INNER JOIN incomes inc ON inc.id = n.id\
-      INNER JOIN rents r ON r.id = n.id\
-      INNER JOIN racial_makeups rm ON rm.id = n.id\
+      JOIN boroughs bo ON bo.id = n.borough_id\
+      JOIN income i ON i.neighborhood_id = n.id\
+      JOIN rent r ON r.neighborhood_id = n.id\
+      JOIN race rm ON rm.neighborhood_id = n.id\
       '
       )
       .catch(error => console.log('ERROR', error))

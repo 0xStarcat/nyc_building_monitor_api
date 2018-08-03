@@ -1,8 +1,8 @@
 module.exports = {
   constructNeighborhoodJson: data => {
+    console.log(data.length, data[0])
     return {
       features: data.map(row => {
-        if (row.name === 'Chelsea') console.log(row)
         return {
           type: 'Feature',
           geometry: JSON.parse(row.geometry),
@@ -10,10 +10,10 @@ module.exports = {
             id: row.id,
             name: row.name,
             parentBoundaryName: row.borough_name, //boroughData.find(borough => borough.id === row.borough_id).name,
-            incomeMedian2017: parseFloat(row.incomeMedian2017),
-            rentMedian2017: parseFloat(row.rentMedian2017),
-            rentChange20112017: parseFloat(row.rentChange20112017),
-            racePercentWhite2010: row.racePercentWhite2010,
+            incomeMedian2017: parseFloat(row.incomeMedian2017).toFixed(2),
+            rentMedian2017: parseFloat(row.rentMedian2017).toFixed(2),
+            rentChange20112017: parseFloat(row.rentChange20112017).toFixed(2),
+            racePercentWhite2010: parseFloat(row.racePercentWhite2010).toFixed(2),
             buildingsTotal: parseFloat(row.total_buildings),
             residentialBuildingsTotal: parseFloat(row.total_residential_buildings),
             serviceCallsTotal: parseFloat(row.total_service_calls),
