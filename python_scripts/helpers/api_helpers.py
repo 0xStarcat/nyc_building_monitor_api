@@ -18,6 +18,12 @@ def get_next_day_to_request(conn, table_name, source):
   else:
     return get_start_date(table_name, source)
 
+def get_previous_days(table_name, source, days):
+  if table_name == 'violations' and source != "HPD":
+    return (datetime.date.today() - datetime.timedelta(days=days)).strftime("%Y%m%d")
+  else:
+    return (datetime.date.today() - datetime.timedelta(days=days)).strftime("%Y-%m-%d")
+
 def get_today(table_name, source):
   if table_name == 'violations' and source != "HPD":
     return datetime.date.today().strftime("%Y%m%d")
