@@ -8,8 +8,6 @@ def seed_db():
   factories.seed_test_db_with_building()
 
 def test_insertions():
-  conn = setup_tests.new_conn()
-  c = conn.cursor()
   try:
     seed_db()
     conn = setup_tests.new_conn()
@@ -29,6 +27,7 @@ def test_insertions():
     insertion_of_record_hpd(c)
     conn.close()
   except Exception as error:
+    conn.close()
     print(error)
     raise error
 

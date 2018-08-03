@@ -29,6 +29,7 @@ def test_insertions():
     conn.close()
   except Exception as error:
     print(error)
+    conn.close()
     raise error
 
 def insertion_of_record_dob(c):

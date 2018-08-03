@@ -6,18 +6,23 @@ def seed_db():
   setup_tests.setup_db()
   factories.seed_test_db_with_open_service_calls()
 
-def test_service_calls_status_request_on_open_records():
-  seed_db()
-  conn = setup_tests.new_conn()
-  c = conn.cursor()
-  c.execute('pragma foreign_keys=on;')
-  c.execute('pragma recursive_triggers=on')
+def test_check_service_calls_status_request_on_open_records():
+  
 
   try:
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
+    seed_db()
     with_closed_api_record(c)
+    conn.close()
+
+    seed_db()
+    conn = setup_tests.new_conn()
+    c = conn.cursor()
     with_open_api_record(c)
     conn.close()
   except Exception as error:
+    conn.close()
     print(error)
     raise error
 
@@ -26,7 +31,7 @@ def with_closed_api_record(c):
   unique_id = api_json["unique_key"]
 
   try:
-    test_context.context.service_calls_status_request.update_service_call_row(c, api_json)
+    test_context.context.check_service_calls_status_request.update_row(c, api_json)
 
     c.execute('SELECT unique_id FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
@@ -39,22 +44,22 @@ def with_closed_api_record(c):
     c.execute('SELECT resolution_description FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
     assert entry[0] == 'The Department of Buildings investigated this complaint and closed it. If the problem still exists, please call 311 and file a new complaint. If you are outside of New York City, please call (212) NEW-YORK (212-639-9675).'
+    c.execute('SELECT resolution_no_action FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
+    entry = c.fetchone()
+    assert entry[0] == 1
 
     c.execute('SELECT resolution_violation FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'False'
+    assert entry[0] == 0
 
-    c.execute('SELECT resolution_no_action FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
-    entry = c.fetchone()
-    assert entry[0] == 'True'
 
     c.execute('SELECT unable_to_investigate FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'False'
+    assert entry[0] == 0
 
     c.execute('SELECT open_over_month FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'True'
+    assert entry[0] == 1
 
     c.execute('SELECT closed_date FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
@@ -71,7 +76,7 @@ def with_open_api_record(c):
   unique_id = api_json["unique_key"]
 
   try:
-    test_context.context.service_calls_status_request.update_service_call_row(c, api_json)
+    test_context.context.check_service_calls_status_request.update_row(c, api_json)
 
     c.execute('SELECT unique_id FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
@@ -87,27 +92,27 @@ def with_open_api_record(c):
 
     c.execute('SELECT resolution_violation FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'False'
+    assert entry[0] == 0
 
     c.execute('SELECT resolution_no_action FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'False'
+    assert entry[0] == 0
 
     c.execute('SELECT unable_to_investigate FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'False'
+    assert entry[0] == 0
 
     c.execute('SELECT open_over_month FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'True'
+    assert entry[0] == 1
 
     c.execute('SELECT closed_date FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'None'
+    assert entry[0] == None
 
     c.execute('SELECT days_to_close FROM {tn} WHERE unique_id=\"{unique_id}\"'.format(tn=test_context.context.service_calls_seeds.table, unique_id=unique_id))
     entry = c.fetchone()
-    assert entry[0] == 'None'
+    assert entry[0] == None
   except AssertionError as error:
     raise error
 

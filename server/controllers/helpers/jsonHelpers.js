@@ -1,6 +1,5 @@
 module.exports = {
   constructNeighborhoodJson: data => {
-    console.log(data.length, data[0])
     return {
       features: data.map(row => {
         return {

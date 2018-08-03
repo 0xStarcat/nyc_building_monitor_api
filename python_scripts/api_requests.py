@@ -24,7 +24,8 @@ def check_call_statuses():
   c = conn.cursor()
   c.execute('pragma foreign_keys=on;')
 
-  total_closed_service_calls = requests_api.service_calls_status_request.check_statuses(c, conn)
+  total_closed_service_calls = requests_api.check_service_calls_status_request.check_statuses(c, conn)
+  conn.commit()
   return { "total_closed_service_calls" : total_closed_service_calls }
 
 def request(write_to_csv=False):

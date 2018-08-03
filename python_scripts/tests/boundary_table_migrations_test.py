@@ -18,6 +18,7 @@ def test_insertions():
     conn.close()
 
   except Exception as error:
+    conn.close()
     print(error)
     raise error
 
