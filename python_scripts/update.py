@@ -15,8 +15,11 @@ log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
 new_entry_counts = api_requests.request(False)
 # status_update_counts = api_requests.check_call_statuses()
 api_requests.update_data()
-update_counts_data = { "date": datetime.datetime.now().strftime("%Y%m%d"),**new_entry_counts, **status_update_counts}
-context.updates_seeds.new_entry(c, update_counts_data)
+
+
+# update_counts_data = { "date": datetime.datetime.now().strftime("%Y%m%d"),**new_entry_counts, **status_update_counts}
+# context.updates_seeds.new_entry(c, update_counts_data)
+
 shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
 shutil.move(config.DATABASE_BACKUP_URL, config.DATABASE_URL)
 os.remove(config.DATABASE_TEMP_URL)

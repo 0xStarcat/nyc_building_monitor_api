@@ -2,6 +2,7 @@ module.exports = {
   constructNeighborhoodJson: data => {
     return {
       features: data.map(row => {
+        if (row.name === 'Chelsea') console.log(row)
         return {
           type: 'Feature',
           geometry: JSON.parse(row.geometry),
