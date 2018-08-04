@@ -36,7 +36,7 @@ def api_request(table, source):
   elif source == "ECB":
     url = 'https://data.cityofnewyork.us/resource/gq3f-5jm8.json?$where=issue_date > "'+ api_helpers.get_previous_days(table, source, 365) + '" AND hearing_status!="PENDING"&'
   elif source == "HPD":
-    url = 'https://data.cityofnewyork.us/resource/b2iz-pps8.json?$where=currentstatusdate > "'+ api_helpers.get_previous_days(table, source, 365) + '" AND violationstatus!="Open"&'
+    url = 'https://data.cityofnewyork.us/resource/b2iz-pps8.json?$where=currentstatusdate > "'+ api_helpers.get_previous_days(table, source, 180) + '" AND violationstatus!="Open"&'
 
   api_response = api_helpers.request_from_api_no_seed(url)
   return api_response
@@ -55,7 +55,7 @@ def check_statuses(c, conn):
       if update_row(c, api_json[index]):
         violations_updated += 1
       else:
-        print("  X Call not updated", str(index) + '/' + str(len(api_json)))
+        print("  X Violation not updated", str(index) + '/' + str(len(api_json)))
         continue
 
   print(str(violations_updated) + " violations were updated")
