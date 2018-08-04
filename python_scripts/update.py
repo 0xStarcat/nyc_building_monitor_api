@@ -22,6 +22,7 @@ update_counts_data = { "date": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
 conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
 c = conn.cursor()
 context.updates_seeds.new_entry(c, update_counts_data)
+conn.commit()
 
 shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
 shutil.move(config.DATABASE_BACKUP_URL, config.DATABASE_URL)
