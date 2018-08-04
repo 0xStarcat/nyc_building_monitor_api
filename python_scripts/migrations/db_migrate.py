@@ -1,5 +1,6 @@
 import sqlite3
 import config
+import context
 
 sqlite_file = config.DATABASE_URL
 
@@ -16,5 +17,6 @@ def create_updates_table(c):
   print("creating updates table")
   try:
     context.updates_seeds.create_table(c)
-  except:
-    print("Table already exists. Skipping.")
+  except Exception as error:
+    print(error)
+    raise error

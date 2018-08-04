@@ -1,3 +1,4 @@
+import context
 import datetime
 
 table = "updates"
