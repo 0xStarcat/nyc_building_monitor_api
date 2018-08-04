@@ -1,4 +1,3 @@
-import json
 import datetime
 import config 
 import context 
@@ -144,7 +143,6 @@ def seed(c, service_calls_json, write_to_csv=False):
     unique_id = str(call["unique_key"]) if "unique_key" in call else ""
     open_over_month = is_open_over_month(status, date)
     description = str(call["descriptor"])
-    address = str(call["incident_address"]) if "incident_address" in call else ""
     complaint_type = str(call["complaint_type"]) if "complaint_type" in call else ""
     
     # Create call

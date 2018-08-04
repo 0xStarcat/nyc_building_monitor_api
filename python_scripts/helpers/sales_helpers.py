@@ -11,7 +11,7 @@ def fix_brooklyn_csv():
   for row in rows[1:]:
     try:
       row[20] = datetime.datetime.strptime(row[20], "%m/%d/%y").strftime("%m/%d/%Y")
-    except ValueError as e:
+    except ValueError:
       row[20] = datetime.datetime.strptime(row[20], "%m/%d/%Y").strftime("%m/%d/%Y")
     
     writer.writerow(row)

@@ -1,8 +1,6 @@
-import sqlite3
 import datetime
 import requests
 import json 
-import csv
 
 def get_next_day_to_request(conn, table_name, source):
   c = conn.cursor()
@@ -45,7 +43,6 @@ def request_from_api_no_seed(url):
   offset = 0
   limit = 50000  
   request_data = []
-  count = 0
 
   def request(off):
     r = requests.get(url+'&$limit='+str(limit)+'&$offset=' + str(off))

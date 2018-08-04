@@ -1,7 +1,3 @@
-import json
-from shapely.geometry import Point, mapping
-import datetime
-
 import context
 
 table = 'permit_clusters'

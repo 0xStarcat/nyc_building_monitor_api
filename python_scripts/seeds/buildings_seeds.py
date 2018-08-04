@@ -1,5 +1,5 @@
 import json
-from shapely.geometry import shape, Point
+from shapely.geometry import shape
 import context
 
 table = 'buildings'
