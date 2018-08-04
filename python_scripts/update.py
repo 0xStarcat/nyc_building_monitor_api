@@ -17,6 +17,9 @@ status_update_counts = api_requests.check_call_statuses()
 api_requests.update_data()
 
 update_counts_data = { "date": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),**new_entry_counts, **status_update_counts}
+
+conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
+c = conn.cursor()
 context.updates_seeds.new_entry(c, update_counts_data)
 
 shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
