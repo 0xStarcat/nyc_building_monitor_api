@@ -31,6 +31,7 @@ def setup_db():
     test_context.context.building_events_seeds.create_table(c)
     test_context.context.violations_seeds.create_table(c)
     test_context.context.service_calls_seeds.create_table(c)
+    test_context.context.updates_seeds.create_table(c)
     conn.commit()
     conn.close()
   except Exception as error:
@@ -54,6 +55,8 @@ def drop_db():
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=test_context.context.census_tracts_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=test_context.context.neighborhoods_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=test_context.context.boroughs_seeds.table))
+  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=test_context.context.updates_seeds.table))
+
   conn.commit()
   conn.close()
 

@@ -25,8 +25,10 @@ def check_call_statuses():
   c.execute('pragma foreign_keys=on;')
 
   total_closed_service_calls = requests_api.check_service_calls_status_request.check_statuses(c, conn)
+  total_closed_violations = requests_api.check_violations_status_request.check_statuses(c, conn)
+
   conn.commit()
-  return { "total_closed_service_calls" : total_closed_service_calls }
+  return { "resolved_service_calls" : total_closed_service_calls, "resolved_violations": total_closed_violations }
 
 def request(write_to_csv=False):
   conn = sqlite3.connect(config.DATABASE_BACKUP_URL, timeout=10)
@@ -57,6 +59,6 @@ def request(write_to_csv=False):
   total_new_service_calls = dob_service_call_count + hpd_service_call_count
   total_new_violations = dob_violation_count + ecb_violation_count + hpd_violation_count
   
-  return { "total_new_service_calls": total_new_service_calls, "total_new_violations": total_new_violations }
+  return { "new_service_calls": total_new_service_calls, "new_violations": total_new_violations }
 
 

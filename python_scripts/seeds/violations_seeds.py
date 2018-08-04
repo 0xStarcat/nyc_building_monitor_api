@@ -38,11 +38,11 @@ def create_table(c):
   c.execute('CREATE UNIQUE INDEX idx_violation_unique_id ON {tn}({col})'.format(tn=table, col=col2))
 
 def get_violation_id(violation):
-  if "violationid" in violation:
+  if "violationid" in violation: #HPD
     return violation["violationid"]
-  elif "ecb_violation_number" in violation:
+  elif "ecb_violation_number" in violation: #ECB
     return violation["ecb_violation_number"]
-  elif "number" in violation:
+  elif "number" in violation: #DoB
     return violation["number"]
   else:
     print("  * No unique id found")

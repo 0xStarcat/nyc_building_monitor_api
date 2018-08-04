@@ -26,6 +26,12 @@ open_service_calls_json = [
   {"address_type":"ADDRESS","agency":"HPD","agency_name":"Department of Housing Preservation and Development","bbl":"5056280024","borough":"BROOKLYN","city":"BROOKLYN","closed_date":"2015-08-20T10:20:40.000","community_board":"01 BROOKLYN","complaint_type":"GENERAL","created_date":"2015-06-10T18:39:08.000","descriptor":"BELL/BUZZER/INTERCOM","facility_type":"N/A","incident_address":"fake","incident_zip":"11206","latitude":"40","location":{"type":"Point","coordinates":[-73.94003123834,40]},"location_type":"RESIDENTIAL BUILDING","longitude":"-73.94003123833956","open_data_channel_type":"PHONE","park_borough":"BROOKLYN","park_facility_name":"Unspecified","resolution_action_updated_date":"2015-08-20T10:20:40.000","resolution_description":"The Department of Housing Preservation and Development was not able to gain access to inspect the following conditions. The complaint has been closed. If the condition still exists, please file a new complaint.","status":"Closed","street_name":"fake","unique_key":"1234567","x_coordinate_state_plane":"1000876","y_coordinate_state_plane":"1"}
 ]
 
+open_violations_json =[    
+  {"source": "HPD","apartment":"1234","approveddate":"2013-10-10T00:00:00.000","bbl":"1234","bin":"1234","block":"5628","boro":"NOT BRONX","boroid":"5","buildingid":"1234","censustract":"63","class":"B","communityboard":"4","councildistrict":"8","currentstatus":"ACTIVE","currentstatusdate":"2014-10-17T00:00:00.000","currentstatusid":"19","highhousenumber":"1234","housenumber":"123","inspectiondate":"2013-10-08T00:00:00.000","latitude":"40","longitude":"-73.926605","lot":"24","lowhousenumber":"1234","novdescription":"SECTION 27-2005 some words go here!","novid":"4706454","novissueddate":"2013-10-11T00:00:00.000","novtype":"Original","nta":"West Concourse","ordernumber":"501","originalcertifybydate":"2013-11-29T00:00:00.000","originalcorrectbydate":"2013-11-15T00:00:00.000","registrationid":"0k","story":"3","streetcode":"35020","streetname":"somewhere","violationid":"a good id","violationstatus":"Open","zip":"10451"},
+  {"source": "ECB", "aggravated_level":"NO","amount_paid":".00","balance_due":"2400.00","bin":"4618517","block":"5628","boro":"5","certification_status":"CERTIFICATE ACCEPTED","dob_violation_number":"060711CSSCWJM08","ecb_violation_number":"unique for ecb id","ecb_violation_status":"ACTIVE","hearing_date":"20120221","hearing_status":"PENDING","hearing_time":"830","infraction_code1":"109","isn_dob_bis_extract":"946264","issue_date":"20110607","lot":"24","penality_imposed":"2400.00","respondent_city":"HUNTINGTON STAT","respondent_house_number":"34","respondent_name":"HEMPTON PARK CORPORATION","respondent_street":"W 18 ST","respondent_zip":"11746","section_law_description1":"BC 3301.2,27-1009(A)                                                        FAIL TO SAFEGUARD PERS/PROPERTY AFFECTED BY CONSTRUCTION OP","served_date":"20110715","severity":"Unknown","violation_description":"FAILURE TO SAFEGUARD ALL PERSONS & PROPERTY AFFECTED BY CONSTRUCTION OPERATIONS. FLATBED TRUCK BLOCKING ENTIRE SIDEWALK (SITE ENTRANCE) WHILE BEING UNLOADED BY UNLICENSED OPERATOR ON CRANE CD 3876. ABOVE IS","violation_type":"Construction"},
+  { "source": "DOB", "penality_imposed": "10000", "bin":"3116172","block":"5628","lot":"24","boro":"5","description":"A really good violation.","disposition_comments":"Wow you should have seen that.","ecb_number":"1234","house_number":"2","isn_dob_bis_viol":"3","issue_date":"19991014","number":"a unique id violation","street":"fake st","violation_category":"VW*-VIOLATION - WORK W/O PERMIT ACTIVE","violation_number":"22?","violation_type":"C-CONSTRUCTION","violation_type_code":"C"}
+]
+
 def seed_test_db_with_building():
   conn = setup_tests.new_conn()
   c = conn.cursor()
@@ -62,3 +68,16 @@ def seed_test_db_with_open_service_calls():
   test_context.context.service_calls_seeds.seed(c, open_service_calls_json)
   conn.commit()
   conn.close()
+
+def seed_test_db_with_open_violations():
+  conn = setup_tests.new_conn()
+  c = conn.cursor()
+  c.execute('pragma foreign_keys=on;')
+  test_context.context.boroughs_seeds.seed(c, borough_json)
+  test_context.context.neighborhoods_seeds.seed(c, neighborhood_json)
+  test_context.context.census_tracts_seeds.seed(c, census_tract_json)
+  test_context.context.buildings_seeds.seed(c, building_json)
+  test_context.context.violations_seeds.seed(c, open_violations_json)
+  conn.commit()
+  conn.close()
+
