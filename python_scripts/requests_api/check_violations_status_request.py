@@ -34,9 +34,9 @@ def api_request(table, source):
   if source == 'DOB':
     url = 'https://data.cityofnewyork.us/resource/dvnq-fhaa.json?$where=disposition_date > "'+ api_helpers.get_previous_days(table, source, 365) + '"&'
   elif source == "ECB":
-    url = 'https://data.cityofnewyork.us/resource/gq3f-5jm8.json?$where=issue_date > "'+ api_helpers.get_previous_days(table, source, 365) + ' AND hearing_date is not PENDING"'
+    url = 'https://data.cityofnewyork.us/resource/gq3f-5jm8.json?$where=issue_date > "'+ api_helpers.get_previous_days(table, source, 365) + '" AND hearing_date is not PENDING&'
   elif source == "HPD":
-    url = 'https://data.cityofnewyork.us/resource/b2iz-pps8.json?$where=currentstatusdate > "'+ api_helpers.get_previous_days(table, source, 365) + ' AND violationsatus is not Open"&'
+    url = 'https://data.cityofnewyork.us/resource/b2iz-pps8.json?$where=currentstatusdate > "'+ api_helpers.get_previous_days(table, source, 365) + '" AND violationstatus is not Open&'
 
   api_response = api_helpers.request_from_api_no_seed(url)
   return api_response
