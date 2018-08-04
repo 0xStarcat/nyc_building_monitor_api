@@ -25,7 +25,10 @@ def check_call_statuses():
   c.execute('pragma foreign_keys=on;')
 
   total_closed_service_calls = requests_api.check_service_calls_status_request.check_statuses(c, conn)
+  log_helper.write_to_log(" ++ service calls resolved: " + str(total_closed_service_calls) + "\n")
+
   total_closed_violations = requests_api.check_violations_status_request.check_statuses(c, conn)
+  log_helper.write_to_log(" ++ violations resolved: " + str(total_closed_violations) + "\n")
 
   conn.commit()
   return { "resolved_service_calls" : total_closed_service_calls, "resolved_violations": total_closed_violations }
