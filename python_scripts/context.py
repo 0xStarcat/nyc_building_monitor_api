@@ -2,7 +2,6 @@ import os
 import sys
 
 from seeds import boroughs_seeds
-from seeds import community_districts_seeds
 from seeds import neighborhoods_seeds
 from seeds import census_tracts_seeds
 from seeds import buildings_seeds
