@@ -21,6 +21,7 @@ from seeds import updates_seeds
 from helpers import csv_helpers
 from helpers import boundary_helpers
 from helpers import api_helpers 
+from helpers import log_helper
 
 from migrations import boundary_table_migrations
 from migrations import buildings_migration

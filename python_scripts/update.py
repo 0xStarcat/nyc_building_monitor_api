@@ -6,13 +6,12 @@ import shutil
 import os
 import context
 import api_requests
-from helpers import log_helper
 
 
 print("Starting data update...")
 shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
 
-log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
+context.log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
 new_entry_counts = api_requests.request(False)
 status_update_counts = api_requests.check_call_statuses()
 api_requests.update_data()
@@ -28,8 +27,8 @@ shutil.move(config.DATABASE_URL, config.DATABASE_TEMP_URL)
 shutil.move(config.DATABASE_BACKUP_URL, config.DATABASE_URL)
 os.remove(config.DATABASE_TEMP_URL)
 
-log_helper.write_to_log("Database replaced\n")
-log_helper.write_to_log("***\n")
+context.log_helper.write_to_log("Database replaced\n")
+context.log_helper.write_to_log("***\n")
 
 
 
