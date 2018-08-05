@@ -101,6 +101,19 @@ module.exports = {
       })
     }
   },
+  constructUpdateJson: data => {
+    return {
+      rows: data.map(row => {
+        return {
+          date: row.date,
+          newViolations: row.newViolations,
+          newServiceCalls: row.newServiceCalls,
+          resolvedViolations: row.resolvedViolations,
+          resolvedServiceCalls: row.resolvedServiceCalls
+        }
+      })
+    }
+  },
   constructViolationJson: data => {
     return {
       features: data.map(row => {

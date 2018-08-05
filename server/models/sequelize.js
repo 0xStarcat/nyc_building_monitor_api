@@ -34,6 +34,7 @@ db.Sale = sequelize.import(__dirname + '/Sale.js')
 db.Permit = sequelize.import(__dirname + '/Permit.js')
 db.ServiceCall = sequelize.import(__dirname + '/ServiceCall.js')
 db.BuildingEvent = sequelize.import(__dirname + '/BuildingEvent.js')
+db.Update = sequelize.import(__dirname + '/Update.js')
 
 // http://docs.sequelizejs.com/manual/tutorial/associations.html
 // db.BuildingEvent.prototype.getItem = function(options) {

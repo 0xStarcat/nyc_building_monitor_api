@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 const neighborhoods = require('./routes/neighborhoodRoutes')
 const census_tracts = require('./routes/censusTractRoutes')
 const buildings = require('./routes/buildingsRoutes')
+const updates = require('./routes/updatesRoutes')
 
 //Define what happens then a user visits the root route
 app.get('/', function(req, res) {
@@ -36,6 +37,7 @@ app.get('/', function(req, res) {
 app.use('/neighborhoods', neighborhoods)
 app.use('/census-tracts', census_tracts)
 app.use('/buildings', buildings)
+app.use('/updates', updates)
 
 app.get('/boundaries/:type/:fileName', function(req, res) {
   var file = './data/boundary_data/' + req.params['type'] + '/' + req.params['fileName'] + '.geojson'

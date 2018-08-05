@@ -37,7 +37,7 @@ password = os.environ["BUILDING_MONITOR_EMAIL_PASSWORD"]
 fromaddr = "NYC Building Monitor"
 toaddrs  = "jadeahking@gmail.com"
 
-log = open("python_scripts/log/log.txt", "r").read().split("***")
+log = open(config.LOG_URL, "r").read().split("***")
 print(log)
 msg = log[len(log) - 2]
 
