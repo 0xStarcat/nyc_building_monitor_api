@@ -27,7 +27,7 @@ app.get(['/', '/about', '/story', '/support'], (req, res) => {
   res.set({
     'Content-Type': 'text/html'
   })
-  res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, '../../buildingmonitor.nyc_client/build', 'index.html'))
 })
 
 app.use('/neighborhoods', neighborhoods)
