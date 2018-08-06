@@ -9,7 +9,6 @@ app.use(express.static(path.resolve(__dirname, '../../buildingmonitor.nyc_client
 app.use((req, res, next) => {
   res.set({
     Accept: 'application/json',
-    'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
@@ -23,15 +22,8 @@ const buildings = require('./routes/buildingsRoutes')
 const updates = require('./routes/updatesRoutes')
 
 //Define what happens then a user visits the root route
-app.get(['/', '/about', '/story', '/support'], function(req, res) {
-  res.set({
-    'Content-Type': 'text/html',
-    'Access-Control-Allow-Credentials': true,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
-    'Access-Control-Allow-Methods': 'GET'
-  })
-  res.sendFile(path.resolve(__dirname, '../build', 'index.html')) //Tell Express which html file to render for this route
+app.get(['/', '/about', '/story', '/support'], (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
 })
 
 app.use('/neighborhoods', neighborhoods)
