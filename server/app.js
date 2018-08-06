@@ -23,7 +23,7 @@ const buildings = require('./routes/buildingsRoutes')
 const updates = require('./routes/updatesRoutes')
 
 //Define what happens then a user visits the root route
-app.get('/', function(req, res) {
+app.get(['/', '/about', '/story', '/support'], function(req, res) {
   res.set({
     'Content-Type': 'text/html',
     'Access-Control-Allow-Credentials': true,
