@@ -5,10 +5,11 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
-app.use(express.static(path.resolve(__dirname, '../../buildingmonitor.nyc_client/build')))
+app.use(express.static(path.resolve(__dirname, '/build/static')))
 app.use((req, res, next) => {
   res.set({
     Accept: 'application/json',
+    'Content-Type': 'application/json',
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
@@ -23,6 +24,9 @@ const updates = require('./routes/updatesRoutes')
 
 //Define what happens then a user visits the root route
 app.get(['/', '/about', '/story', '/support'], (req, res) => {
+  res.set({
+    'Content-Type': 'text/html'
+  })
   res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
 })
 
