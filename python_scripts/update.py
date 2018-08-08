@@ -7,6 +7,7 @@ import os
 import context
 import api_requests
 
+
 print("Starting data update...")
 try:
 	shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
