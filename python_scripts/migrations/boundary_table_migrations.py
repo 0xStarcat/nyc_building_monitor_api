@@ -54,14 +54,14 @@ def update_data(c, table):
     service_calls_open_over_month = 0
 
     for event in service_call_events:
-      c.execute('SELECT * FROM service_calls WHERE id={id}'.format(id=event[6])) # find service call by eventable_id of building_event
+      c.execute('SELECT open_over_month FROM service_calls WHERE id={id}'.format(id=event[6])) # find service call by eventable_id of building_event
       service_call = c.fetchone()
 
       if not service_call:
         print("Entry not found", event)
         continue
 
-      if service_call[11] == True:
+      if service_call[0] == True:
         service_calls_open_over_month += 1
 
     c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
@@ -76,36 +76,4 @@ def update_data(c, table):
 
     c.execute('UPDATE {tn} SET {cn} = ? WHERE id=?'\
       .format(tn=table, cn=col4), (average, row[0]))
-
-    # sales
-
-    # c.execute('SELECT id, COUNT(id) FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
-    #   .format(event='sale', cn=column_name, id=row[0]))
-
-    # sales_count = c.fetchone()[1]
-
-    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-    #   .format(tn=table, cn=col5, value=sales_count, id=row[0]))
-
-
-    # permits
-
-    # c.execute('SELECT id, COUNT(id) FROM permits WHERE {cn}={id} AND {cn2}=\'{type}\''\
-    #   .format(event='permit', cn=column_name, cn2='permit_type', id=row[0], type='NB'))
-
-    # permits_count = c.fetchone()[1]
-
-    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-    #   .format(tn=table, cn=col6, value=permits_count, id=row[0]))
-
-
-    # evictions
-
-    # c.execute('SELECT * FROM building_events WHERE {cn}={id} AND eventable=\'{event}\''\
-    #   .format(event='eviction', cn=column_name, id=row[0]))
-
-    # evictions_count = len(c.fetchall())
-
-    # c.execute('UPDATE {tn} SET {cn} = {value} WHERE id={id}'\
-    #   .format(tn=table, cn=col10, value=evictions_count, id=row[0]))
 

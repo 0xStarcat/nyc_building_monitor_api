@@ -122,6 +122,10 @@ def insertion_of_record_ecb(c):
     c.execute('SELECT status_description FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
     entry = c.fetchone()
     assert entry[0] == 'CERTIFICATE ACCEPTED'
+
+    c.execute('SELECT ecb_number FROM {tn}'.format(tn=test_context.context.violations_seeds.table))
+    entry = c.fetchone()
+    assert entry[0] == None
   except AssertionError as error:
     raise error
 

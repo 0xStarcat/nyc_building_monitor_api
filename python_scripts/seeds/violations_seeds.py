@@ -37,23 +37,24 @@ def create_table(c):
   c.execute('CREATE UNIQUE INDEX idx_violation_unique_id ON {tn}({col})'.format(tn=table, col=col2))
 
 def get_violation_id(violation):
-  if "violationid" in violation: #HPD
-    return violation["violationid"]
-  elif "ecb_violation_number" in violation: #ECB
-    return violation["ecb_violation_number"]
-  elif "number" in violation: #DoB
-    return violation["number"]
-  else:
-    print("  * No unique id found")
-    return None
+  # HPD = violationid
+  # ECB = ecb_violation_number
+  # DOB = number
+  return \
+    violation.get("violationid", None) or \
+    violation.get("ecb_violation_number", None) or \
+    violation.get("number", None)
 
 def get_status(violation):
+  # HPD = violationstatus
+  # ECB = ecb_violation_status
+  # DOB = violation_category
   status = ""
-  if "violationstatus" in violation: #HPD
+  if "violationstatus" in violation:
     status = "closed" if "close" in violation["violationstatus"].lower() else "open"
-  elif "ecb_violation_status" in violation: #ecb
+  elif "ecb_violation_status" in violation: 
     status = "closed" if "resolve" in violation["ecb_violation_status"].lower() else "open"
-  elif "violation_category" in violation: #DOB
+  elif "violation_category" in violation:
     status = "open" if "active" in violation["violation_category"].lower() else "closed"
   else:
     print("  * no status found")
@@ -61,11 +62,14 @@ def get_status(violation):
   return status
 
 def get_status_description(violation):
+  # HPD = currentstatus
+  # DOB = violation_category
+  # ECB = certification_status
   status_description = ""
-  if "currentstatus" in violation: #hpd
+  if "currentstatus" in violation:
     status_description = violation["currentstatus"]
-  elif "certification_status" in violation: #ecb
-    status_description = violation["certification_status"] #dob
+  elif "certification_status" in violation:
+    status_description = violation["certification_status"] 
   elif "violation_category" in violation and "disposition_comments" in violation:
     status_description = violation["violation_category"] + " - " + violation["disposition_comments"]
   elif "violation_category" in violation:
@@ -76,31 +80,34 @@ def get_status_description(violation):
   return status_description
 
 def get_description(violation):
-  description = ""
-  if "violation_description" in violation:
-    description = violation["violation_description"] #ECB
-  elif "description" in violation:
-    description = violation["description"] #DOB
-  elif "novdescription" in violation: #HPD
-    description = violation["novdescription"]
-  return description
+  # HPD = violation_description
+  # DOB = description
+  # ECB = novdescription
+  return \
+    violation.get("violation_description", None) or \
+    violation.get("description", None) or \
+    violation.get("novdescription", None) or \
+    ''
 
 def extract_section_code(description):
+  if description is None: 
+    return description
+
   if "SECTION" in description:
     split =  description.split(" ")
     return split[0] + " " + split[1]
   return
 
 def get_code(violation):
-  code = ""
-  if "violation_type_code" in violation: # ECB
-    code = violation["violation_type_code"]
-  elif "infraction_code1" in violation: #DOB
-    code = violation["infraction_code1"]
-  elif "novdescription" in violation: #HPD - need to parse section law from this
-    code = extract_section_code(violation["novdescription"])
-  return code
-
+  # HPD = violation_type_code
+  # DOB = infraction_code1
+  # ECB = novdescription
+  return \
+    violation.get("violation_type_code", None) or \
+    violation.get("infraction_code1", None) or \
+    extract_section_code(violation.get("novdescription", None)) or \
+    ''
+  
 def get_penalty(violation):
   penalty_imposed = ""
   if "penality_imposed" in violation:
@@ -168,15 +175,14 @@ def seed(c, violation_json, write_to_csv=False):
     building_id = int(building_match[0])
     unique_id = str(get_violation_id(violation))
 
-    
-
     description = str(get_description(violation))
     penalty_imposed = str(get_penalty(violation))
     source = violation['source'] # field added from from API call
     violation_code = str(get_code(violation))
     status = get_status(violation)
     status_description = get_status_description(violation)
-    ecb_number = violation["ecb_number"] if "ecb_number" in violation else None
+    ecb_number = violation.get("ecb_number", None)
+    
     # Create Violation
     try:
       c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'\
