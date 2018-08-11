@@ -11,7 +11,7 @@
     "babel_server": "babel server --out-dir build/server"
   },
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
