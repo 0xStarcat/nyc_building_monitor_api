@@ -1,17 +1,16 @@
-# buildingmonitor.nyc API
+# NYC Building Monitor
 
-Welcome,
+- This is the repo for the Backend API and database manager.
+- For the frontend client, visit [https://github.com/0xStarcat/nyc_building_monitor_client](https://github.com/0xStarcat/nyc_building_monitor_client)
 
-Here's the code that collects and prepares the data for consumption by the client.
+## Description
 
-## Tech
+The NYC Building monitor is a tool that NYC tenants can use to help them make informed housing decisions and fight for housing justice.
 
-Python (no framework)
+## Setup
 
-- Data formatting + cleaning
-- Sqlite3 Database seeding
-- API requests from NYC Open Data portal
-
-Javascript (Node.js)
-
-- Serves data from the Sqlite3 database to the client
+1.  Clone this repo and the [frontend repo](https://github.com/0xStarcat/nyc_building_monitor_client) into separate directories.
+2.  Install dependencies for both repos with `npm install`
+3.  Start the backend server with `yarn nodemon`
+4.  Start the frontend client with `yarn dev`
+5.  Visit `localhost:3000`
