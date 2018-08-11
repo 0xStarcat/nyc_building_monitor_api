@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import smtplib
 import datetime
 import sqlite3
@@ -10,6 +12,7 @@ import api_requests
 
 print("Starting data update...")
 try:
+  context.log_helper.write_to_log("Copying Database to backup")
   shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
 
   context.log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
@@ -35,6 +38,7 @@ try:
   log = open(config.LOG_URL, "r").read().split("***")
   msg = log[len(log) - 2]
 except Exception as error:
+  context.log_helper.write_to_log(error)
   msg = error
 
 print(msg)
