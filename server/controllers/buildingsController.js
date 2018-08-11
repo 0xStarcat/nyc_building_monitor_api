@@ -18,11 +18,11 @@ const selectFullTextSearchQuery = query => {
   const split = query.split(' ')
 
   const houseQuery = house_number =>
-    `SELECT * FROM building_search WHERE building_search MATCH '"${house_number}"*' ORDER BY rank LIMIT 3`
+    `SELECT * FROM building_search WHERE building_search MATCH 'house_number:"${house_number}"*' ORDER BY rank LIMIT 3`
   const houseStreetQuery = (house_number, street) =>
-    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}* address:${street}*" ORDER BY rank LIMIT 3`
+    `SELECT * FROM building_search WHERE building_search MATCH 'house_number:"${house_number}"* address:${street}*' ORDER BY rank LIMIT 3`
   const houseStreetBoroughQuery = (house_number, street, borough_name) =>
-    `SELECT * FROM building_search WHERE building_search MATCH ("house_number:${house_number}* address:${street}* borough_name:${borough_name}*") ORDER BY rank LIMIT 3`
+    `SELECT * FROM building_search WHERE building_search MATCH 'house_number:"${house_number}"* address:${street}* borough_name:${borough_name}*' ORDER BY rank LIMIT 3`
   const streetQuery = street =>
     `SELECT * FROM building_search WHERE building_search MATCH "address:${street}*" ORDER BY rank LIMIT 3`
 
@@ -49,7 +49,6 @@ const selectFullTextSearchQuery = query => {
   } else {
     // if number is present and split only has 1 word, do a house number query
     house_number = split[0]
-    console.log('***', houseQuery(house_number.trim()))
     return houseQuery(house_number.trim())
   }
 }
@@ -135,7 +134,7 @@ module.exports = {
   },
   search: async (req, res) => {
     let userQuery = req.body['query'].trim().replace(/@|!|#|\$|%|\^|&|\*|(|)|_|\+|{|}|\[|\]|'|"|;|:|<|>|\?|=/g, '')
-    if (userQuery === '') res.json({ results: [] })
+    if (userQuery === '') return res.json({ results: [] })
 
     const dbQuery = selectFullTextSearchQuery(userQuery)
 
