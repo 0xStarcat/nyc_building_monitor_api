@@ -9,14 +9,16 @@ const {
   constructBuildingSearchJson
 } = require(__dirname + '/helpers/jsonHelpers.js')
 
-const hasNumber = string => /\d/.test(string)
+const hasHouseNumber = string => {
+  return /((\d)+-(\d)+)|(\d)+/.test(string)
+}
 
 const selectFullTextSearchQuery = query => {
   let house_number, street, borough_name
   const split = query.split(' ')
 
   const houseQuery = house_number =>
-    `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}*" ORDER BY rank LIMIT 3`
+    `SELECT * FROM building_search WHERE building_search MATCH '"${house_number}"*' ORDER BY rank LIMIT 3`
   const houseStreetQuery = (house_number, street) =>
     `SELECT * FROM building_search WHERE building_search MATCH "house_number:${house_number}* address:${street}*" ORDER BY rank LIMIT 3`
   const houseStreetBoroughQuery = (house_number, street, borough_name) =>
@@ -24,9 +26,9 @@ const selectFullTextSearchQuery = query => {
   const streetQuery = street =>
     `SELECT * FROM building_search WHERE building_search MATCH "address:${street}*" ORDER BY rank LIMIT 3`
 
-  if (!hasNumber(split[0])) {
+  if (!hasHouseNumber(split[0])) {
     return streetQuery(split.join(' ').replace(',', '')) // If no number in first split section, do generic street search
-  } else if (hasNumber(split[0]) && split.length > 1) {
+  } else if (hasHouseNumber(split[0]) && split.length > 1) {
     house_number = split[0].replace(',', '')
     borough_name = query.split(',')[1]
     if (borough_name) {
@@ -47,6 +49,7 @@ const selectFullTextSearchQuery = query => {
   } else {
     // if number is present and split only has 1 word, do a house number query
     house_number = split[0]
+    console.log('***', houseQuery(house_number.trim()))
     return houseQuery(house_number.trim())
   }
 }

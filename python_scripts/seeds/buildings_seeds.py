@@ -74,6 +74,8 @@ def create_virtual_table(c):
     b_name = c.fetchone()[1]
     split = building[9].strip().split(" ")
     house_number = split[0]
+
+    # If no numbers are found in the house number, don't insert
     if any(char.isdigit() for char in house_number) == False:
       continue
     del split[0]
