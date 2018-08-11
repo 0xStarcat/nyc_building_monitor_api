@@ -11,8 +11,8 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 
 1.  Clone this repo and the [frontend repo](https://github.com/0xStarcat/nyc_building_monitor_client) into separate directories.
 2.  Install dependencies for both repos with `npm install`
-3.  Start the backend server with `yarn nodemon`
-4.  Start the frontend client with `yarn dev`
+3.  Start the backend server with `npm run-script nodemon`
+4.  Start the frontend client with `npm run-script dev`
 5.  Visit `localhost:3000`
 
 ## Database Management
@@ -24,5 +24,5 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 
 ## API
 
-1.  Server can started for development with `yarn nodemon`, for production with `yarn start` in a production environment with PM2 installed.
-2.  Tests run with `yarn test`
+1.  Server can started for development with `npm run-script nodemon`, for production with `npm start` in a production environment with PM2 installed.
+2.  Tests run with `npm test`
