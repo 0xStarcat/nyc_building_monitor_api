@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+venv
 
 bk_mappluto_shapefile_bundle.zip
 node_modules/
