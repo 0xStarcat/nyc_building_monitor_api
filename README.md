@@ -17,7 +17,8 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 
 ## Database Management
 ** Requires Python > 3.5 and Sqlite3 with FST5 and virtual environment
-** And moving the seeding & migrations over to Alchemy rather than manual
+
+** I'm working on moving the seeding & migrations over to Alembic.
 
 1. Setup virtual environemnt in `python_scripts` directory
   - `python3 virtualenv venv`
