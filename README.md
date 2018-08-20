@@ -23,7 +23,7 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 1. Setup virtual environemnt in `python_scripts` directory
   - `python3 virtualenv venv`
   - activate it with `source venv/bin/activate`
-  - install packages with `pip3 install requirements.txt`
+  - install packages with `pip3 install -r requirements.txt`
 
 2.  The database can be seeded with `python3 python_scripts/seed_db.py`
   - This can take about an hour
