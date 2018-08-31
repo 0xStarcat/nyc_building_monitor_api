@@ -118,8 +118,8 @@ def drop():
 
   clear_csvs()
   drop_buildings_data_tables(c)
-  # drop_buildings_table(c)
-  # drop_boundary_tables(c)
+  drop_buildings_table(c)
+  drop_boundary_tables(c)
 
   conn.commit()
   conn.close()
