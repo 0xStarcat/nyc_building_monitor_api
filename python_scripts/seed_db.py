@@ -48,7 +48,7 @@ def create_buildings_data_tables(c):
   # context.evictions_seeds.create_table(c)
 
 
-# def seed_buildings_data(c):
+def seed_buildings_data(c):
   print("Seeding building data")
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
   context.sales_seeds.seed_sales(c, sales_csv)
@@ -85,22 +85,22 @@ def seed_buildings(c, conn):
 
 def seed_boundary_tables(c, conn):
   print("Seeding boundary tables")
-  borough_json = json.load(open('data/boundary_data/boroughs.geojson'))
-  neighborhood_json = json.load(open('data/boundary_data/neighborhoods.geojson'))
-  census_tract_json = json.load(open('data/boundary_data/census_tracts_2010.geojson'))
+  borough_json = json.load(open(config.BOROUGHS_DATA))
+  neighborhood_json = json.load(open(config.NEIGHBORHOODS_DATA))
+  census_tract_json = json.load(open(config.CENSUS_TRACTS_DATA))
 
   context.boroughs_seeds.seed(c, borough_json)
-  conn.commit()
+  # conn.commit()
   context.neighborhoods_seeds.seed(c, neighborhood_json)
-  conn.commit()
+  # conn.commit()
   context.census_tracts_seeds.seed(c, census_tract_json)
-  conn.commit()
+  # conn.commit()
 
 
 def seed_boundary_table_data(c, conn):
-  incomes_csv = list(csv.reader(open("data/income_data/censustract-medianhouseholdincome2017.csv")))[1:]
-  rents_csv = list(csv.reader(open("data/rent_data/censustract-medianrentall2017.csv")))[1:]
-  racial_makeup_csv = list(csv.reader(open("data/race_data/nyc_race_2010_by_census_tract.csv")))[1:]
+  incomes_csv = list(csv.reader(open(INCOME_DATA)))[1:]
+  rents_csv = list(csv.reader(open(RENT_DATA)))[1:]
+  racial_makeup_csv = list(csv.reader(open(RACE_DATA)))[1:]
 
   context.incomes_seeds.seed(c, incomes_csv)
   conn.commit()
@@ -133,10 +133,10 @@ def seed():
   c.execute('pragma recursive_triggers=on;')
 
   seed_boundary_tables(c, conn)
-  seed_boundary_table_data(c, conn)
-  seed_buildings(c, conn)
+  # seed_boundary_table_data(c, conn)
+  # seed_buildings(c, conn)
   # seed_buildings_data(c)
-  conn.commit()
+  # conn.commit()
   conn.close()
 
 

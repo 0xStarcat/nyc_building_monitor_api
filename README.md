@@ -37,3 +37,23 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 
 1.  Server can started for development with `npm run-script nodemon`, for production with `npm start` in a production environment with PM2 installed.
 2.  Tests run with `npm test`
+
+
+## Sources
+Boroughs (clipped to shoreline)
+http://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/nybb/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=geojson
+
+Neighborhoods
+http://data.beta.nyc/dataset/pediacities-nyc-neighborhoods/resource/35dd04fb-81b3-479b-a074-a27a37888ce7
+
+Census tracts 2010 (clipped to shoreline)
+https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/nyct2010/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=geojson
+
+Income
+http://app.coredata.nyc/?mlb=false&ntii=hh_inc_med_adj&ntr=Census%20Tract&mz=14&vtl=https%3A%2F%2Fthefurmancenter.carto.com%2Fu%2Fnyufc%2Fapi%2Fv2%2Fviz%2F691a2b7c-94d7-46ac-ac4d-9a589cb2c6ed%2Fviz.json&mln=true&mlp=true&mlat=40.718&ptsb=&nty=2012-2016&mb=roadmap&pf=%7B%22subsidies%22%3Atrue%7D&md=table&mlv=false&mlng=-73.996&btl=Borough&atp=neighborhoods
+
+Rent
+http://app.coredata.nyc/?mlb=false&ntii=rent_gross_med_adj&ntr=Census%20Tract&mz=14&vtl=https%3A%2F%2Fthefurmancenter.carto.com%2Fu%2Fnyufc%2Fapi%2Fv2%2Fviz%2F691a2b7c-94d7-46ac-ac4d-9a589cb2c6ed%2Fviz.json&mln=true&mlp=true&mlat=40.718&ptsb=&nty=2012-2016&mb=roadmap&pf=%7B%22subsidies%22%3Atrue%7D&md=table&mlv=false&mlng=-73.996&btl=Borough&atp=neighborhoods
+
+Race
+https://www1.nyc.gov/site/planning/data-maps/nyc-population/census-2010.page

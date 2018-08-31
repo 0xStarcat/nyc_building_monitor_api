@@ -63,7 +63,7 @@ def seed(c, census_tract_json):
       neighborhood = context.boundary_helpers.get_record_from_coordinates(ct["geometry"], neighborhoods, 2)
 
     if not neighborhood:
-      print("  X -- no neighborhood found")
+      print("  X -- no neighborhood found", ct["BoroCT2010"], ct['NTAName'])
       continue
 
     name = ct["properties"]["CT2010"]
