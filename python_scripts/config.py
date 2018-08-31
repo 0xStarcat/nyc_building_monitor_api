@@ -17,7 +17,7 @@ EVICTIONS_CSV_URL = os.path.abspath(os.path.join(ROOT_DIR, 'data/evictions_data/
 
 BOROUGHS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/boroughs.geojson'))
 NEIGHBORHOODS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/neighborhoods.geojson'))
-CENSUS_TRACTS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/census_tracts.geojson'))
+CENSUS_TRACTS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/census_tracts_2010.geojson'))
 
 INCOME_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/income_data/censustract-medianhouseholdincome2017.csv'))
 RENT_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/income_data/censustract-medianrentall2017.csv'))
