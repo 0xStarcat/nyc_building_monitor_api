@@ -6,6 +6,8 @@ import context
 import config
 sqlite_file = config.DATABASE_URL
 backup_sqlite_file = config.DATABASE_BACKUP_URL
+
+
 def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.building_events_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.service_calls_seeds.table))
@@ -16,9 +18,11 @@ def drop_buildings_data_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.sales_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.evictions_seeds.table))
 
+
 def drop_buildings_table(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.buildings_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.buildings_seeds.virtual_table))
+
 
 def drop_boundary_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.racial_makeup_seeds.table))
@@ -28,21 +32,24 @@ def drop_boundary_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.neighborhoods_seeds.table))
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.boroughs_seeds.table))
 
+
 def clear_csvs():
   context.csv_helpers.clear_csv(config.VIOLATIONS_CSV_URL)
   context.csv_helpers.clear_csv(config.PERMITS_CSV_URL)
   context.csv_helpers.clear_csv(config.SERVICE_CALLS_CSV_URL)
 
+
 def create_buildings_data_tables(c):
   print("creating buildings data tables")
-  context.sales_seeds.create_table(c)
-  context.conversions_seeds.create_table(c)
-  context.permit_clusters_seeds.create_table(c)
-  context.permits_seeds.create_table(c)
+  # context.sales_seeds.create_table(c)
+  # context.conversions_seeds.create_table(c)
+  # context.permit_clusters_seeds.create_table(c)
+  # context.permits_seeds.create_table(c)
   context.service_calls_seeds.create_table(c)
   context.violations_seeds.create_table(c)
   context.building_events_seeds.create_table(c)
-  context.evictions_seeds.create_table(c)
+  # context.evictions_seeds.create_table(c)
+
 
 def create_boundaries_tables(c):
   print("creating boundary tables")
@@ -50,10 +57,12 @@ def create_boundaries_tables(c):
   context.neighborhoods_seeds.create_table(c)
   context.census_tracts_seeds.create_table(c)
 
+
 def create_boundaries_data_tables(c):
   context.incomes_seeds.create_table(c)
   context.rents_seeds.create_table(c)
   context.racial_makeup_seeds.create_table(c)
+
 
 def create_buildings_tables(c):
   c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.buildings_seeds.virtual_table))
@@ -61,13 +70,16 @@ def create_buildings_tables(c):
   # context.buildings_seeds.create_table(c)
   context.buildings_seeds.create_virtual_table(c)
 
+
 def create_update_tables(c):
   context.updates_seeds.create_table(c)
+
 
 def seed_buildings_data(c):
   print("Seeding building data")
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
   context.sales_seeds.seed_sales(c, sales_csv)
+
 
 def seed_buildings(c, conn):
   print("Seeding buildings")
@@ -102,15 +114,14 @@ def seed_boundary_tables(c, conn):
   borough_json = json.load(open('data/boundary_data/boroughs.geojson'))
   neighborhood_json = json.load(open('data/boundary_data/neighborhoods.geojson'))
   census_tract_json = json.load(open('data/boundary_data/census_tracts_2010.geojson'))
-  
-  
+
   context.boroughs_seeds.seed(c, borough_json)
   conn.commit()
   context.neighborhoods_seeds.seed(c, neighborhood_json)
   conn.commit()
   context.census_tracts_seeds.seed(c, census_tract_json)
   conn.commit()
-  
+
 
 def seed_boundary_table_data(c, conn):
   incomes_csv = list(csv.reader(open("data/income_data/censustract-medianhouseholdincome2017.csv")))[1:]
@@ -123,6 +134,7 @@ def seed_boundary_table_data(c, conn):
   conn.commit()
   context.racial_makeup_seeds.seed(c, racial_makeup_csv)
   conn.commit()
+
 
 def drop():
   print("Dropping")
@@ -138,6 +150,7 @@ def drop():
   conn.commit()
   conn.close()
 
+
 def seed():
   print("Seeding")
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -152,9 +165,10 @@ def seed():
   # seed_boundary_table_data(c, conn)
   # seed_buildings(c, conn)
   # create_buildings_data_tables(c)
-  # seed_buildings_data(c)  
+  # seed_buildings_data(c)
   conn.commit()
   conn.close()
+
 
 def clear_evictions():
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -167,6 +181,7 @@ def clear_evictions():
   conn.commit()
   conn.close()
 
+
 def clear_violations():
   conn = sqlite3.connect(backup_sqlite_file, timeout=10)
   c = conn.cursor()
@@ -177,6 +192,7 @@ def clear_violations():
   context.violations_seeds.create_table(c)
   conn.commit()
   conn.close()
+
 
 def clear_sales():
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -189,6 +205,7 @@ def clear_sales():
   conn.commit()
   conn.close()
 
+
 def clear_conversions():
   conn = sqlite3.connect(sqlite_file, timeout=10)
   c = conn.cursor()
@@ -199,6 +216,7 @@ def clear_conversions():
   context.conversions_seeds.create_table(c)
   conn.commit()
   conn.close()
+
 
 def rename_building_column():
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -212,7 +230,7 @@ def rename_building_column():
   c.execute('DROP INDEX idx_bldg_neighborhood_id')
   c.execute('DROP INDEX idx_bldg_borough_id')
   c.execute('DROP INDEX idx_bldg_class')
-  
+
   c.execute('DROP INDEX idx_bldg_borough_and_residential')
   c.execute('DROP INDEX idx_bldg_neighborhood_and_residential')
   c.execute('DROP INDEX idx_bldg_census_tract_and_residential')
@@ -227,6 +245,7 @@ def rename_building_column():
   conn.commit()
 
   c.execute('PRAGMA foreign_keys=on;')
+
 
 def sample():
   conn = sqlite3.connect(sqlite_file, timeout=10)
@@ -255,6 +274,6 @@ def sample():
   # print(len(all_rows))
   # print(all_rows[len(all_rows) - 1])
   # for row in all_rows:
-    # print(row[1])
+  # print(row[1])
   # conn.commit()
   # conn.close()
