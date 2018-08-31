@@ -18,6 +18,7 @@ depends_on = None
 
 def upgrade():
   op.create_table('updates',
+                  sa.Column('id', sa.Integer, primary_key=True),
                   sa.Column('date', sa.Text),
                   sa.Column('new_violations', sa.Integer),
                   sa.Column('new_service_calls', sa.Integer),

@@ -19,6 +19,7 @@ depends_on = None
 def upgrade():
   op.create_table('boroughs',
                   sa.Column('id', sa.Integer, primary_key=True),
+                  sa.Column('id', sa.Integer, primary_key=True),
                   sa.Column('name', sa.Text),
                   sa.Column('code', sa.Integer),
                   sa.Column('geometry', sa.Text),
