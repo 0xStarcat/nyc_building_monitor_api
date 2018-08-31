@@ -45,37 +45,10 @@ def create_buildings_data_tables(c):
   # context.conversions_seeds.create_table(c)
   # context.permit_clusters_seeds.create_table(c)
   # context.permits_seeds.create_table(c)
-  context.service_calls_seeds.create_table(c)
-  context.violations_seeds.create_table(c)
-  context.building_events_seeds.create_table(c)
   # context.evictions_seeds.create_table(c)
 
 
-def create_boundaries_tables(c):
-  print("creating boundary tables")
-  context.boroughs_seeds.create_table(c)
-  context.neighborhoods_seeds.create_table(c)
-  context.census_tracts_seeds.create_table(c)
-
-
-def create_boundaries_data_tables(c):
-  context.incomes_seeds.create_table(c)
-  context.rents_seeds.create_table(c)
-  context.racial_makeup_seeds.create_table(c)
-
-
-def create_buildings_tables(c):
-  c.execute('DROP TABLE IF EXISTS {tn}'.format(tn=context.buildings_seeds.virtual_table))
-
-  # context.buildings_seeds.create_table(c)
-  context.buildings_seeds.create_virtual_table(c)
-
-
-def create_update_tables(c):
-  context.updates_seeds.create_table(c)
-
-
-def seed_buildings_data(c):
+# def seed_buildings_data(c):
   print("Seeding building data")
   sales_csv = list(csv.reader(open("data/sales_data/csv/nyc_sales_2010-2017.csv")))[1:]
   context.sales_seeds.seed_sales(c, sales_csv)
@@ -83,30 +56,31 @@ def seed_buildings_data(c):
 
 def seed_buildings(c, conn):
   print("Seeding buildings")
+  context.buildings_seeds.create_virtual_table(c)
 
-  # mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, mn_building_json)
-  # conn.commit()
+  mn_building_json = json.load(open('data/buildings_data/mn_mappluto.geojson'))
+  context.buildings_seeds.seed(c, mn_building_json)
+  conn.commit()
 
-  # bx_building_json = json.load(open('data/buildings_data/bx_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, bx_building_json)
-  # conn.commit()
+  bx_building_json = json.load(open('data/buildings_data/bx_mappluto.geojson'))
+  context.buildings_seeds.seed(c, bx_building_json)
+  conn.commit()
 
-  # bk_building_json = json.load(open('data/buildings_data/bk_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, bk_building_json)
-  # conn.commit()
+  bk_building_json = json.load(open('data/buildings_data/bk_mappluto.geojson'))
+  context.buildings_seeds.seed(c, bk_building_json)
+  conn.commit()
 
-  # qn_building_json = json.load(open('data/buildings_data/qn_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, qn_building_json)
-  # conn.commit()
+  qn_building_json = json.load(open('data/buildings_data/qn_mappluto.geojson'))
+  context.buildings_seeds.seed(c, qn_building_json)
+  conn.commit()
 
-  # si_building_json = json.load(open('data/buildings_data/si_mappluto.geojson'))
-  # context.buildings_seeds.seed(c, si_building_json)
-  # conn.commit()
+  si_building_json = json.load(open('data/buildings_data/si_mappluto.geojson'))
+  context.buildings_seeds.seed(c, si_building_json)
+  conn.commit()
 
-  # # adds total_buildings number to boundary data tables
-  # context.buildings_seeds.add_counts_to_boundary_data(c)
-  # conn.commit()
+  # adds total_buildings number to boundary data tables
+  context.buildings_seeds.add_counts_to_boundary_data(c)
+  conn.commit()
 
 
 def seed_boundary_tables(c, conn):
@@ -158,13 +132,9 @@ def seed():
   c.execute('pragma foreign_keys=on;')
   c.execute('pragma recursive_triggers=on;')
 
-  # create_boundaries_tables(c)
-  # create_boundaries_data_tables(c)
-  # create_buildings_tables(c)
-  # seed_boundary_tables(c, conn)
-  # seed_boundary_table_data(c, conn)
-  # seed_buildings(c, conn)
-  # create_buildings_data_tables(c)
+  seed_boundary_tables(c, conn)
+  seed_boundary_table_data(c, conn)
+  seed_buildings(c, conn)
   # seed_buildings_data(c)
   conn.commit()
   conn.close()
