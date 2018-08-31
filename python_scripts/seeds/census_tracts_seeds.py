@@ -1,5 +1,6 @@
 import json
 import context
+import pprint
 
 table = 'census_tracts'
 col1 = 'borough_id'
@@ -51,7 +52,7 @@ def seed(c, census_tract_json):
 
   c.execute('SELECT id, borough_id, geometry FROM {tn}'.format(tn=context.neighborhoods_seeds.table))
   neighborhoods = c.fetchall()
-
+  missing_neighborhoods = []
   for index, ct in enumerate(census_tract_json["features"]):
     print("CT: " + str(index) + "/" + str(len(census_tract_json["features"])))
 
@@ -63,7 +64,8 @@ def seed(c, census_tract_json):
       neighborhood = context.boundary_helpers.get_record_from_coordinates(ct["geometry"], neighborhoods, 2)
 
     if not neighborhood:
-      print("  X -- no neighborhood found", ct["BoroCT2010"], ct['NTAName'])
+      missing_neighborhoods.append([ct["properties"]["BoroCT2010"], ct["properties"]['NTAName']])
+      print("  X -- no neighborhood found", ct["properties"]["BoroCT2010"], ct["properties"]['NTAName'])
       continue
 
     name = ct["properties"]["CT2010"]
@@ -76,3 +78,4 @@ def seed(c, census_tract_json):
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'
               .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (borough_id, neighborhood_id, name, ct_label, boro_code, geometry, representative_point))
+  pprint.pprint(missing_neighborhoods)

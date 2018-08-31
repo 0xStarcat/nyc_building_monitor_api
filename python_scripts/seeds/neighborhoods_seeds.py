@@ -47,8 +47,12 @@ def seed(c, neighborhood_json):
 
     borough = context.boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], boroughs, 1)
     if not borough:
-      print("  X -- no borough found", name)
-      continue
+      c.execute('SELECT code FROM {tn} WHERE code={code}'.format(
+          tn=context.boroughs_seeds.table, code=neighborhood["properties"]["boroughCode"]))
+      borough = c.fetchone()
+      if not borough:
+        print("  X -- no borough found", name)
+        continue
 
     boro_id = borough[0]
     name = neighborhood["properties"]["neighborhood"]
