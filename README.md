@@ -14,7 +14,7 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 3. This project requires python 3.5.2+ which has a sqlite3 version that comes with FTS5
 4.  Create a virtual env if desired inside the `python_scripts` directory with `python3 -m venv venv` and activate with `source venv/bin/activate`
 5. Pip install the required python packages with `pip install requirements.txt`
-6. Download the raw data from <SOURCE PENDING> and copy the files into a `data` directory at project root.
+6. Download the raw data from dropbox [link](https://www.dropbox.com/sh/etzgvzqrjf617ie/AABzWxaTI5asnhqeknxAV2Zqa?dl=0) and place the `data` directory into the project root.
 7. Create a sqlite3 database file at root named `nyc_data_map.sqlite`
 8. Create the database tables with alembic - `alembic upgrade head`
 9. Seed the database tables with `python3 prepare.py` (may take about an hour)
