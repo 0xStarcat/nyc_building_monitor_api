@@ -15,8 +15,10 @@ col10 = 'total_service_calls'
 col11 = 'total_service_calls_open_over_month'
 col12 = 'service_calls_average_days_to_resolve'
 
+
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'.format(tn=table, col1=col1, ref_table=context.boroughs_seeds.table))
+  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'.format(
+      tn=table, col1=col1, ref_table=context.boroughs_seeds.table))
 
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col2))
   c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col3))
@@ -33,6 +35,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=table, col1=col1))
   c.execute('CREATE UNIQUE INDEX idx_n_name ON {tn}({col2})'.format(tn=table, col2=col2))
 
+
 def seed(c, neighborhood_json):
   print("** Seeding Neighborhoods...")
 
@@ -41,17 +44,21 @@ def seed(c, neighborhood_json):
 
   for index, neighborhood in enumerate(neighborhood_json["features"]):
     print("Neighborhood: " + str(index) + "/" + str(len(neighborhood_json["features"])))
-    
+
     borough = context.boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], boroughs, 1)
     if not borough:
-      print("  X -- no borough found", name)
-      continue
+      c.execute('SELECT code FROM {tn} WHERE code={code}'.format(
+          tn=context.boroughs_seeds.table, code=neighborhood["properties"]["boroughCode"]))
+      borough = c.fetchone()
+      if not borough:
+        print("  X -- no borough found", name)
+        continue
 
     boro_id = borough[0]
     name = neighborhood["properties"]["neighborhood"]
-    geo = json.dumps(neighborhood["geometry"], separators=(',',':'))
-    representative_point = json.dumps(context.boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
+    geo = json.dumps(neighborhood["geometry"], separators=(',', ':'))
+    representative_point = json.dumps(
+        context.boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
 
     c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES (?, ?, ?, ?)'
-      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (boro_id, name, geo, representative_point))
-
+              .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (boro_id, name, geo, representative_point))
