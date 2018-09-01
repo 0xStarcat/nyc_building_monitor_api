@@ -17,6 +17,7 @@ col11 = 'open_over_month'
 col12 = 'closed_date'
 col13 = 'days_to_close'
 col14 = 'complaint_type'
+col15 = 'is_duplicate'
 
 
 def create_table(c):
@@ -138,13 +139,11 @@ def seed(c, service_calls_json, write_to_csv=False):
         building_id = int(building_match[0])
 
         resolution_description = call["resolution_description"] if "resolution_description" in call else "missing"
-        if call_is_duplicate(resolution_description):
-            # print("  * duplicate complaint found", "call: " + str(index) + "/" + str(len(service_calls_json)))
-            pass  # we are now saving duplicate calls
 
         resolution_violation = resulted_in_violation(resolution_description)
         resolution_no_action = took_no_action(resolution_description)
         unable_to_investigate = unable_to_investigate_call(resolution_description)
+        is_duplicate = call_is_duplicate(resolution_description)
 
         date = str(datetime.datetime.strptime(call["created_date"][:10], "%Y-%m-%d").strftime("%Y%m%d"))
         closed_date = str(datetime.datetime.strptime(call["closed_date"][:10], "%Y-%m-%d").strftime(
@@ -159,8 +158,8 @@ def seed(c, service_calls_json, write_to_csv=False):
 
         # Create call
         try:
-            c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-                      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close, complaint_type))
+            c.execute('INSERT INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14}, {col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                      .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14, col15=col15), (building_id, unique_id, date, status, source, description, resolution_description, resolution_violation, resolution_no_action, unable_to_investigate, open_over_month, closed_date, days_to_close, complaint_type, is_duplicate))
         except Exception as error:
             print("ERROR", error, call["unique_key"])
             continue

@@ -20,10 +20,10 @@ except IOError:
 
 print("Starting data update...")
 try:
-    context.log_helper.write_to_log("Copying Database to backup")
+    context.log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
+    context.log_helper.write_to_log("Copying Database to backup" + "\n")
     shutil.copy(config.DATABASE_URL, config.DATABASE_BACKUP_URL)
 
-    context.log_helper.write_to_log(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y") + '\n')
     new_entry_counts = api_requests.request(False)
     status_update_counts = api_requests.check_call_statuses()
     api_requests.update_data()
