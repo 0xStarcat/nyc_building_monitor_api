@@ -17,56 +17,46 @@ depends_on = None
 
 
 def upgrade():
-  op.create_table('buildings',
-                  sa.Column('id', sa.Integer, primary_key=True),
-                  sa.Column('borough_id', sa.Integer, sa.ForeignKey('boroughs.id'), nullable=False),
-                  sa.Column('neighborhood_id', sa.Integer, sa.ForeignKey('neighborhoods.id'), nullable=False),
-                  sa.Column('census_tract_id', sa.Integer, sa.ForeignKey('census_tracts.id'), nullable=False),
-                  sa.Column('boro_code', sa.Integer),
-                  sa.Column('CT2010', sa.Text),
-                  sa.Column('bbl', sa.Integer),
-                  sa.Column('block', sa.Text),
-                  sa.Column('lot', sa.Text),
-                  sa.Column('address', sa.Text),
-                  sa.Column('geometry', sa.Text),
-                  sa.Column('representative_point', sa.Text),
-                  sa.Column('year_built', sa.Integer),
-                  sa.Column('residential_units', sa.Integer),
-                  sa.Column('bldg_class', sa.Text),
-                  sa.Column('residential', sa.Boolean),
-                  sa.Column('total_violations', sa.Integer),
-                  sa.Column('total_sales', sa.Integer),
-                  sa.Column('total_service_calls', sa.Integer),
-                  sa.Column('total_service_calls_open_over_month', sa.Integer),
-                  sa.Column('service_calls_average_days_to_resolve', sa.Integer)
-                  )
+    op.create_table('buildings',
+                    sa.Column('id', sa.Integer, primary_key=True),
+                    sa.Column('borough_id', sa.Integer, sa.ForeignKey('boroughs.id'), nullable=False),
+                    sa.Column('neighborhood_id', sa.Integer, sa.ForeignKey('neighborhoods.id'), nullable=False),
+                    sa.Column('census_tract_id', sa.Integer, sa.ForeignKey('census_tracts.id'), nullable=False),
+                    sa.Column('boro_code', sa.Integer),
+                    sa.Column('CT2010', sa.Text),
+                    sa.Column('bbl', sa.Integer),
+                    sa.Column('block', sa.Text),
+                    sa.Column('lot', sa.Text),
+                    sa.Column('address', sa.Text),
+                    sa.Column('geometry', sa.Text),
+                    sa.Column('representative_point', sa.Text),
+                    sa.Column('year_built', sa.Integer),
+                    sa.Column('residential_units', sa.Integer),
+                    sa.Column('bldg_class', sa.Text),
+                    sa.Column('residential', sa.Boolean),
+                    sa.Column('total_violations', sa.Integer),
+                    sa.Column('total_sales', sa.Integer),
+                    sa.Column('total_service_calls', sa.Integer),
+                    sa.Column('total_service_calls_open_over_month', sa.Integer),
+                    sa.Column('service_calls_average_days_to_resolve', sa.Integer)
+                    )
 
-  op.create_index('idx_bldg_block_and_lot', 'buildings', ['block', 'lot'], None, unique=False)
-  op.create_index('idx_bldg_census_tract_id', 'buildings', ['census_tract_id'], None, unique=False)
-  op.create_index('idx_bldg_neighborhood_id', 'buildings', ['neighborhood_id'], None, unique=False)
-  op.create_index('idx_bldg_borough_id', 'buildings', ['borough_id'], None, unique=False)
-  op.create_index('idx_bldg_class', 'buildings', ['bldg_class'], None, unique=False)
+    op.create_index('idx_bldg_block_and_lot', 'buildings', ['block', 'lot'], None, unique=False)
+    op.create_index('idx_bldg_census_tract_id', 'buildings', ['census_tract_id'], None, unique=False)
+    op.create_index('idx_bldg_neighborhood_id', 'buildings', ['neighborhood_id'], None, unique=False)
+    op.create_index('idx_bldg_borough_id', 'buildings', ['borough_id'], None, unique=False)
+    op.create_index('idx_bldg_class', 'buildings', ['bldg_class'], None, unique=False)
 
-  op.create_index('idx_bldg_borough_and_residential', 'buildings', ['borough_id', 'residential'], None, unique=False)
-  op.create_index('idx_bldg_neighborhood_and_residential', 'buildings', [
-                  'neighborhood_id', 'residential'], None, unique=False),
-  op.create_index('idx_bldg_census_tract_and_residential', 'buildings', [
-                  'census_tract_id', 'residential'], None, unique=False)
+    op.create_index('idx_bldg_borough_and_residential', 'buildings', ['borough_id', 'residential'], None, unique=False)
+    op.create_index('idx_bldg_neighborhood_and_residential', 'buildings', [
+                    'neighborhood_id', 'residential'], None, unique=False),
+    op.create_index('idx_bldg_census_tract_and_residential', 'buildings', [
+                    'census_tract_id', 'residential'], None, unique=False)
 
-  op.create_index('idx_bldg_boroid_and_address', 'buildings', ['boro_code', 'address'], None, unique=True)
-  op.create_index('idx_bldg_bbl', 'buildings', ['bbl'], None, unique=True)
-
-  # virtual table for FTS
-
-  conn = sqlite3.connect('../../nyc_data_map.sqlite', timeout=10)
-  c = conn.cursor()
-  c.execute(
-      'CREATE VIRTUAL TABLE IF NOT EXISTS {tn} USING fts5(id, house_number, address, borough_name)'.format(tn='building_search'))
+    op.create_index('idx_bldg_boroid_and_address', 'buildings', ['boro_code', 'address'], None, unique=True)
+    op.create_index('idx_bldg_bbl', 'buildings', ['bbl'], None, unique=True)
 
 
 def downgrade():
-  op.drop_table('buildings')
-  conn = sqlite3.connect('../../nyc_data_map.sqlite', timeout=10)
-  c = conn.cursor()
-  c.execute('DROP TABLE building_search')
-  pass
+    op.drop_table('buildings')
+    pass
