@@ -49,16 +49,16 @@ except Exception as error:
     context.log_helper.write_to_log(error)
     msg = error
 
-# print(msg)
-# print("Message length is", len(msg))
-# username = os.environ["BUILDING_MONITOR_EMAIL"]
-# password = os.environ["BUILDING_MONITOR_EMAIL_PASSWORD"]
-# fromaddr = "NYC Building Monitor"
-# toaddrs  = "jadeahking@gmail.com"
-#
-# server = smtplib.SMTP('smtp.gmail.com:587')
-# server.set_debuglevel(1)
-# server.starttls()
-# server.login(username, password)
-# server.sendmail(fromaddr, toaddrs, msg)
-# server.quit()
+print(msg)
+print("Message length is", len(msg))
+username = os.environ["BUILDING_MONITOR_EMAIL"]
+password = os.environ["BUILDING_MONITOR_EMAIL_PASSWORD"]
+fromaddr = "NYC Building Monitor"
+toaddrs = "jadeahking@gmail.com"
+
+server = smtplib.SMTP('smtp.gmail.com:587')
+server.set_debuglevel(1)
+server.starttls()
+server.login(username, password)
+server.sendmail(fromaddr, toaddrs, msg)
+server.quit()
