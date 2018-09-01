@@ -10,10 +10,17 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 ## Setup
 
 1.  Clone this repo and the [frontend repo](https://github.com/0xStarcat/nyc_building_monitor_client) into separate directories.
-2.  Install dependencies for both repos with `npm install`
-3.  Start the backend server with `npm run-script nodemon`
-4.  Start the frontend client with `npm run-script dev`
-5.  Visit `localhost:3000`
+2.  Install node packages `npm install`
+3. This project requires python 3.5.2+ which has a sqlite3 version that comes with FTS5
+4.  Create a virtual env if desired inside the `python_scripts` directory with `python3 -m venv venv` and activate with `source venv/bin/activate`
+5. Pip install the required python packages with `pip install requirements.txt`
+6. Download the raw data from <SOURCE PENDING> and copy the files into a `data` directory at project root.
+7. Create a sqlite3 database file at root named `nyc_data_map.sqlite`
+8. Create the database tables with alembic - `alembic upgrade head`
+9. Seed the database tables with `python3 prepare.py` (may take about an hour)
+10. Seed the rest of the data from the NYC open data portal API with `python3 update.py` (may take a couple hours)
+11.  Start the backend server with `npm run-script nodemon`
+12.  Start the frontend client with `npm run-script dev` and visit `localhost:3000`
 
 ## Database Management
 ** Requires Python > 3.5 and Sqlite3 with FST5 and virtual environment

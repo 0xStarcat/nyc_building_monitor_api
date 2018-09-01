@@ -53,7 +53,7 @@ def create_table(c):
   c.execute('CREATE INDEX idx_bldg_census_tract_id ON {tn}({col})'.format(tn=table, col=col3))
   c.execute('CREATE INDEX idx_bldg_neighborhood_id ON {tn}({col})'.format(tn=table, col=col2))
   c.execute('CREATE INDEX idx_bldg_borough_id ON {tn}({col})'.format(tn=table, col=col1))
-  c.execute('CREATE INDEX idx_bldg_class ON {tn}({col})'.format(tn=table, col=col13))
+  c.execute('CREATE INDEX idx_bldg_class ON {tn}({col})'.format(tn=table, col=col14))
 
   c.execute('CREATE INDEX idx_bldg_borough_and_residential ON {tn}({col1}, {col2})'.format(
       tn=table, col1=col1, col2=col15))
@@ -67,8 +67,7 @@ def create_table(c):
   c.execute('CREATE UNIQUE INDEX idx_bldg_bbl ON {tn}({col})'.format(tn=table, col=col6))
 
 
-def create_virtual_table(c):
-  c.execute('CREATE VIRTUAL TABLE {tn} USING fts5(id, house_number, address, borough_name)'.format(tn=virtual_table))
+def seed_virtual_table(c):
   c.execute("SELECT * FROM {tn}".format(tn=table))
   buildings = c.fetchall()
 
@@ -135,7 +134,7 @@ def seed(c, building_json):
 
     foreign_keys = find_foreign_keys(c, building)
     if foreign_keys == None:
-      print("  * no CT", str(index) + "/" + str(len(building_json["features"])))
+      print("  * no CT", building["properties"]["Address"], str(index) + "/" + str(len(building_json["features"])))
       continue
 
     borough_id = int(foreign_keys["borough_id"])

@@ -50,3 +50,4 @@ def upgrade():
 
 def downgrade():
   op.drop_table('service_calls')
+  pass

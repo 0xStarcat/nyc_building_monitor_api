@@ -7,7 +7,7 @@ Create Date: 2018-08-30 19:59:33.205114
 """
 from alembic import op
 import sqlalchemy as sa
-
+import sqlite3
 
 # revision identifiers, used by Alembic.
 revision = 'e8d9a74cd47e'
@@ -41,6 +41,12 @@ def upgrade():
                   sa.Column('service_calls_average_days_to_resolve', sa.Integer)
                   )
 
+  op.create_index('idx_bldg_block_and_lot', 'buildings', ['block', 'lot'], None, unique=False)
+  op.create_index('idx_bldg_census_tract_id', 'buildings', ['census_tract_id'], None, unique=False)
+  op.create_index('idx_bldg_neighborhood_id', 'buildings', ['neighborhood_id'], None, unique=False)
+  op.create_index('idx_bldg_borough_id', 'buildings', ['borough_id'], None, unique=False)
+  op.create_index('idx_bldg_class', 'buildings', ['bldg_class'], None, unique=False)
+
   op.create_index('idx_bldg_borough_and_residential', 'buildings', ['borough_id', 'residential'], None, unique=False)
   op.create_index('idx_bldg_neighborhood_and_residential', 'buildings', [
                   'neighborhood_id', 'residential'], None, unique=False),
@@ -50,6 +56,17 @@ def upgrade():
   op.create_index('idx_bldg_boroid_and_address', 'buildings', ['boro_code', 'address'], None, unique=True)
   op.create_index('idx_bldg_bbl', 'buildings', ['bbl'], None, unique=True)
 
+  # virtual table for FTS
+
+  conn = sqlite3.connect('../../nyc_data_map.sqlite', timeout=10)
+  c = conn.cursor()
+  c.execute(
+      'CREATE VIRTUAL TABLE IF NOT EXISTS {tn} USING fts5(id, house_number, address, borough_name)'.format(tn='building_search'))
+
 
 def downgrade():
   op.drop_table('buildings')
+  conn = sqlite3.connect('../../nyc_data_map.sqlite', timeout=10)
+  c = conn.cursor()
+  c.execute('DROP TABLE building_search')
+  pass

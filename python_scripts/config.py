@@ -20,5 +20,11 @@ NEIGHBORHOODS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/
 CENSUS_TRACTS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/census_tracts_2010.geojson'))
 
 INCOME_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/income_data/censustract-medianhouseholdincome2017.csv'))
-RENT_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/income_data/censustract-medianrentall2017.csv'))
+RENT_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/rent_data/censustract-medianrentall2017.csv'))
 RACE_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/race_data/pop_race2010_ct.csv'))
+
+MN_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/mn_mappluto.geojson'))
+BK_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/bk_mappluto.geojson'))
+BX_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/bx_mappluto.geojson'))
+SI_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/si_mappluto.geojson'))
+QN_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/qn_mappluto.geojson'))

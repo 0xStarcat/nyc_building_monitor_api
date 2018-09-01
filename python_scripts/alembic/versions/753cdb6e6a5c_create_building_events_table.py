@@ -8,7 +8,6 @@ Create Date: 2018-08-30 21:06:45.493021
 from alembic import op
 import sqlalchemy as sa
 
-
 # revision identifiers, used by Alembic.
 revision = '753cdb6e6a5c'
 down_revision = 'eb5f8c221e68'
@@ -40,3 +39,4 @@ def upgrade():
 
 def downgrade():
   op.drop_table('building_events')
+  pass

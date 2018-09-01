@@ -30,3 +30,4 @@ def upgrade():
 
 def downgrade():
   op.drop_table('racial_makeups')
+  pass
