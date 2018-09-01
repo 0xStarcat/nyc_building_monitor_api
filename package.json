@@ -1,8 +1,7 @@
 {
   "name": "nyc_building_monitor_api",
   "version": "1.0.0",
-  "description":
-    "A NYC building monitor to hold landlords and city departments accountable through the data analysis of building violations, 311 calls, sales, and permits across all five boroughs.",
+  "description": "A NYC building monitor to hold landlords and city departments accountable through the data analysis of building violations, 311 calls, sales, and permits across all five boroughs.",
   "main": "server/buildingmonitor_server.js",
   "scripts": {
     "nodemon": "nodemon server/nyc_data_server.js",

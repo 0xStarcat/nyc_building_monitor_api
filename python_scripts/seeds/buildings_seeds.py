@@ -165,6 +165,13 @@ def seed(c, building_json):
         c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}, {col8}, {col9}, {col10}, {col11}, {col12}, {col13}, {col14}, {col15}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
                   .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7, col8=col8, col9=col9, col10=col10, col11=col11, col12=col12, col13=col13, col14=col14, col15=col15), (borough_id, neighborhood_id, census_tract_id, boro_code, ct_2010, bbl, block, lot, address, geometry, representative_point, year_built, residential_units, bldg_class, residential_units > 0))
 
+    log_file = config.UNASSIGNED_BUILDINGS_FILE
+    try:
+        file = open(log_file, 'r')
+        file.close()
+    except IOError:
+        file = open(log_file, 'w')
+        file.close()
     file = open(config.UNASSIGNED_BUILDINGS_FILE, 'a+')
     for i in range(len(unassigned_buildings)):
         file.write(', '.join(map(str, unassigned_buildings[i])) + "\n")
