@@ -37,6 +37,7 @@ def create_table(c):
     c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col12))
     c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col13))
     c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col14))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} BOOLEAN".format(tn=table, cn=col15))
 
     c.execute('CREATE INDEX idx_call_building_id ON {tn}({col})'.format(tn=table, col=col1))
     c.execute('CREATE INDEX idx_call_date ON {tn}({col})'.format(tn=table, col=col3))
