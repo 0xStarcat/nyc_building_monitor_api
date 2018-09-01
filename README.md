@@ -11,7 +11,7 @@ The NYC Building monitor is a tool that NYC tenants can use to help them make in
 
 1.  Clone this repo and the [frontend repo](https://github.com/0xStarcat/nyc_building_monitor_client) into separate directories.
 2.  Install node packages `npm install`
-3. This project requires python 3.5.2+ which has a sqlite3 version that comes with FTS5
+3. This project requires python 3.5.2+. Check your python version with `python3 --version` and upgrade if needed.
 4.  Create a virtual env if desired inside the `python_scripts` directory with `python3 -m venv venv` and activate with `source venv/bin/activate`
 5. Pip install the required python packages with `pip install requirements.txt`
 6. Download the raw data from dropbox ( [link](https://www.dropbox.com/sh/oneei3xguhpzg8b/AABRKiQZPacG0KYRSO5eX6eaa?dl=0) ) and place the `data` directory into the project root.
