@@ -55,6 +55,8 @@ Neighborhoods
 http://data.beta.nyc/dataset/pediacities-nyc-neighborhoods/resource/35dd04fb-81b3-479b-a074-a27a37888ce7
 
 Census tracts 2010 (clipped to shoreline)
+https://www1.nyc.gov/site/planning/data-maps/open-data/districts-download-metadata.page
+NOTE - needs to be converted from .shp to .geojson since the api only delivers 2000 (full number is 2166)
 https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/nyct2010/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=geojson
 
 Income

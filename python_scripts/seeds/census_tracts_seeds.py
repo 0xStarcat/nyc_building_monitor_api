@@ -1,6 +1,6 @@
 import json
 import context
-import pprint
+import config
 
 table = 'census_tracts'
 col1 = 'borough_id'
@@ -78,4 +78,15 @@ def seed(c, census_tract_json):
 
         c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}, {col5}, {col6}, {col7}) VALUES (?, ?, ?, ?, ?, ?, ?)'
                   .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4, col5=col5, col6=col6, col7=col7), (borough_id, neighborhood_id, name, ct_label, boro_code, geometry, representative_point))
-    pprint.pprint(missing_neighborhoods)
+
+    log_file = config.UNASSIGNED_CENSUS_TRACTS
+    try:
+        file = open(log_file, 'r')
+        file.close()
+    except IOError:
+        file = open(log_file, 'w')
+        file.close()
+    file = open(config.UNASSIGNED_CENSUS_TRACTS, 'w+')
+    for i in range(len(missing_neighborhoods)):
+        file.write(', '.join(map(str, missing_neighborhoods[i])) + "\n")
+    file.close()

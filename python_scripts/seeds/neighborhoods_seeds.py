@@ -1,5 +1,6 @@
 import json
 import context
+import config
 
 table = 'neighborhoods'
 col1 = 'borough_id'
@@ -17,48 +18,61 @@ col12 = 'service_calls_average_days_to_resolve'
 
 
 def create_table(c):
-  c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'.format(
-      tn=table, col1=col1, ref_table=context.boroughs_seeds.table))
+    c.execute('CREATE TABLE IF NOT EXISTS {tn} (id INTEGER PRIMARY KEY AUTOINCREMENT, {col1} INTEGER NOT NULL REFERENCES {ref_table}(id))'.format(
+        tn=table, col1=col1, ref_table=context.boroughs_seeds.table))
 
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col2))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col3))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col4))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col5))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col6))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col7))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col8))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col9))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col10))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col11))
-  c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col12))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col2))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col3))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} TEXT".format(tn=table, cn=col4))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col5))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col6))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col7))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col8))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col9))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col10))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col11))
+    c.execute("ALTER TABLE {tn} ADD COLUMN {cn} INT".format(tn=table, cn=col12))
 
-  c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=table, col1=col1))
-  c.execute('CREATE UNIQUE INDEX idx_n_name ON {tn}({col2})'.format(tn=table, col2=col2))
+    c.execute('CREATE INDEX idx_n_borough_id ON {tn}({col1})'.format(tn=table, col1=col1))
+    c.execute('CREATE UNIQUE INDEX idx_n_name ON {tn}({col2})'.format(tn=table, col2=col2))
 
 
 def seed(c, neighborhood_json):
-  print("** Seeding Neighborhoods...")
+    print("** Seeding Neighborhoods...")
+    missing_boroughs = []
+    c.execute('SELECT id, geometry FROM {tn}'.format(tn=context.boroughs_seeds.table))
+    boroughs = c.fetchall()
 
-  c.execute('SELECT id, geometry FROM {tn}'.format(tn=context.boroughs_seeds.table))
-  boroughs = c.fetchall()
+    for index, neighborhood in enumerate(neighborhood_json["features"]):
+        print("Neighborhood: " + str(index) + "/" + str(len(neighborhood_json["features"])))
 
-  for index, neighborhood in enumerate(neighborhood_json["features"]):
-    print("Neighborhood: " + str(index) + "/" + str(len(neighborhood_json["features"])))
+        borough = context.boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], boroughs, 1)
+        if not borough:
+            c.execute('SELECT code FROM {tn} WHERE code={code}'.format(
+                tn=context.boroughs_seeds.table, code=neighborhood["properties"]["boroughCode"]))
+            borough = c.fetchone()
+            if not borough:
+                missing_boroughs.append([neighborhood["properties"]["name"]])
+                print("  X -- no borough found", name)
+                continue
 
-    borough = context.boundary_helpers.get_record_from_coordinates(neighborhood["geometry"], boroughs, 1)
-    if not borough:
-      c.execute('SELECT code FROM {tn} WHERE code={code}'.format(
-          tn=context.boroughs_seeds.table, code=neighborhood["properties"]["boroughCode"]))
-      borough = c.fetchone()
-      if not borough:
-        print("  X -- no borough found", name)
-        continue
+        boro_id = borough[0]
+        name = neighborhood["properties"]["neighborhood"]
+        geo = json.dumps(neighborhood["geometry"], separators=(',', ':'))
+        representative_point = json.dumps(
+            context.boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
 
-    boro_id = borough[0]
-    name = neighborhood["properties"]["neighborhood"]
-    geo = json.dumps(neighborhood["geometry"], separators=(',', ':'))
-    representative_point = json.dumps(
-        context.boundary_helpers.get_representative_point_geojson(neighborhood["geometry"]))
+        c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES (?, ?, ?, ?)'
+                  .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (boro_id, name, geo, representative_point))
 
-    c.execute('INSERT OR IGNORE INTO {tn} ({col1}, {col2}, {col3}, {col4}) VALUES (?, ?, ?, ?)'
-              .format(tn=table, col1=col1, col2=col2, col3=col3, col4=col4), (boro_id, name, geo, representative_point))
+    log_file = config.UNASSIGNED_NEIGHBORHOODS
+    try:
+        file = open(log_file, 'r')
+        file.close()
+    except IOError:
+        file = open(log_file, 'w')
+        file.close()
+    file = open(config.UNASSIGNED_NEIGHBORHOODS, 'w+')
+    for i in range(len(missing_boroughs)):
+        file.write(', '.join(map(str, missing_boroughs[i])) + "\n")
+    file.close()

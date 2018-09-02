@@ -172,10 +172,9 @@ def seed(c, building_json):
     except IOError:
         file = open(log_file, 'w')
         file.close()
-    file = open(config.UNASSIGNED_BUILDINGS_FILE, 'a+')
+    file = open(config.UNASSIGNED_BUILDINGS_FILE, 'w+')
     for i in range(len(unassigned_buildings)):
         file.write(', '.join(map(str, unassigned_buildings[i])) + "\n")
-
     file.close()
 
 

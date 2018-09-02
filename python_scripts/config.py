@@ -29,6 +29,6 @@ BX_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/
 SI_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/si_mappluto.geojson'))
 QN_BUILDINGS_DATA = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/qn_mappluto.geojson'))
 
-# missing buildings file
-
 UNASSIGNED_BUILDINGS_FILE = os.path.abspath(os.path.join(ROOT_DIR, 'data/buildings_data/unassigned_buildings.txt'))
+UNASSIGNED_CENSUS_TRACTS = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/unassigned_census_tracts.txt'))
+UNASSIGNED_NEIGHBORHOODS = os.path.abspath(os.path.join(ROOT_DIR, 'data/boundary_data/unassigned_neighborhoods.txt'))
