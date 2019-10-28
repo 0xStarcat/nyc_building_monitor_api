@@ -23,7 +23,7 @@
     "jest": "^23.4.1",
     "nock": "^9.4.2",
     "nodemon": "^1.17.5",
-    "sequelize": "^4.38.0",
+    "sequelize": "^5.15.1",
     "sqlite": "^2.9.2",
     "sqlite3": "^4.0.2",
     "webpack": "3.8.1"
